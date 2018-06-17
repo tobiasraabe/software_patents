@@ -1,0 +1,46 @@
+def build(ctx):
+
+    ctx(
+        features='run_py_script',
+        source='prepare_bessen_hunt_2007.py',
+        deps=[
+            ctx.path_to(ctx, 'IN_DATA_MANAGEMENT', 'scrape_patents.py'),
+            ctx.path_to(ctx, 'IN_DATA_EXTERNAL', 'bessen_hunt_2007.dta'),
+        ],
+        target=[
+            ctx.path_to(ctx, 'OUT_DATA', 'bh_bool.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'bh_text.pkl'),
+        ],
+        name='prepare_bessen_hunt_2007'
+    )
+
+    ctx(
+        features='run_py_script',
+        source='prepare_patents.py',
+        deps=ctx.path_to(ctx, 'IN_DATA_DOWNLOADED', 'patent.tsv.zip'),
+        target=ctx.path_to(ctx, 'OUT_DATA', 'patents.pkl'),
+        name='prepare_patents'
+    )
+
+    ctx(
+        features='run_py_script',
+        source='prepare_description.py',
+        # deps=ctx.path_to(ctx, 'IN_DATA_RAW', 'detail_desc_text_1.tsv.zip'),
+        target=ctx.path_to(ctx, 'OUT_DATA', 'indicators_description.parquet'),
+        name='prepare_descriptions'
+    )
+
+    # Tests
+    ctx(
+        rule='pytest ../src/data_management --no-cov',
+        deps=[
+            # Module
+            ctx.path_to(ctx, 'IN_DATA_MANAGEMENT', 'test_data_management.py'),
+            # Data
+            ctx.path_to(ctx, 'OUT_DATA', 'bh_bool.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'bh_text.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'patents.pkl'),
+        ],
+        target=ctx.path_to(ctx, 'OUT_DATA', 'debug.pkl'),
+        name='test_data_management',
+    )

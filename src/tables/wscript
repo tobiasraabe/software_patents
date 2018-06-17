@@ -1,0 +1,16 @@
+def build(ctx):
+
+    ctx(
+        features='run_py_script',
+        source='table_bessen_hunt_2007_and_replication.py',
+        deps=[
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'replication_bh2007.pkl'),
+            ctx.path_to(ctx, 'OUT_ANALYSIS',
+                        'patents_classified_with_bh2007.pkl')
+        ],
+        target=[
+            ctx.path_to(ctx, 'OUT_TABLES', 'tab_cf_bh2007.tex'),
+            ctx.path_to(ctx, 'OUT_TABLES', 'tab_cf_bh2007_replication.tex'),
+        ],
+        name='confusion_matrices_bessen_hunt_2007_and_replication'
+    )

@@ -1,0 +1,18 @@
+def build(ctx):
+
+    ctx(
+        features='run_py_script',
+        source='replicate_results_of_bh2007.py',
+        deps=ctx.path_to(ctx, 'OUT_DATA', 'bh_bool.pkl'),
+        target=ctx.path_to(ctx, 'OUT_ANALYSIS', 'replication_bh.pkl'),
+        name='replication_bh'
+    )
+
+    # Tests
+    ctx(
+        rule='pytest ../src/analysis --no-cov',
+        deps=[
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'replication_bh.pkl'),
+        ],
+        name='test_analysis',
+    )
