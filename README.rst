@@ -60,15 +60,30 @@ distributions of patents and software versus non-software patents.
 
 **Absolute number of Utility Patents**
 
-.. image:: _static/fig-patents-distribution.png
+.. raw:: html
+
+        <p align="center">
+            <img src="_static/fig-patents-distribution.png" 
+            width="600" height="400">
+        </p>
 
 **Absolute Number of Software vs. Non-Software Patents**
 
-.. image:: _static/fig-patents-distribution-vs.png
+.. raw:: html
+
+        <p align="center">
+            <img src="_static/fig-patents-distribution-vs.png"
+            width="600" height="400">
+        </p>
 
 **Relative Number of Software vs. Non-Software Patents**
 
-.. image:: _static/fig-patents-distribution-vs-shares.png
+.. raw:: html
+
+        <p align="center">
+            <img src="_static/fig-patents-distribution-vs-shares.png"
+            width="600" height="400">
+        </p>
 
 
 List of Analyses and Todos
