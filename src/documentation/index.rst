@@ -1,9 +1,3 @@
-.. This the Identification Strategies of Software Patents project's documentation master file.
-
-.. You can adapt this file completely to your liking,
-.. but it should at least contain the `toctree` directive.
-
-
 Welcome to the Identification Strategies of Software Patents project's documentation!
 =====================================================================================
 
@@ -12,5 +6,4 @@ Welcome to the Identification Strategies of Software Patents project's documenta
 
     introduction
     compare_replication.ipynb
-    paper
-    references
+    zreferences

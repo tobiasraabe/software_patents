@@ -4,13 +4,22 @@ def build(ctx):
         features='run_py_script',
         source='table_bessen_hunt_2007_and_replication.py',
         deps=[
-            ctx.path_to(ctx, 'OUT_ANALYSIS', 'replication_bh2007.pkl'),
-            ctx.path_to(ctx, 'OUT_ANALYSIS',
-                        'patents_classified_with_bh2007.pkl')
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_crawled_text.pkl'
+            ),
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_patent_db.pkl'
+            ),
         ],
         target=[
-            ctx.path_to(ctx, 'OUT_TABLES', 'tab_cf_bh2007.tex'),
-            ctx.path_to(ctx, 'OUT_TABLES', 'tab_cf_bh2007_replication.tex'),
+            ctx.path_to(
+                ctx,
+                'OUT_TABLES',
+                'tab-cf-replication-bh-with-crawled-text.tex',
+            ),
+            ctx.path_to(
+                ctx, 'OUT_TABLES', 'tab-cf-replication-bh-with-patent-db.tex'
+            ),
         ],
-        name='confusion_matrices_bessen_hunt_2007_and_replication'
+        name='confusion_matrices_bessen_hunt_2007_and_replication',
     )

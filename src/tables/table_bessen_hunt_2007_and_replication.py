@@ -1,6 +1,8 @@
-from bld.project_paths import project_paths_join as ppj
 import pandas as pd
+
 from sklearn.metrics import confusion_matrix
+
+from bld.project_paths import project_paths_join as ppj
 
 TABLE = """\\begin{tabular}{@{}cp{0.5cm}cp{0.5cm}c@{}}
 \t\\toprule
@@ -33,7 +35,7 @@ def create_confusion_matrix(actual_class, predicted_class, suffix):
         .replace('TN', str(tn))
     )
 
-    with open(ppj('OUT_TABLES', f'tab_cf_{suffix}.tex'), 'w') as file:
+    with open(ppj('OUT_TABLES', f'tab-cf-{suffix}.tex'), 'w') as file:
         file.write(table)
 
 
@@ -49,12 +51,14 @@ def create_confusion_matrix_with_info(actual_class, predicted_class, suffix):
         .replace('TN', str(tn))
     )
 
-    with open(ppj('OUT_TABLES', f'tab_cf_{suffix}.tex'), 'w') as file:
+    with open(ppj('OUT_TABLES', f'tab-cf-{suffix}.tex'), 'w') as file:
         file.write(table)
 
 
-if __name__ == '__main__':
-    df = pd.read_pickle(ppj('OUT_ANALYSIS', 'replication_bh2007.pkl'))
+def main():
+    df = pd.read_pickle(
+        ppj('OUT_ANALYSIS', 'replication_bh_with_crawled_text.pkl')
+    )
 
     create_confusion_matrix(
         df.CLASSIFICATION_MANUAL, df.CLASSIFICATION_ALGORITHM, 'bh2007'
@@ -62,21 +66,23 @@ if __name__ == '__main__':
     create_confusion_matrix_with_info(
         df.CLASSIFICATION_MANUAL,
         df.CLASSIFICATION_REPLICATION,
-        'bh2007_replication_with_text',
+        'replication-bh-with-crawled-text',
     )
 
     temp = pd.read_pickle(
-        ppj('OUT_ANALYSIS', 'patents_classified_with_bh2007.pkl')
+        ppj('OUT_ANALYSIS', 'replication_bh_with_patent_db.pkl')
     )
 
-    df = df[['PATENTNR', 'CLASSIFICATION_MANUAL']].merge(
-        temp[['PATENTNR', 'CLASSIFICATION_REPLICATION']],
-        on='PATENTNR',
-        how='left',
+    df = df[['ID', 'CLASSIFICATION_MANUAL']].merge(
+        temp[['ID', 'CLASSIFICATION_REPLICATION']], on='ID', how='left'
     )
 
     create_confusion_matrix(
         df.CLASSIFICATION_MANUAL,
         df.CLASSIFICATION_REPLICATION,
-        'bh2007_replication',
+        'replication-bh-with-patent-db',
     )
+
+
+if __name__ == '__main__':
+    main()

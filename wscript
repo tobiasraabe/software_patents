@@ -2,7 +2,6 @@
 
 import os
 
-
 # The project root directory and the build directory.
 top = '.'
 out = 'bld'
@@ -15,6 +14,7 @@ def set_project_paths(ctx):
     pp['PROJECT_ROOT'] = '.'
     pp['IN_DATA_DOWNLOADED'] = 'src/data/downloaded'
     pp['IN_DATA_EXTERNAL'] = 'src/data/external'
+    pp['IN_DATA_PROCESSED'] = 'src/data/processed'
     pp['IN_DATA_RAW'] = 'src/data/raw'
     pp['IN_DATA_MANAGEMENT'] = 'src/data_management'
     pp['IN_ANALYSIS'] = 'src/analysis'

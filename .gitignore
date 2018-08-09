@@ -67,5 +67,9 @@ ___*
 .env/installed_conda_pkgs
 .env/installed_pip_pkgs
 .env/installed_spec.json
+
+# Custom ignores
+dask-worker-space
 *.parquet
 *.zip
+*.pkl

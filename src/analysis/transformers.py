@@ -1,8 +1,9 @@
 import string
 
-from nltk import WordNetLemmatizer, sent_tokenize, pos_tag, wordpunct_tokenize
-from nltk.corpus import stopwords as sw, wordnet as wn
 from sklearn.base import BaseEstimator, TransformerMixin
+
+from nltk import WordNetLemmatizer, pos_tag, sent_tokenize, wordpunct_tokenize
+from nltk.corpus import stopwords as sw, wordnet as wn
 
 
 class NLTKPreprocessor(BaseEstimator, TransformerMixin):

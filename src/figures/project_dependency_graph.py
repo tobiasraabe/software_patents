@@ -1,7 +1,9 @@
 import functools
+
 from pathlib import Path
 
 import graphviz as gv
+
 from waflib import Utils
 
 graph = functools.partial(gv.Graph, format='png')
@@ -13,7 +15,7 @@ styles = {
         'fontsize': '48',
         'fontcolor': 'white',
         'bgcolor': '#333333',
-        'rankdir': 'LR',
+        'rankdir': 'TB',
     },
     'nodes': {
         'fontname': 'Helvetica',

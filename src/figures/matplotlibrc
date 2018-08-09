@@ -300,7 +300,7 @@ font.size           : 16
 #axes.labelpad       : 4.0     # space between label and axis
 #axes.labelweight    : normal  # weight of the x and y labels
 #axes.labelcolor     : black
-#axes.axisbelow      : 'line'  # draw axis gridlines and ticks below
+axes.axisbelow      : True  # draw axis gridlines and ticks below
                                # patches (True); above patches but below
                                # lines ('line'); or above all (False)
 
@@ -408,7 +408,7 @@ font.size           : 16
 ### Legend
 #legend.loc           : best
 #legend.frameon       : True     # if True, draw the legend on a background patch
-#legend.framealpha    : 0.8      # legend patch transparency
+legend.framealpha    : 1      # legend patch transparency
 #legend.facecolor     : inherit  # inherit from axes.facecolor; or color spec
 #legend.edgecolor     : 0.8      # background patch boundary color
 #legend.fancybox      : True     # if True, use a rounded box for the

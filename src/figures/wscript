@@ -19,13 +19,18 @@ def build(ctx):
     ctx(
         features='run_py_script',
         source='visualize_distribution_of_patents.py',
-        deps=ctx.path_to(ctx, 'OUT_ANALYSIS',
-                         'patents_classified_with_bh2007.pkl'),
-        target=[
-            ctx.path_to(ctx, 'OUT_FIGURES', 'fig_patents_distribution.png'),
-            ctx.path_to(ctx, 'OUT_FIGURES', 'fig_patents_distribution_vs.png'),
-            ctx.path_to(ctx, 'OUT_FIGURES',
-                        'fig_patents_distribution_vs_shares.png'),
+        deps=[
+            ctx.path_to(ctx, 'IN_FIGURES', 'auxiliaries.py'),
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_patent_db.pkl'
+            ),
         ],
-        name='visualize_distribution_of_patents'
+        target=[
+            ctx.path_to(ctx, 'OUT_FIGURES', 'fig-patents-distribution.png'),
+            ctx.path_to(ctx, 'OUT_FIGURES', 'fig-patents-distribution-vs.png'),
+            ctx.path_to(
+                ctx, 'OUT_FIGURES', 'fig-patents-distribution-vs-shares.png'
+            ),
+        ],
+        name='visualize_distribution_of_patents',
     )

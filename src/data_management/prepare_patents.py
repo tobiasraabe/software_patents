@@ -1,63 +1,70 @@
-"""Prepare data from PatentsView.org on general information of patents."""
+"""Prepare data from PatentsView.org on general information of patents.
 
+Note that the information is previously processed by ``download_data.py`` and
+``split_tsv_files.py`` so that many ``.parquet`` files reside in
+``src/data/raw``.
+
+"""
+
+import dask.dataframe as dd
+import numpy as np
 import pandas as pd
+
+from dask.distributed import Client, LocalCluster
+
 from bld.project_paths import project_paths_join as ppj
+from src import DASK_LOCAL_CLUSTER_CONFIGURATION
+from src.data_management.prepare_bessen_hunt_2007 import create_indicators
 
 
-PATENTSVIEW_MISSPELLINGS = {
-    '\.degree\.': '°',
-    '\.gt\.': '>',
-    '\.lt\.': '<',
-    '\.ltoreq\.': '≦',
-    '\.gtoreq\.': '≧',
-}
+def process_data():
+    # Get 399 patent numbers from BH2007 to store fulltext of abstract and
+    # title.
+    bh = pd.read_pickle(ppj('OUT_DATA', 'bh.pkl'))
+
+    # Start client for computations
+    cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
+    client = Client(cluster)
+
+    df = dd.read_parquet(ppj('IN_DATA_RAW', 'patent_*.parquet'))
+
+    for section in ['ABSTRACT', 'TITLE']:
+
+        out = df[['ID']]
+
+        out = create_indicators(df, section, out)
+
+        out = out.assign(
+            **{
+                section: df[section].where(
+                    cond=out.ID.isin(bh.ID), other=np.nan
+                )
+            }
+        )
+
+        out.to_parquet(
+            ppj('OUT_DATA', f'indicators_{section.lower()}.parquet'),
+            compute=True,
+        )
+
+
+def merge_indicators():
+    for section in ['abstract', 'title']:
+        df = dd.read_parquet(
+            ppj('OUT_DATA', f'indicators_{section}.parquet/*.parquet')
+        )
+        df = df.compute()
+        df.to_pickle(ppj('OUT_DATA', f'indicators_{section}.pkl'))
 
 
 def main():
-    df = pd.read_table(
-        ppj('IN_DATA_DOWNLOADED', 'patent.tsv.zip'),
-        sep='\t',
-        error_bad_lines=False,
-        usecols=[0, 1, 4, 5, 6, 7, 8],
-        low_memory=False,
-    )
+    process_data()
+    merge_indicators()
 
-    # Only utility patents
-    df = df.loc[df.type == 'utility'].copy()
-    # Ensure that only patents are chosen
-    df = df.loc[df.kind.isin(['A', 'B1', 'B2'])]
-
-    # ID is numeric
-    df['ID'] = pd.to_numeric(df.id, errors='coerce')
-    # CLAIMS_NUMBER is numeric
-    df['CLAIMS_NUMBER'] = pd.to_numeric(df.num_claims, errors='coerce')
-    # DATE is datetime
-    df['DATE'] = pd.to_datetime(df.date)
-
-    # Drop unnecessary columns
-    df.drop(columns=['type', 'id', 'date', 'num_claims', 'kind'], inplace=True)
-
-    # Rename columns
-    col_names = {'abstract': 'ABSTRACT', 'title': 'TITLE'}
-    df = df.rename(columns=col_names)
-
-    # Drop NaNs
-    df.dropna(inplace=True)
-
-    # More efficient dtypes
-    df.ID = pd.to_numeric(df.ID, downcast='unsigned')
-    df.CLAIMS_NUMBER = pd.to_numeric(df.CLAIMS_NUMBER, downcast='unsigned')
-    # Edits to text columns
-    df.TITLE = df.TITLE.str.strip()
-    df.ABSTRACT = df.ABSTRACT.str.strip()
-
-    for column in ['TITLE', 'ABSTRACT']:
-        for key, value in PATENTSVIEW_MISSPELLINGS.items():
-            df[column] = df[column].str.replace(key, value)
-
-    df.reset_index(drop=True)
-
-    df.to_pickle(ppj('OUT_DATA', 'patents.pkl'))
+    # Save date information
+    df = dd.read_parquet(ppj('IN_DATA_RAW', 'patent_*.parquet'))
+    df = df[['ID', 'DATE']].compute()
+    df.to_pickle(ppj('OUT_DATA', 'patent.pkl'))
 
 
 if __name__ == '__main__':

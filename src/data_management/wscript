@@ -1,34 +1,123 @@
-def build(ctx):
+from pathlib import Path
 
+
+def build(ctx):
     ctx(
         features='run_py_script',
         source='prepare_bessen_hunt_2007.py',
+        deps=ctx.path_to(ctx, 'IN_DATA_EXTERNAL', 'bessen_hunt_2007.dta'),
+        target=[
+            ctx.path_to(ctx, 'OUT_DATA', 'bh.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'bh_with_crawled_text.pkl'),
+        ],
+        name='prepare_bessen_hunt_2007',
+    )
+
+    # Initialize list of files to copy if they are available
+    files_to_copy = []
+
+    for i in range(1, 6):
+        # Path is relative to the project directory
+        path = Path(
+            'src', 'data', 'processed', f'indicators_description_{i}.pkl'
+        )
+        if not path.exists():
+            ctx(
+                features='run_py_script',
+                source='prepare_description.py',
+                deps=[ctx.path_to(ctx, 'OUT_DATA', 'bh.pkl')]
+                + [
+                    ctx.path_to(
+                        ctx,
+                        'IN_DATA_RAW',
+                        f'detail_desc_text_{i}_{ii}.parquet',
+                    )
+                    for ii in range(1, 126)
+                ],
+                target=ctx.path_to(
+                    ctx, 'OUT_DATA', f'indicators_description_{i}.pkl'
+                ),
+                append=f'{i}',
+                name=f'prepare_descriptions_{i}',
+            )
+        else:
+            files_to_copy.append(path.name)
+
+    # Paths are relative to the project directory.
+    paths = [
+        Path('src', 'data', 'processed', file)
+        for file in [
+            'indicators_abstract.pkl',
+            'indicators_title.pkl',
+            'patent.pkl',
+        ]
+    ]
+    if not all([path.exists() for path in paths]):
+        ctx(
+            features='run_py_script',
+            source='prepare_patents.py',
+            deps=[ctx.path_to(ctx, 'OUT_DATA', 'bh.pkl')]
+            + [
+                ctx.path_to(ctx, 'IN_DATA_RAW', f'patent_{i}.parquet')
+                for i in range(1, 24)
+            ],
+            target=[
+                ctx.path_to(ctx, 'OUT_DATA', 'patent.pkl'),
+                ctx.path_to(ctx, 'OUT_DATA', 'indicators_abstract.pkl'),
+                ctx.path_to(ctx, 'OUT_DATA', 'indicators_title.pkl'),
+            ],
+            name='prepare_patents',
+        )
+    else:
+        files_to_copy += [path.name for path in paths]
+
+    # Paths are relative to the project directory.
+    path = Path('src', 'data', 'processed', 'indicators_summary.pkl')
+    if not path.exists():
+        ctx(
+            features='run_py_script',
+            source='prepare_summary.py',
+            deps=[ctx.path_to(ctx, 'OUT_DATA', 'bh.pkl')]
+            + [
+                ctx.path_to(ctx, 'IN_DATA_RAW', f'brf_sum_text_{i}.parquet')
+                for i in range(1, 203)
+            ],
+            target=ctx.path_to(ctx, 'OUT_DATA', 'indicators_summary.pkl'),
+            name='prepare_summary',
+        )
+    else:
+        files_to_copy += [path.name for path in paths]
+
+    for file in files_to_copy:
+
+        ctx(
+            features='subst',
+            source=ctx.path_to(ctx, 'IN_DATA_PROCESSED', file),
+            target=ctx.path_to(ctx, 'OUT_DATA', file),
+            is_copy=True,
+        )
+
+    ctx(
+        features='run_py_script',
+        source='merge_indicators.py',
         deps=[
-            ctx.path_to(ctx, 'IN_DATA_MANAGEMENT', 'scrape_patents.py'),
-            ctx.path_to(ctx, 'IN_DATA_EXTERNAL', 'bessen_hunt_2007.dta'),
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators_abstract.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators_title.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators_summary.pkl'),
+        ]
+        + [
+            ctx.path_to(ctx, 'OUT_DATA', f'indicators_description_{i}.pkl')
+            for i in range(1, 6)
         ],
         target=[
-            ctx.path_to(ctx, 'OUT_DATA', 'bh_bool.pkl'),
-            ctx.path_to(ctx, 'OUT_DATA', 'bh_text.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators_description.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators.pkl'),
         ],
-        name='prepare_bessen_hunt_2007'
+        name='merge_indicators',
     )
 
-    ctx(
-        features='run_py_script',
-        source='prepare_patents.py',
-        deps=ctx.path_to(ctx, 'IN_DATA_DOWNLOADED', 'patent.tsv.zip'),
-        target=ctx.path_to(ctx, 'OUT_DATA', 'patents.pkl'),
-        name='prepare_patents'
-    )
-
-    ctx(
-        features='run_py_script',
-        source='prepare_description.py',
-        # deps=ctx.path_to(ctx, 'IN_DATA_RAW', 'detail_desc_text_1.tsv.zip'),
-        target=ctx.path_to(ctx, 'OUT_DATA', 'indicators_description.parquet'),
-        name='prepare_descriptions'
-    )
+    # Added so that ``prepare_description.py`` can run with ncores - 1 workers
+    ctx.add_group()
 
     # Tests
     ctx(
@@ -37,10 +126,8 @@ def build(ctx):
             # Module
             ctx.path_to(ctx, 'IN_DATA_MANAGEMENT', 'test_data_management.py'),
             # Data
-            ctx.path_to(ctx, 'OUT_DATA', 'bh_bool.pkl'),
-            ctx.path_to(ctx, 'OUT_DATA', 'bh_text.pkl'),
-            ctx.path_to(ctx, 'OUT_DATA', 'patents.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'bh.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'patent.pkl'),
         ],
-        target=ctx.path_to(ctx, 'OUT_DATA', 'debug.pkl'),
         name='test_data_management',
     )

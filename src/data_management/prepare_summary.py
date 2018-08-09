@@ -8,8 +8,6 @@ TODO: Implement intermediate step where the fulltext of all 399 is also saved
 for manual inspection.
 
 """
-import sys
-
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
@@ -21,7 +19,7 @@ from src import DASK_LOCAL_CLUSTER_CONFIGURATION
 from src.data_management.prepare_bessen_hunt_2007 import create_indicators
 
 
-def process_data(part: str):
+def process_data():
     # Get 399 patent numbers from BH2007 to store fulltext of description.
     bh = pd.read_pickle(ppj('OUT_DATA', 'bh.pkl'))
 
@@ -29,34 +27,32 @@ def process_data(part: str):
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
     client = Client(cluster)
 
-    df = dd.read_parquet(ppj('IN_DATA_RAW', f'detail_desc_text_{part}_*'))
+    df = dd.read_parquet(ppj('IN_DATA_RAW', f'brf_sum_text_*'))
 
     out = df[['ID']]
 
-    out = create_indicators(df, 'DESCRIPTION', out)
+    out = create_indicators(df, 'SUMMARY', out)
 
     out = out.assign(
-        DESCRIPTION=df['DESCRIPTION'].where(
+        SUMMARY=df['SUMMARY'].where(
             cond=out.ID.isin(bh.ID), other=np.nan
         )
     )
 
     out.to_parquet(
-        ppj('OUT_DATA', f'indicators_description_{part}.parquet'), compute=True
+        ppj('OUT_DATA', f'indicators_summary.parquet'), compute=True
     )
 
 
 def main():
-    part = sys.argv[1]
-
-    process_data(part)
+    process_data()
 
     df = dd.read_parquet(
-        ppj('OUT_DATA', f'indicators_description_{part}.parquet')
+        ppj('OUT_DATA', f'indicators_summary.parquet')
     )
     df = df.compute()
 
-    df.to_pickle(ppj('OUT_DATA', f'indicators_description_{part}.pkl'))
+    df.to_pickle(ppj('OUT_DATA', f'indicators_summary.pkl'))
 
 
 if __name__ == '__main__':

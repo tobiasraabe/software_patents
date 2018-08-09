@@ -1,10 +1,13 @@
 """Contains code to scrape patents by pantent ids."""
 
-import requests
-from bs4 import BeautifulSoup
-from src import PROCESSES_SCRAPE_PATENTS
 import multiprocessing as mp
+
 import numpy as np
+import requests
+
+from bs4 import BeautifulSoup
+
+from src import PROCESSES_SCRAPE_PATENTS
 
 
 def multiprocessed(func, inputs, processes=PROCESSES_SCRAPE_PATENTS):
@@ -58,4 +61,4 @@ def scrape_patent_info(patentnr):
     except AttributeError:
         claims_number = np.nan
 
-    return title, abstract, description, claims, claims_number
+    return patentnr, title, abstract, description, claims, claims_number

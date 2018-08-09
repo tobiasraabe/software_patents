@@ -1,21 +1,20 @@
-\documentclass[12pt, a4paper]{scrartcl}
+\documentclass[12pt, a4paper, abstract, parskip]{scrartcl}
 \def\datum{\today}
 \author{Tobias Raabe}
 \title{Identification Strategies of Software Patents}
 
-\usepackage[english]{babel} % Anpassung von Überschriften, Silbentrennung
-\usepackage[utf8]{inputenc} % erlaubt das direkte Eingeben von Umlauten und Symbolen
-\usepackage[T1]{fontenc} % Zeichenbelegung, notwendig bei Umlauten, Akzentuierungen
-\usepackage{lmodern} % Latin Modern Fonts sind Nachfolger von Latexs Standardfonts
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{booktabs}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 \usepackage{amsmath, amssymb, amsthm}
-\usepackage{nameref} % references in the document with name
+\usepackage{nameref}
 \usepackage{graphicx}
 \usepackage[space]{grffile}
-\usepackage[hidelinks, hyperfootnotes=false]{hyperref} % Möglichkeit Links zu setzen
-\usepackage{natbib} % Bibliographie
-\bibliographystyle{apa}
+\usepackage[hidelinks, hyperfootnotes=false]{hyperref}
+
 \usepackage{geometry} % Anpassung der Seite
 \geometry{left=30mm,right=20mm,top=20mm,bottom=20mm}
 \usepackage{setspace} % Defines Line spacing
@@ -30,6 +29,13 @@
 \makeatletter
 \patchcmd{\epigraph}{\@epitext{#1}}{\itshape\@epitext{#1}}{}{}
 \makeatother
+
+\usepackage[backend=biber, natbib=true, bibencoding=utf8, safeinputenc=true,
+bibstyle=authoryear, citestyle=authoryear-comp, maxcitenames=2, mincitenames=1,
+uniquelist=false, useprefix=true, maxbibnames=99, minbibnames=99, backref=true,
+backrefstyle=three, doi=true, isbn=false, sortcites=false, dashed=false,
+]{biblatex}
+\addbibresource{references.bib}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
@@ -49,7 +55,7 @@
 \textbf{\large Bachelor of Science (B.Sc.)}\\[1cm]
 {\large im Studiengang Volkswirtschaftlehre}\\[1cm]
 \textbf{\large an der Rheinischen Friedrich-Wilhelms-Universität zu Bonn}\\[4pt]
-{\large JProf. Michael B\"ohm}\\[4cm]
+{\large JProf. Michael Böhm}\\[4cm]
 \begin{tabular}{rl}
 \hline
 Autor: & Tobias Raabe\\
@@ -60,12 +66,9 @@ Vorgelegt: & September 2015\\
 \hline
 \end{tabular}
 \end{center}
-
-\newpage
-\tableofcontents
-
 \newpage
 
+\renewcommand*{\abstractname}{\large Abstract}
 \begin{abstract}
     This Bachelor's Thesis is about the identification of software patents,
     which build a substantial group among patents without a specific class id
@@ -83,12 +86,15 @@ Vorgelegt: & September 2015\\
 \end{abstract}
 
 \newpage
+\tableofcontents
+
+\newpage
+
 \pagenumbering{arabic}
 
 \epigraph{"Begin at the beginning," the King said gravely, "and go on till you
 come to the end: then stop."}{--- \textup{Lewis Carroll}, Alice in Wonderland}
 
-%%%%% Section One %%%%%
 \section{Introduction}
 \label{sec:introduction}
 
@@ -105,6 +111,7 @@ inspiration for this thesis. After that, machine learning techniques are
 explored as an alternative technique to identify patents.
 
 % section introduction (end)
+
 
 \section{Background and Data} % (fold)
 \label{sec:background_and_data}
@@ -146,32 +153,32 @@ existing and still protected patents is not answered. If a protection is
 violated, the plaintiff can sue for injunction to discontinue the infringement
 and / or sue for compensation.
 
-The two main requirements for obtaining a patent are novelty and nonobviousness
-and are applicated during the examination process. There are two conditions for
-novelty: First, the invention must not have been available to the public before
-the filing date of the invention and, second, it must not have been mentioned
-in an issued patent, called prior art. When these criteria are met, patent
-status can still be refused, in case the difference between the invention and
-prior art is obvious for <<a person, having ordinary skill in the area of
-technology related to the invention>>\footnote{see \cite{uspto2014patents}}.
-One might think, that these two requirements set high levels for patent status,
-but in 1980 for example 104,000 patents were applied and 61,000 were granted, a
-ratio of circa 58\%. The ratio for different years is 62\% in 1970, 54\% in
-1990, 53\% in 2000, and 44\% in 2010\footnote{The statistics are from URL \#1
-in Table~\ref{tab:url}}. The ratios for the European Patent Office for all
-patents from 2005 till 2014 vary from 23\% to 29\%\footnote{The patent filing
-statistics are from URL \#2 and the granting statistics from URL \#3 in
-Table~\ref{tab:url}}. These number are only examples and should not be
-interpreted as a trend in the US to a stricter granting process. But, one can
-observe, the numbers are varying over the years and countries, which is,
-according to \citet{griliches1990patent}, related to the procedures and
-resources of patent offices and therefore also indicate the quality of patents.
-Numbers on patents are also available for firms, industries, and countries and
-allow to examine the relation of patents on the economy in different
-contexts\footnote{\cite{hall2001nber} provide a rich and already harmonized
-database on patents, citations, et cetera matched with data from Compustat,
-data for all firms traded in the US. The dataset is called the \textit{NBER
-U.S. Patent Citations Data File} and is available under URL \#4 in
+The two main requirements for obtaining a patent are novelty and
+non-obviousness and are applicated during the examination process. There are
+two conditions for novelty: First, the invention must not have been available
+to the public before the filing date of the invention and, second, it must not
+have been mentioned in an issued patent, called prior art. When these criteria
+are met, patent status can still be refused, in case the difference between the
+invention and prior art is obvious for <<a person, having ordinary skill in the
+area of technology related to the invention>>\footnote{see
+\cite{uspto2014patents}}. One might think, that these two requirements set high
+levels for patent status, but in 1980 for example 104,000 patents were applied
+and 61,000 were granted, a ratio of circa 58\%. The ratio for different years
+is 62\% in 1970, 54\% in 1990, 53\% in 2000, and 44\% in 2010\footnote{The
+statistics are from URL \#1 in Table~\ref{tab:url}}. The ratios for the
+European Patent Office for all patents from 2005 till 2014 vary from 23\% to
+29\%\footnote{The patent filing statistics are from URL \#2 and the granting
+statistics from URL \#3 in Table~\ref{tab:url}}. These number are only examples
+and should not be interpreted as a trend in the US to a stricter granting
+process. But, one can observe, the numbers are varying over the years and
+countries, which is, according to \citet{griliches1990patent}, related to the
+procedures and resources of patent offices and therefore also indicate the
+quality of patents. Numbers on patents are also available for firms,
+industries, and countries and allow to examine the relation of patents on the
+economy in different contexts\footnote{\cite{hall2001nber} provide a rich and
+already harmonized database on patents, citations, et cetera matched with data
+from Compustat, data for all firms traded in the US. The dataset is called the
+\textit{NBER U.S. Patent Citations Data File} and is available under URL \#4 in
 Table~\ref{tab:url}}. This commonality measure of the previous mentioned data
 is based on patent counts grouped by other variables to identify effects. But,
 patent data is a much richer resource than that, because a patent also contains
@@ -330,6 +337,7 @@ significant large.
 
 % subsection empirical_look_at_software_patents (end)
 
+
 \subsection{Of Smart Phone Wars and Software Patents} % (fold)
 \label{sub:of_smart_phone_wars_and_software_patents}
 
@@ -363,7 +371,7 @@ differences.
 First, they investigated the numbers of First Final Actions for software and
 other patents. After an examiner at the patent office rejects a patent
 application, the applicant can oppose the decision and deliver new arguments in
-favor of the application. The examiner will reinvestigate and will make a Final
+favor of the application. The examiner will re-investigate and will make a Final
 Action. Among the First Final Actions that were rejections from 2003 to 2012
 they find that annual as well as cumulative differences were significant and
 indicate that software patents received more rejections than others.
@@ -392,7 +400,6 @@ multiple stages, namely two intern assessments and Federal Courts.
 
 % subsection of_smart_phone_wars_and_software_patents (end)
 % section empirical_research_on_patents (end)
-
 
 
 \section{An Algorithmic Approach} % (fold)
@@ -442,7 +449,7 @@ power.
 \subsection{Excursion: Evaluation of Algorithms}
 
 \begin{table}[tb]\caption{Confusion Matrix of \cite{bessen2007empirical}}\label{tab:confusion_algo_original}\centering\ra{1.3}
-    \input{../../out/tables/tab_cf_bh2007}
+    \input{../../out/tables/tab-cf-replication-bh-with-crawled-text}
 \end{table}
 
 The evaluation starts with a confusion matrix
@@ -578,7 +585,7 @@ the algorithm is applied on patents from 1976 to 2015 without testing on a
 sample which is bigger and balanced among the years.
 
 \begin{table}[tb]\caption{Confusion Matrix of the replication}\label{tab:confusion_algo_rep}\centering\ra{1.3}
-    \input{../../out/tables/tab_cf_bh2007}
+    \input{../../out/tables/tab-cf-replication-bh-with-crawled-text}
 \end{table}
 
 The confusion matrices of both, the original in
@@ -593,14 +600,14 @@ Table~\ref{tab:eval_algo_rep}.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=0.7\textwidth]{graphics/Number of Software Patents.png}
+	\includegraphics[width=0.7\textwidth]{../../out/figures/fig-patents-distribution-vs}
 	\caption{Number of Software Patents}
 	\label{fig:softpat}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=0.7\textwidth]{graphics/Share of Software Patents.png}
+	\includegraphics[width=0.7\textwidth]{../../out/figures/fig-patents-distribution-vs-shares}
 	\caption{Share of Software Patents}
 	\label{fig:sharesoft}
 \end{figure}
@@ -1074,7 +1081,7 @@ avg / total & & 0.94 & & 0.93 & & 0.73 & & 400\\
 \begin{table}[!hp]\caption{List of Urls}\label{tab:url}\centering\ra{1.3}
 \begin{tabular}{cp{0.5cm}p{5cm}p{0.5cm}p{5cm}}\toprule
 \# & & Description & & Url\\ \cline{1-1} \cline{3-3} \cline{5-5}
-1 & & US Patent Statistic Chart with numbers of patent applications and grants from 1963 to 2014 & & \url{http://goo.gl/fK6Upx}\\
+1 & & US Patent Statistic Chart with numbers of patent applications and grants from 1963 to 2015 & & \url{http://goo.gl/fK6Upx}\\
 2 & & European Patent Office Application statistics & & \url{http://goo.gl/ncsWqf}\\
 3 & & European Patent Office Grants statistics & & \url{http://goo.gl/bL44zq}\\
 4 & & The NBER U.S. Patent Citations Data File & & \url{http://www.nber.org/patents/}\\
@@ -1096,7 +1103,7 @@ avg / total & & 0.94 & & 0.93 & & 0.73 & & 400\\
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=0.9\textwidth]{graphics/Number of Utility Patents.png}
+	\includegraphics[width=0.9\textwidth]{../../out/figures/fig-patents-distribution}
 	\caption{Number of Utility Patents}
 	\label{fig:utilpat}
 \end{figure}
@@ -1213,7 +1220,7 @@ And for the maximization problem:
 
 \newpage
 
-\bibliography{bibliography}
+\printbibliography
 
 \newpage
 

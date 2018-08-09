@@ -2,17 +2,53 @@ def build(ctx):
 
     ctx(
         features='run_py_script',
+        source='apply_bh_to_indicators.py',
+        deps=[
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators.pkl'),
+            ctx.path_to(ctx, 'OUT_DATA', 'bh_with_crawled_text.pkl'),
+        ],
+        target=[
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'bh_with_patent_db.pkl'),
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'bh_with_crawled_text.pkl'),
+        ],
+        name='apply_bh_to_indicators',
+    )
+
+    ctx(
+        features='run_py_script',
         source='replicate_results_of_bh2007.py',
-        deps=ctx.path_to(ctx, 'OUT_DATA', 'bh_bool.pkl'),
-        target=ctx.path_to(ctx, 'OUT_ANALYSIS', 'replication_bh.pkl'),
-        name='replication_bh'
+        deps=[
+            ctx.path_to(ctx, 'OUT_DATA', 'indicators.pkl'),
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'bh_with_crawled_text.pkl'),
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'bh_with_patent_db.pkl'),
+        ],
+        target=[
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_crawled_text.pkl'
+            ),
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_patent_db.pkl'
+            ),
+        ],
+        name='replicate_results_of_bh2007',
     )
 
     # Tests
     ctx(
         rule='pytest ../src/analysis --no-cov',
         deps=[
-            ctx.path_to(ctx, 'OUT_ANALYSIS', 'replication_bh.pkl'),
+            # Modules
+            ctx.path_to(ctx, 'IN_ANALYSIS', 'test_analysis.py'),
+            # Data
+            ctx.path_to(ctx, 'IN_DATA_EXTERNAL', 'bh2007_table_1.xlsx'),
+            ctx.path_to(ctx, 'OUT_DATA', 'patent.pkl'),
+            ctx.path_to(ctx, 'OUT_ANALYSIS', 'bh_with_patent_db.pkl'),
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_crawled_text.pkl'
+            ),
+            ctx.path_to(
+                ctx, 'OUT_ANALYSIS', 'replication_bh_with_patent_db.pkl'
+            ),
         ],
         name='test_analysis',
     )

@@ -1,75 +1,83 @@
 """Prepare data from Bessen and Hunt (2007)."""
 
 import re
+
 import pandas as pd
+
 from bld.project_paths import project_paths_join as ppj
-from src.data_management.scrape_patents import multiprocessed
-from src.data_management.scrape_patents import scrape_patent_info
+from src.data_management.scrape_patents import (
+    multiprocessed,
+    scrape_patent_info,
+)
 
 
-def change_dtypes(df):
-    for col in ['CLASSIFICATION_ALGORITHM', 'CLASSIFICATION_MANUAL']:
-        df[col] = df[col].astype('category')
-    df.CLAIMS_NUMBER = pd.to_numeric(
-        df.CLAIMS_NUMBER, errors='coerce', downcast='unsigned'
-    )
-
-    return df
-
-
-def create_indicators(df):
-    for indicator in [
-        'software',
-        'computer',
-        'program',
-        'chip',
-        'semiconductor',
-        'semi-conductor',
-        'bus',
-        'circuit',
-        'circuitry',
-        'antigen',
-        'antigenic',
-        'chromatography',
-    ]:
-        for part in ['TITLE', 'ABSTRACT', 'DESCRIPTION']:
-            df[part + '_' + indicator.replace('-', '_').upper()] = df[
-                part
-            ].str.contains(r'\b' + indicator + r'\b', flags=re.IGNORECASE)
-
-    return df
+INDICATORS = [
+    'software',
+    'computer',
+    'program',
+    'chip',
+    'semiconductor',
+    'semi-conductor',
+    'bus',
+    'circuit',
+    'circuitry',
+    'antigen',
+    'antigenic',
+    'chromatography',
+]
 
 
-if __name__ == '__main__':
+def create_indicators(df_source, column: str, df_out=None):
+    if df_out is None:
+        df_out = df_source
+
+    for indicator in INDICATORS:
+        df_out[column + '_' + indicator.replace('-', '_').upper()] = df_source[
+            column
+        ].str.contains(r'\b' + indicator + r'\b', flags=re.IGNORECASE)
+
+    return df_out
+
+
+def main():
     # Read the dataset of BH2007
     df = pd.read_stata(ppj('IN_DATA_EXTERNAL', 'bessen_hunt_2007.dta'))
 
     # Setting the correct column names
-    dict_columns = dict()
-    dict_columns['patent'] = 'ID'
-    dict_columns['sw'] = 'CLASSIFICATION_MANUAL'
-    dict_columns['mowpat'] = 'CLASSIFICATION_MOWERY'
-    dict_columns['swpat2'] = 'CLASSIFICATION_ALGORITHM'
+    dict_columns = {
+        'patent': 'ID',
+        'sw': 'CLASSIFICATION_BASE',
+        'mowpat': 'CLASSIFICATION_MOWERY',
+        'swpat2': 'CLASSIFICATION_ALGORITHM',
+    }
 
     df.rename(columns=dict_columns, inplace=True)
 
-    # Splitting df.classification_manual because of entries with 2 as 0 and 1
-    df['CLASSIFICATION_MANUAL_STRICTER'] = df.CLASSIFICATION_MANUAL == 1
-    df['CLASSIFICATION_MANUAL_LOOSER'] = (df.CLASSIFICATION_MANUAL == 1) | (
-        df.CLASSIFICATION_MANUAL == 2
-    )
-
-    # Drop the former manual classification
-    df.drop('CLASSIFICATION_MANUAL', axis=1, inplace=True)
+    # Split the original manual classification. The first is the one used in
+    # the paper.
+    df['CLASSIFICATION_MANUAL'] = df.CLASSIFICATION_BASE.isin([1, 2])
+    df['CLASSIFICATION_MANUAL_ALT'] = df.CLASSIFICATION_BASE.eq(1)
 
     # Setting the correct dtypes
     df = df[df.columns.difference(['ID'])].astype(bool).join(df.ID)
+
+    # Convert booleans to labels
+    df.replace({False: 'Non-Software', True: 'Software'}, inplace=True)
+
+    object_cols = df.select_dtypes(object).columns.tolist()
+    df[object_cols] = df[object_cols].astype('category')
+
+    # Exclude patent which is not available anymore
+    df = df.loc[~df.ID.eq(5785646)]
+
+    df.to_pickle(ppj('OUT_DATA', 'bh.pkl'))
 
     # Crawl information from Google and append to existing data
     out = multiprocessed(scrape_patent_info, df.ID.values)
     out = pd.DataFrame(
         out,
         columns=[
+            'ID',
             'TITLE',
             'ABSTRACT',
             'DESCRIPTION',
@@ -77,39 +85,13 @@ if __name__ == '__main__':
             'CLAIMS_NUMBER',
         ],
     )
-    df = df.join(out)
+    df = df.merge(out, on='ID', how='inner', validate='1:1')
 
-    # Drop unnecessary columns
-    df.drop(
-        columns=['CLASSIFICATION_MOWERY', 'CLASSIFICATION_MANUAL_STRICTER'],
-        inplace=True,
-    )
-    # Drop incomplete data
-    df.dropna(inplace=True)
+    for column in ['ABSTRACT', 'DESCRIPTION', 'TITLE']:
+        df = create_indicators(df, column)
 
-    # Rename columns
-    df = df.rename(
-        columns={'CLASSIFICATION_MANUAL_LOOSER': 'CLASSIFICATION_MANUAL'}
-    )
+    df.to_pickle(ppj('OUT_DATA', 'bh_with_crawled_text.pkl'))
 
-    # Convert booleans to labels
-    df.replace({False: 'Non-Software', True: 'Software'}, inplace=True)
 
-    df = change_dtypes(df)
-
-    df.to_pickle(ppj('OUT_DATA', 'bh_text.pkl'))
-
-    df = create_indicators(df)
-
-    df.drop(
-        columns=[
-            'TITLE',
-            'ABSTRACT',
-            'DESCRIPTION',
-            'CLAIMS',
-            'CLAIMS_NUMBER',
-        ],
-        inplace=True,
-    )
-
-    df.to_pickle(ppj('OUT_DATA', 'bh_bool.pkl'))
+if __name__ == '__main__':
+    main()

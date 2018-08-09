@@ -3,18 +3,16 @@
 """This module contains pipelines to build prediction models.
 
 """
+from sklearn.decomposition import PCA
 # fmt: off
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.feature_selection import SelectFromModel, SelectKBest, chi2
 from sklearn.linear_model import LogisticRegression
-from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import ExtraTreesClassifier
 
 from src.analysis.auxiliary import identity
 from src.analysis.transformers import NLTKPreprocessor
-
 
 # This is the original classifier used in the thesis
 OriginalClassifier = Pipeline([
