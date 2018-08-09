@@ -58,23 +58,17 @@ in the following way:
 Applying the algorithm on the whole patent corpus, we get the following
 distributions of patents and software versus non-software patents.
 
+**Absolute number of Utility Patents**
+
 .. image:: _static/fig-patents-distribution.png
-    :align: center
-    :width: 600px
-    :height: 400px
-    :caption: Absolute number of Utility Patents
+
+**Absolute Number of Software vs. Non-Software Patents**
 
 .. image:: _static/fig-patents-distribution-vs.png
-    :align: center
-    :width: 600px
-    :height: 400px
-    :caption: Absolute Number of Software vs. Non-Software Patents
+
+**Relative Number of Software vs. Non-Software Patents**
 
 .. image:: _static/fig-patents-distribution-vs-shares.png
-    :align: center
-    :width: 600px
-    :height: 400px
-    :caption: Relative Number of Software vs. Non-Software Patents
 
 
 List of Analyses and Todos
