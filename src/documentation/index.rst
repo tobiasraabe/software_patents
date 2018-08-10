@@ -1,9 +1,10 @@
-Welcome to the Identification Strategies of Software Patents project's documentation!
-=====================================================================================
+Identification Strategies of Software Patents Documentation!
+============================================================
 
 .. toctree::
     :maxdepth: 2
 
     introduction
+    data
     compare_replication.ipynb
     zreferences

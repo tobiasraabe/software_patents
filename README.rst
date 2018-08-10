@@ -1,5 +1,15 @@
+Identification of Software Patents
+==================================
+
+.. image:: https://travis-ci.com/tobiasraabe/software_patents.svg?branch=master
+    :target: https://travis-ci.com/tobiasraabe/software_patents
+
+.. image:: https://pyup.io/repos/github/tobiasraabe/software_patents/shield.svg
+    :target: https://pyup.io/repos/github/tobiasraabe/software_patents/
+    :alt: Updates
+
 Introduction
-============
+------------
 
 This project deals with the identification of software patents and combines
 multiple approaches from simple algorithms to novel machine learning models to
@@ -7,7 +17,7 @@ achieve this goal.
 
 
 Background
-==========
+----------
 
 The origin of this project was a Bachelor's thesis built on the algorithmic
 approach of [BH2007]_. The authors wanted to estimate the number of software
@@ -63,7 +73,7 @@ distributions of patents and software versus non-software patents.
 .. raw:: html
 
         <p align="center">
-            <img src="_static/fig-patents-distribution.png" 
+            <img src="_static/fig-patents-distribution.png"
             width="600" height="400">
         </p>
 
@@ -86,21 +96,50 @@ distributions of patents and software versus non-software patents.
         </p>
 
 
-List of Analyses and Todos
-==========================
+Installation
+------------
 
-The are many types of analyses which are already implemented or planned.
+To work on the project yourself, clone the repository on your disk with
 
-- [x] Replication of the algorithm of [BH2007]_.
-- [ ] Replacing old results of Random Forest implementation with a current
-  implementation.
-- [ ] Improving the algorithm of Bessen and Hunt (2007) on the same indicator
-  data with machine learning methods.
-- [ ] Machine and deep learning techniques using textual data.
-- [ ] Network analysis of patents with the citation data at [PATENTSVIEW]_.
+.. code-block:: bash
+
+    $ git clone https://github.com/tobiasraabe/software_patents
+
+After that create an environment with ``conda`` and activate it by running
+
+.. code-block:: bash
+
+    $ conda env create -n sp -f environment.yml
+    $ activate sp
+
+Then, download the data. If you want to download only the files for reproducing
+the analysis based on the indicators, run the following commands to download
+the data and to validate the files:
+
+.. code-block:: bash
+
+    $ python prepare_data_for_project download --subset replication
+    $ python prepare_data_for_project validate
+
+(If you want to have the raw data or everything, use ``--subset raw`` or
+``--subset all``. Note that, you need about 60GB of free space on your disk.
+Furthermore, handling the raw data requires an additional step where the files
+are splitted into smaller chunks, so that they can fit into the memory of your
+machine. These steps require knowledge about `Dask
+<https://dask.pydata.org/en/latest/>`_. You can find more on this `here
+<https://github.com/tobiasraabe/software_patents/blob/master/src/documentation/
+data.rst>`_.)
+
+Then, run the following two commands to replicate the results.
+
+.. code-block:: bash
+
+    $ python waf.py configure distclean
+    $ python waf.py build
 
 
-.. rubric:: References
+References
+----------
 
 .. [BH2007] https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x
 .. [PATENTSVIEW] http://www.patentsview.org/download/

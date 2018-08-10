@@ -97,7 +97,7 @@ FILES_REPLICATION: Dict[str, List[str]] = {
         f'{DB_DOWNLOAD_LINK}atu4974la2p8d5s/patent.pkl?dl=0',
         'a6ad32258040fa6bdf7abd583038ceec1adae6ab19f028c9a98ab3473fd9b6fd',
     ],
-    'summary.pkl': [
+    'indicators_summary.pkl': [
         f'{DB_DOWNLOAD_LINK}8mffjyvintl757a/indicators_summary.pkl?dl=0',
         '280081912bee1676638572fe623954c2b42480e1616043fcb0f63f199f3b5244',
     ],
@@ -503,7 +503,7 @@ def cli():
     '--subset',
     type=click.Choice(['all', 'replication', 'raw']),
     default='replication',
-    help='Download raw data (>40GB), replication data (<500MB) or both.',
+    help='Download raw data (~60GB), replication data (<750MB) or both.',
 )
 def download(subset):
     """Download files specified in ``URLS``."""
@@ -523,7 +523,7 @@ def download(subset):
 @cli.command()
 def validate():
     """Validate downloads with hashes in ``HASHES``."""
-    click.echo('### Start validating required files.\n')
+    click.echo('### Start validating existing files.\n')
     files = {**FILES_RAW, **FILES_REPLICATION}
     for filename, (_, hash) in files.items():
         validate_file(filename, hash)
@@ -537,7 +537,7 @@ def split():
     The chunk size is chosen so that files are about 100MB big.
 
     """
-    click.echo('### Start splitting required files.\n')
+    click.echo('### Start splitting predefined files.\n')
     for filename in FILES_RAW.keys():
         if 'detail_desc_text' in filename:
             split_detail_desc_text(filename)
