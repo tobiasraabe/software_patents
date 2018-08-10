@@ -29,26 +29,24 @@ needs_sphinx = '1.6'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.ifconfig',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'nbsphinx',
     'sphinxcontrib.bibtex',
+    'nbsphinx',
+    # bug fix for https://github.com/spatialaudio/nbsphinx/issues/24
+    'IPython.sphinxext.ipython_console_highlighting',
 ]
 
 suppress_warnings = ['app.add_directive', 'app.add_node', 'app.add_role']
 
 autodoc_mock_imports = [
     'bld',
-    'lightgbm',
     'matplotlib',
-    'missingno',
     'numpy',
     'pandas',
     'scipy',
-    'seaborn',
     'sklearn',
 ]
 
@@ -125,17 +123,7 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    'canonical_url': '',
-    'analytics_id': '',
-    'logo_only': False,
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-}
+# html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []

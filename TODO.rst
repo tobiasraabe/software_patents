@@ -13,3 +13,6 @@ The are many types of analyses which are already implemented or planned.
   data with machine learning methods.
 - [ ] Machine and deep learning techniques using textual data.
 - [ ] Network analysis of patents with the citation data at [PATENTSVIEW]_.
+
+.. [BH2007] https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x
+.. [PATENTSVIEW] http://www.patentsview.org/download/
