@@ -65,6 +65,12 @@ in the following way:
 | **Not Retrieved** |       12 |          337 |
 +-------------------+----------+--------------+
 
+Relevant refers to software patents according to the  manual
+classification whereas retrieved indicates software patents 
+detected by the algorithm. The upper left corner can also be called
+true-positives whereas the lower right corner shows the number of
+true-negatives.
+
 Applying the algorithm on the whole patent corpus, we get the following
 distributions of patents and software versus non-software patents.
 
