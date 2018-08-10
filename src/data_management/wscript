@@ -52,7 +52,7 @@ def build(ctx):
             'patent.pkl',
         ]
     ]
-    if not all([path.exists() for path in paths]):
+    if not all(path.exists() for path in paths):
         ctx(
             features='run_py_script',
             source='prepare_patents.py',

@@ -50,10 +50,7 @@ def test_equality_of_replication_with_crawled_texts_and_patent_db():
         ppj('OUT_ANALYSIS', 'replication_bh_with_patent_db.pkl')
     )
 
-    columns = [
-        'ID',
-        'CLASSIFICATION_REPLICATION',
-    ]
+    columns = ['ID', 'CLASSIFICATION_REPLICATION']
     bh = bh[columns]
     db = db[columns]
 

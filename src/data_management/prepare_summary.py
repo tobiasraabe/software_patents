@@ -25,7 +25,7 @@ def process_data():
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
-    client = Client(cluster)
+    client = Client(cluster)  # noqa: F841
 
     df = dd.read_parquet(ppj('IN_DATA_RAW', f'brf_sum_text_*'))
 
@@ -34,9 +34,7 @@ def process_data():
     out = create_indicators(df, 'SUMMARY', out)
 
     out = out.assign(
-        SUMMARY=df['SUMMARY'].where(
-            cond=out.ID.isin(bh.ID), other=np.nan
-        )
+        SUMMARY=df['SUMMARY'].where(cond=out.ID.isin(bh.ID), other=np.nan)
     )
 
     out.to_parquet(
@@ -47,9 +45,7 @@ def process_data():
 def main():
     process_data()
 
-    df = dd.read_parquet(
-        ppj('OUT_DATA', f'indicators_summary.parquet')
-    )
+    df = dd.read_parquet(ppj('OUT_DATA', f'indicators_summary.parquet'))
     df = df.compute()
 
     df.to_pickle(ppj('OUT_DATA', f'indicators_summary.pkl'))

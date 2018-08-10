@@ -24,7 +24,7 @@ def process_data():
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
-    client = Client(cluster)
+    client = Client(cluster)  # noqa: F841
 
     df = dd.read_parquet(ppj('IN_DATA_RAW', 'patent_*.parquet'))
 
@@ -39,7 +39,7 @@ def process_data():
                 section: df[section].where(
                     cond=out.ID.isin(bh.ID), other=np.nan
                 )
-            }
+            },
         )
 
         out.to_parquet(

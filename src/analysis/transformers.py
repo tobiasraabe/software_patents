@@ -18,7 +18,7 @@ class NLTKPreprocessor(BaseEstimator, TransformerMixin):
         return self
 
     def inverse_transform(self, X):
-        return [" ".join(doc) for doc in X]
+        return [' '.join(doc) for doc in X]
 
     def transform(self, X):
         return [list(self.tokenize(doc)) for doc in X]

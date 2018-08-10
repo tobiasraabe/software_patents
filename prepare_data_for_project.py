@@ -11,7 +11,7 @@ import requests
 
 from tqdm import tqdm
 
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 
 PV_LAST_UPDATE = '20180528'
 """str: Date of newest data release."""
@@ -525,8 +525,8 @@ def validate():
     """Validate downloads with hashes in ``HASHES``."""
     click.echo('### Start validating existing files.\n')
     files = {**FILES_RAW, **FILES_REPLICATION}
-    for filename, (_, hash) in files.items():
-        validate_file(filename, hash)
+    for filename, (_, hash_value) in files.items():
+        validate_file(filename, hash_value)
     click.echo('\n### End\n')
 
 

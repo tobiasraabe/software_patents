@@ -27,7 +27,7 @@ def process_data(part: str):
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
-    client = Client(cluster)
+    client = Client(cluster)  # noqa: F841
 
     df = dd.read_parquet(ppj('IN_DATA_RAW', f'detail_desc_text_{part}_*'))
 

@@ -16,15 +16,15 @@ import sys
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath("../.."))
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- General configuration ----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = "1.6"
+needs_sphinx = '1.6'
 
 # Add any Sphinx extension module names here, as strings.
-# They can be extensions coming with Sphinx (named "sphinx.ext.*")
+# They can be extensions coming with Sphinx (named 'sphinx.ext.*')
 # or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
@@ -57,22 +57,22 @@ autodoc_mock_imports = [
 # autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = ".rst"
+source_suffix = '.rst'
 
 # The encoding of source files.
-source_encoding = "utf-8"
+source_encoding = 'utf-8'
 
 # The master toctree document.
-master_doc = "index"
+master_doc = 'index'
 
 # General information about the project.
-project = u"Identification Strategies of Software Patents"
-copyright = u"2015-, Tobias Raabe"
+project = u'Identification Strategies of Software Patents'
+copyright = u'2015-, Tobias Raabe'  # noqa: A001
 
-# The version info for the project you"re documenting, acts as replacement for
+# The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
@@ -87,9 +87,9 @@ release = '0.1'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
-# today = ""
+# today = '
 # Else, today_fmt is used as the format for a strftime call.
-today_fmt = "%d %B %Y"
+today_fmt = '%d %B %Y'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -98,7 +98,7 @@ exclude_patterns = ['_build', '**.ipynb_checkpoints']
 # The reST default role (used for this markup: `text`) to use for all
 # documents. default_role = None
 
-# If true, "()" will be appended to :func: etc. cross-reference text.
+# If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
@@ -110,10 +110,10 @@ add_module_names = False
 show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "sphinx"
+pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
-modindex_common_prefix = ["src."]
+modindex_common_prefix = ['src.']
 
 
 # -- Options for HTML output --------------------------------------------------
@@ -141,7 +141,7 @@ html_theme_options = {
 # html_theme_path = []
 
 # The name for this set of Sphinx documents.  If None, it defaults to
-# "<project> v<release> documentation".
+# '<project> v<release> documentation'.
 # html_title = None
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
@@ -158,12 +158,12 @@ html_theme_options = {
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ["_static"]
+# so a file named 'default.css' will overwrite the builtin 'default.css'.
+# html_static_path = ['_static']
 
-# If not "", a "Last updated on:" timestamp is inserted at every page bottom,
+# If not ', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-# html_last_updated_fmt = "%b %d, %Y"
+# html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
@@ -188,35 +188,35 @@ html_theme_options = {
 # If true, links to the reST sources are added to the pages.
 # html_show_sourcelink = True
 
-# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
+# If true, 'Created using Sphinx' is shown in the HTML footer. Default is True.
 # html_show_sphinx = True
 
-# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
+# If true, '(C) Copyright ...' is shown in the HTML footer. Default is True.
 html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-# html_use_opensearch = ""
+# html_use_opensearch = ''
 
 # This is the file name suffix for HTML files (e.g. ".xhtml").
-html_file_suffix = ".html"
+html_file_suffix = '.html'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "somedoc"
+htmlhelp_basename = 'somedoc'
 
 
 # -- Options for LaTeX output -------------------------------------------------
 
 latex_elements = {
-    # The paper size ("letterpaper" or "a4paper").
-    "papersize": "a4paper",
-    # The font size ("10pt", "11pt" or "12pt").
-    "pointsize": "11pt",
-    # Remove the "Release ..." subtitle from the LaTeX frontpage.
-    "releasename": "",
+    # The paper size ('letterpaper' or 'a4paper').
+    'papersize': 'a4paper',
+    # The font size ('10pt', '11pt' or '12pt').
+    'pointsize': '11pt',
+    # Remove the 'Release ...' subtitle from the LaTeX frontpage.
+    'releasename': '',
     # Additional stuff for the LaTeX preamble.
-    # "preamble": "",
+    # 'preamble': ',
     # Add options to remove blank pages
     'classoptions': ', openany, oneside',
 }
@@ -226,11 +226,12 @@ latex_elements = {
 # list will only consist of one tuple for the master file.
 latex_documents = [
     (
-        "index",
-        "documentation.tex",
-        "Documentation of the Identification Strategies of Software Patents project",
-        "Tobias Raabe",
-        "manual",
+        'index',
+        'documentation.tex',
+        'Documentation of the Identification Strategies of Software Patents '
+        'project',
+        'Tobias Raabe',
+        'manual',
     )
 ]
 
@@ -266,7 +267,9 @@ nbsphinx_execute = 'never'
 # nbsphinx_kernel_name = 'python3'
 
 # List of arguments to be passed to the kernel that executes the notebooks:
-# nbsphinx_execute_arguments = ['--InlineBackend.figure_formats={"png", "pdf"}']
+# nbsphinx_execute_arguments = [
+#     '--InlineBackend.figure_formats={"png", "pdf"}'
+# ]
 
 # If True, the build process is continued even if an exception occurs:
 nbsphinx_allow_errors = False
@@ -296,7 +299,11 @@ nbsphinx_allow_errors = False
 
 #         This page was generated from `{{ docname }}`__.
 #         Interactive online version:
-#         :raw-html:`<a href="https://mybinder.org/v2/gh/spatialaudio/nbsphinx/{{ env.config.release }}?filepath={{ docname }}"><img alt="Binder badge" src="https://mybinder.org/badge.svg" style="vertical-align:text-bottom"></a>`
+#         :raw-html:`<a
+#             href="https://mybinder.org/v2/gh/spatialaudio/nbsphinx/{{
+#             env.config.release }}?filepath={{ docname }}"><img alt="Binder
+#             badge" src="https://mybinder.org/badge.svg"
+#             style="vertical-align:text-bottom"></a>`
 
 #     __ https://github.com/spatialaudio/nbsphinx/blob/
 #         {{ env.config.release }}/{{ docname }}
