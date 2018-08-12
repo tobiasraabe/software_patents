@@ -66,7 +66,7 @@ in the following way:
 +-------------------+----------+--------------+
 
 Relevant refers to software patents according to the  manual
-classification whereas retrieved indicates software patents 
+classification whereas retrieved indicates software patents
 detected by the algorithm. The upper left corner can also be called
 true-positives whereas the lower right corner shows the number of
 true-negatives.
@@ -74,29 +74,26 @@ true-negatives.
 Applying the algorithm on the whole patent corpus, we get the following
 distributions of patents and software versus non-software patents.
 
-**Absolute number of Utility Patents**
-
 .. raw:: html
 
         <p align="center">
+            <b>Absolute Number of Utility Patents</b><br>
             <img src="_static/fig-patents-distribution.png"
             width="600" height="400">
         </p>
 
-**Absolute Number of Software vs. Non-Software Patents**
-
 .. raw:: html
 
         <p align="center">
+            <b>Absolute Number of Software vs. Non-Software Patents</b><br>
             <img src="_static/fig-patents-distribution-vs.png"
             width="600" height="400">
         </p>
 
-**Relative Number of Software vs. Non-Software Patents**
-
 .. raw:: html
 
         <p align="center">
+            <b>Relative Number of Software vs. Non-Software Patents</b><br>
             <img src="_static/fig-patents-distribution-vs-shares.png"
             width="600" height="400">
         </p>
@@ -105,7 +102,7 @@ distributions of patents and software versus non-software patents.
 Installation
 ------------
 
-To work on the project yourself, clone the repository on your disk with
+To play with the project, clone the repository to your disk with
 
 .. code-block:: bash
 
@@ -118,9 +115,8 @@ After that create an environment with ``conda`` and activate it by running
     $ conda env create -n sp -f environment.yml
     $ activate sp
 
-Then, download the data. If you want to download only the files for reproducing
-the analysis based on the indicators, run the following commands to download
-the data and to validate the files:
+If you only want to download the files for reproducing the analysis based on
+the indicators, run the following commands for downloading and validating:
 
 .. code-block:: bash
 
