@@ -35,7 +35,7 @@ dependencies:
     - pytest-isort==0.2.0
     - pytest-pythonpath==0.7.2
     - sphinx==1.7.7
-    - sphinx-rtd-theme==0.4.0
+    - sphinx-rtd-theme==0.4.1
     - sphinxcontrib-bibtex==0.4.0
     - tox==3.1.2
     - tqdm==4.24.0
