@@ -73,3 +73,5 @@ dask-worker-space
 *.parquet
 *.zip
 *.pkl
+*.bib.bak
+*.bib.sav
