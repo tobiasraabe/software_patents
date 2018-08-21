@@ -22,10 +22,11 @@ Background
 The origin of this project was a Bachelor's thesis built on the algorithmic
 approach of [BH2007]_. The authors wanted to estimate the number of software
 patents and find out where software patents are used and what economic
-indicators are correlated with having more software patents.
+indicators are correlated with the amount of software patents in certain
+industries.
 
 To classify patents into categories of software and non-software, the authors
-developed a simple alogrithm based on the evaluation of a random sample of
+developed a simple algorithm based on the evaluation of a random sample of
 patents. The algorithm is as follows:
 
 ..
@@ -40,9 +41,9 @@ patents. The algorithm is as follows:
 
     ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 
-Whereas title is simply identified, specification is defined as the abstract
-and the description of the patent ([PATENTSVIEW]_ separates the description in
-[BH2007]_ definition into description and summary).
+Whereas the title is simply identified, the specification is defined as the
+abstract and the description of the patent ([PATENTSVIEW]_ separates the
+description in [BH2007]_ definition into description and summary).
 
 To replicate the algorithm, the project relies on two strategies. The first
 data source is `Google Patents <https://patents.google.com/>`_ where the texts
