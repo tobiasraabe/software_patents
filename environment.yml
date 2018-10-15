@@ -12,7 +12,7 @@ dependencies:
   - scikit-learn=0.19.1
   - pip:
     - beautifulsoup4==4.6.3
-    - click==6.7
+    - click==7.0
     - doc8==0.8.0
     - flake8==3.5.0
     - flake8-bugbear==18.8.0
