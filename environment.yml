@@ -38,5 +38,5 @@ dependencies:
     - sphinx-rtd-theme==0.4.2
     - sphinxcontrib-bibtex==0.4.0
     - tox==3.5.3
-    - tqdm==4.27.0
+    - tqdm==4.28.1
     - xlrd==1.1.0
