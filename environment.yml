@@ -26,7 +26,7 @@ dependencies:
     - flake8-quotes==2.1.1
     - flake8-todo==0.7
     - matplotlib==3.2.0
-    - nbsphinx==0.4.2
+    - nbsphinx==0.5.1
     - pep8-naming==0.8.1
     - pybtex==0.22.2
     - pytest==4.2.0
