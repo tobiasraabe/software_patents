@@ -27,7 +27,7 @@ dependencies:
     - flake8-todo==0.7
     - matplotlib==3.2.1
     - nbsphinx==0.6.0
-    - pep8-naming==0.8.1
+    - pep8-naming==0.10.0
     - pybtex==0.22.2
     - pytest==4.2.0
     - pytest-black==0.3.3
