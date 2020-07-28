@@ -15,7 +15,7 @@ def plot_distribution_of_patents(df):
 
     ax.set_xticks(range(1975, 2019, 5))
 
-    ax.set_ylim(0, 330000)
+    ax.set_ylim(0, 330_000)
 
     ax.yaxis.set_major_formatter(
         plt.FuncFormatter(format_thousands_with_comma)
@@ -50,7 +50,7 @@ def plot_distribution_of_patents_software_vs_non_software(df):
 
     ax.set_xticks(range(1975, 2019, 5))
 
-    ax.set_ylim(0, 330000)
+    ax.set_ylim(0, 330_000)
 
     ax.yaxis.set_major_formatter(
         plt.FuncFormatter(format_thousands_with_comma)

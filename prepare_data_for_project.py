@@ -360,7 +360,7 @@ def split_patent(filename: str):
         for chunk in pd.read_table(
             Path('src', 'data', 'downloaded', filename),
             sep='\t',
-            chunksize=270000,
+            chunksize=270_000,
             usecols=[0, 1, 4, 5, 6, 7, 8],
             error_bad_lines=False,
             lineterminator='\n',

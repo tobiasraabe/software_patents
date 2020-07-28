@@ -1,6 +1,5 @@
-*********
 Changelog
-*********
+=========
 
 All notable changes to this project will be documented in this file.
 
@@ -9,10 +8,11 @@ The format is based on `Keep a Changelog
 Versioning <http://semver.org/spec/v2.0.0.html>`_ .
 
 Unreleased
-==========
+----------
 
 - Minor changes to the paper.
 - Replaced simple string matches with regular expressions to capture real words
   embedded in word boundaries.
 - Added new data source for all patents from `PatentsView
-  <http://www.patentsview.org>`_ as the old source was flawed due to not using regex
+  <http://www.patentsview.org>`_ as the old source was flawed due to not using
+  regex

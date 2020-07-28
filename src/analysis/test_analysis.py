@@ -25,7 +25,7 @@ def test_equality_of_bh2007_and_replication_with_crawled_texts():
     # Bessen, Hunt (2007) only in one case where the authors overlooked the
     # word `chromatography` in the description of the patent 5489660.
     assert different_classifications.shape[0] == 1
-    assert different_classifications.ID.eq(5489660).all()
+    assert different_classifications.ID.eq(5_489_660).all()
 
 
 def test_equality_of_bh2007_and_replication_with_patent_db():
@@ -112,7 +112,7 @@ def test_absolute_number_of_software_patents_between_1976_and_1999(sp):
 
     for decimal in [-6, -5]:
         assert npt.assert_almost_equal(
-            num_software_patents, 130650, decimal=decimal
+            num_software_patents, 130_650, decimal=decimal
         )
 
 

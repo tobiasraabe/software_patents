@@ -39,7 +39,7 @@ def process_data():
                 section: df[section].where(
                     cond=out.ID.isin(bh.ID), other=np.nan
                 )
-            },
+            }
         )
 
         out.to_parquet(

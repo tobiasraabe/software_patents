@@ -28,13 +28,13 @@ def test_bh():
     assert false_positive == 0.16
 
     false_negative = matrix[1, 0] / (matrix[1, 0] + matrix[1, 1])
-    npt.assert_almost_equal(false_negative, 0.2222222222, decimal=10)
+    npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
 def test_patent():
     df = pd.read_pickle(ppj('OUT_DATA', 'patent.pkl'))
 
-    assert df.shape == (6024729, 2)
+    assert df.shape == (6_024_729, 2)
     assert df.notna().all().all()
 
     # Assert that the total number of patents is similar to the numbers in

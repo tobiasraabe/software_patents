@@ -68,7 +68,7 @@ def main():
     df[object_cols] = df[object_cols].astype('category')
 
     # Exclude patent which is not available anymore
-    df = df.loc[~df.ID.eq(5785646)]
+    df = df.loc[~df.ID.eq(5_785_646)]
 
     df.to_pickle(ppj('OUT_DATA', 'bh.pkl'))
 
