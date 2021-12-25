@@ -1,8 +1,21 @@
 name: sp
+
 channels:
   - conda-forge
+  - nodefaults
+
 dependencies:
-  - python=3.8
+  - python >= 3.8
+  - pip
+  - setuptools_scm
+  - toml
+
+  - pytask
+  - pytask-latex
+  - pytask-parallel
+
+  # Dependencies
+  - black
   - dask
   - fastparquet
   - jupyterlab
@@ -11,17 +24,13 @@ dependencies:
   - python-snappy
   - scikit-learn
   - beautifulsoup4
-  - click
   - matplotlib
-  - nbsphinx
   - pre-commit
-  - pybtex
   - pytest
   - pytest-cov
-  - pytest-pythonpath
-  - sphinx
-  - sphinx-rtd-theme
-  - sphinxcontrib-bibtex
   - tox
   - tqdm
   - xlrd
+
+  - pip:
+    - -e .

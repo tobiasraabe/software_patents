@@ -1,3 +1,0 @@
-.. include:: ../../TODO.rst
-
-.. todolist::
