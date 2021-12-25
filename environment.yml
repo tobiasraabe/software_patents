@@ -30,7 +30,7 @@ dependencies:
   - pytest-cov
   - tox
   - tqdm
-  - xlrd
+  - openpyxl
 
   - pip:
     - -e .
