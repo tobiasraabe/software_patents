@@ -137,8 +137,7 @@ Then, run the following two commands to replicate the results.
 
 .. code-block:: bash
 
-    $ python waf.py configure distclean
-    $ python waf.py build
+    $ pytask
 
 
 References
