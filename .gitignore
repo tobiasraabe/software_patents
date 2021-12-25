@@ -75,5 +75,5 @@ dask-worker-space
 *.pkl
 *.bib.bak
 *.bib.sav
-src/_version.py
+src/software_patents/_version.py
 *.egg-info
