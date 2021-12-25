@@ -2,6 +2,7 @@ include matplotlibrc
 include *.py
 include *.rst
 include *.yml
+include *.yaml
 include pytask.ini
 include tox.ini
 recursive-include _static *.png
