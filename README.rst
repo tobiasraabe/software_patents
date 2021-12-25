@@ -1,6 +1,13 @@
 Identification of Software Patents
 ==================================
 
+.. image:: https://results.pre-commit.ci/badge/github/tobiasraabe/software_patents/main.svg
+    :target: https://results.pre-commit.ci/latest/github/tobiasraabe/software_patents/main
+    :alt: pre-commit.ci status
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+
 
 Introduction
 ------------
