@@ -1,0 +1,18 @@
+include matplotlibrc
+include *.py
+include *.rst
+include *.yml
+include *.yaml
+include pytask.ini
+include tox.ini
+recursive-include _static *.png
+recursive-include src *.bib
+recursive-include src *.dta
+recursive-include src *.gitkeep
+recursive-include src *.ipynb
+recursive-include src *.png
+recursive-include src *.py
+recursive-include src *.rst
+recursive-include src *.tex
+recursive-include src *.vsdx
+recursive-include src *.xlsx

@@ -1,12 +1,13 @@
 Identification of Software Patents
 ==================================
 
-.. image:: https://travis-ci.com/tobiasraabe/software_patents.svg?branch=master
-    :target: https://travis-ci.com/tobiasraabe/software_patents
+.. image:: https://results.pre-commit.ci/badge/github/tobiasraabe/software_patents/main.svg
+    :target: https://results.pre-commit.ci/latest/github/tobiasraabe/software_patents/main
+    :alt: pre-commit.ci status
 
-.. image:: https://pyup.io/repos/github/tobiasraabe/software_patents/shield.svg
-    :target: https://pyup.io/repos/github/tobiasraabe/software_patents/
-    :alt: Updates
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+
 
 Introduction
 ------------
@@ -124,12 +125,11 @@ the indicators, run the following commands for downloading and validating:
     $ python prepare_data_for_project download --subset replication
     $ python prepare_data_for_project validate
 
-(If you want to have the raw data or everything, use ``--subset raw`` or
-``--subset all``. Note that, you need about 60GB of free space on your disk.
-Furthermore, handling the raw data requires an additional step where the files
-are splitted into smaller chunks, so that they can fit into the memory of your
-machine. These steps require knowledge about `Dask
-<https://dask.pydata.org/en/latest/>`_. You can find more on this `here
+(If you want to have the raw data or everything, use ``--subset raw`` or ``--subset
+all``. Note that, you need about 60GB of free space on your disk. Furthermore, handling
+the raw data requires an additional step where the files are split into smaller chunks,
+so that they can fit into the memory of your machine. These steps require knowledge
+about `Dask <https://dask.pydata.org/en/latest/>`_. You can find more on this `here
 <https://github.com/tobiasraabe/software_patents/blob/master/src/documentation/
 data.rst>`_.)
 
