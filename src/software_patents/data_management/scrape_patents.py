@@ -4,7 +4,7 @@ import multiprocessing as mp
 import numpy as np
 import requests
 from bs4 import BeautifulSoup
-from software_patents import PROCESSES_SCRAPE_PATENTS
+from software_patents.config import PROCESSES_SCRAPE_PATENTS
 
 
 def multiprocessed(func, inputs, processes=PROCESSES_SCRAPE_PATENTS):
