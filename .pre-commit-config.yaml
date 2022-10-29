@@ -95,6 +95,8 @@ repos:
     rev: "0.48"
     hooks:
     -   id: check-manifest
+        args: [--no-build-isolation]
+        additional_dependencies: [setuptools-scm, toml]
 -   repo: https://github.com/guilatrova/tryceratops
     rev: v1.1.0
     hooks:
