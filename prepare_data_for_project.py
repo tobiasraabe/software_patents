@@ -1,4 +1,6 @@
 """This script allows to download the necessary data for running the project."""
+from __future__ import annotations
+
 import csv
 import hashlib
 from pathlib import Path

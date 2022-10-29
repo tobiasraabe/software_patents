@@ -1,10 +1,11 @@
 """Prepare data from PatentsView.org on general information of patents.
 
 Note that the information is previously processed by ``download_data.py`` and
-``split_tsv_files.py`` so that many ``.parquet`` files reside in
-``src/data/raw``.
+``split_tsv_files.py`` so that many ``.parquet`` files reside in ``src/data/raw``.
 
 """
+from __future__ import annotations
+
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd

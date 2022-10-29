@@ -1,4 +1,6 @@
 """Contains code to scrape patents by patent ids."""
+from __future__ import annotations
+
 import multiprocessing as mp
 
 import numpy as np

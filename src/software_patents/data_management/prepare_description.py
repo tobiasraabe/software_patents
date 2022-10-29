@@ -8,6 +8,8 @@ TODO: Implement intermediate step where the fulltext of all 399 is also saved
 for manual inspection.
 
 """
+from __future__ import annotations
+
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd

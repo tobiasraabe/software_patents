@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytask
 from software_patents.config import BLD
 from software_patents.config import SRC

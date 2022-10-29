@@ -4,6 +4,8 @@ processed and downloaded files.
 The dynamic task creation needs to be better supported by pytask.
 
 """
+from __future__ import annotations
+
 import functools
 import shutil
 

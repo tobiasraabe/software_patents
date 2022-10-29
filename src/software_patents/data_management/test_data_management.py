@@ -1,4 +1,6 @@
 """This module performs some tests to assert that the data stays the same."""
+from __future__ import annotations
+
 import numpy.testing as npt
 import pandas as pd
 from sklearn.metrics import confusion_matrix
