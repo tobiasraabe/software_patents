@@ -1,4 +1,6 @@
 """This module contains code for merging indicators to one dataset."""
+from __future__ import annotations
+
 import pandas as pd
 import pytask
 from software_patents.config import BLD

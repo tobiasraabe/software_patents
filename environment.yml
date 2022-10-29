@@ -10,9 +10,9 @@ dependencies:
   - setuptools_scm
   - toml
 
-  - pytask
-  - pytask-latex
-  - pytask-parallel
+  - pytask >=0.2
+  - pytask-latex >=0.2
+  - pytask-parallel >=0.2
 
   # Dependencies
   - black

@@ -1,5 +1,5 @@
-"""This file classifies the patents of the original data of Bessen and Hunt
-(2007) according to their algorithm.
+"""This file classifies the patents of the original data of Bessen and Hunt (2007)
+according to their algorithm.
 
 The algorithm is defined as follows:
 
@@ -15,6 +15,8 @@ ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 ````
 
 """
+from __future__ import annotations
+
 import pandas as pd
 import pytask
 from software_patents.config import BLD

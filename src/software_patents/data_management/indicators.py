@@ -1,4 +1,6 @@
 """This module contains code for the indicators used by Bessen and Hunt."""
+from __future__ import annotations
+
 import re
 
 

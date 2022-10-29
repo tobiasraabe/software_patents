@@ -23,9 +23,6 @@ repos:
     -   id: python-no-eval
     -   id: python-no-log-warn
     -   id: python-use-type-annotations
-    -   id: rst-backticks
-    -   id: rst-directive-colons
-    -   id: rst-inline-touching-normal
     -   id: text-unicode-replacement-char
 -   repo: https://github.com/asottile/pyupgrade
     rev: v3.1.0
@@ -36,6 +33,7 @@ repos:
     rev: v3.8.5
     hooks:
     -   id: reorder-python-imports
+        args: [--py37-plus, --add-import, 'from __future__ import annotations']
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.1.0
     hooks:
@@ -49,6 +47,11 @@ repos:
     hooks:
     -   id: blacken-docs
         additional_dependencies: [black]
+-   repo: https://github.com/PyCQA/docformatter
+    rev: v1.5.0
+    hooks:
+    -   id: docformatter
+        args: [--in-place, --wrap-summaries, "88", --wrap-descriptions, "88", --blank]
 -   repo: https://github.com/PyCQA/flake8
     rev: 5.0.4
     hooks:
@@ -69,10 +72,15 @@ repos:
             pydocstyle,
             Pygments,
         ]
--   repo: https://github.com/PyCQA/doc8
-    rev: v1.0.0
+-   repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.14
     hooks:
-    -   id: doc8
+    -   id: mdformat
+        additional_dependencies: [
+            mdformat-gfm,
+            mdformat-black,
+        ]
+        args: [--wrap, "88"]
 -   repo: https://github.com/econchick/interrogate
     rev: 1.5.0
     hooks:
@@ -87,26 +95,12 @@ repos:
     rev: "0.48"
     hooks:
     -   id: check-manifest
+        args: [--no-build-isolation]
+        additional_dependencies: [setuptools-scm, toml]
 -   repo: https://github.com/guilatrova/tryceratops
     rev: v1.1.0
     hooks:
     -   id: tryceratops
-# -   repo: https://github.com/pre-commit/mirrors-mypy
-#     rev: 'v0.910-1'
-#     hooks:
-#     -   id: mypy
-#         args: [
-#             --no-strict-optional,
-#             --ignore-missing-imports,
-#         ]
-#         additional_dependencies: [
-#             types-attrs,
-#             types-click,
-#             types-requests,
-#             types-setuptools
-#         ]
-#         pass_filenames: false
-#         language_version: "3.9"
 -   repo: meta
     hooks:
     -   id: check-hooks-apply

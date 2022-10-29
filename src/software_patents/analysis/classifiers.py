@@ -1,4 +1,6 @@
 """This module contains pipelines to build prediction models."""
+from __future__ import annotations
+
 from sklearn.decomposition import PCA
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import RandomForestClassifier

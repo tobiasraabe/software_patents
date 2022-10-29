@@ -1,6 +1,7 @@
-"""This module tests the equality of the two algorithms in
-classifcation_bh2007.py and replication_bh2007.py as well as the data quality.
-"""
+"""This module tests the equality of the two algorithms in classifcation_bh2007.py and
+replication_bh2007.py as well as the data quality."""
+from __future__ import annotations
+
 import numpy.testing as npt
 import pandas as pd
 import pytest
@@ -82,8 +83,8 @@ def sp():
 def test_absolute_number_of_software_patents_between_1976_and_1999(sp):
     """Test number of software patents in the period from 1976 to 1999.
 
-    Bessen and Hunt (2007) state on p. 163 that they found 130,650 software
-    patents during this period.
+    Bessen and Hunt (2007) state on p. 163 that they found 130,650 software patents
+    during this period.
 
     """
     sp = sp.loc[sp.DATE.dt.year.le(1999) & sp.CLASSIFICATION_REPLICATION.eq("Software")]

@@ -1,4 +1,6 @@
 """This is the configuration of the project."""
+from __future__ import annotations
+
 import os
 from pathlib import Path
 

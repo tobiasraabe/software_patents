@@ -1,4 +1,6 @@
 """Prepare data from Bessen and Hunt (2007)."""
+from __future__ import annotations
+
 import pandas as pd
 import pytask
 from software_patents.config import BLD

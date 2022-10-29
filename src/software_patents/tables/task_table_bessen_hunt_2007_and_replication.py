@@ -1,4 +1,6 @@
 """This module contains code to produce confusion matrices."""
+from __future__ import annotations
+
 import pandas as pd
 import pytask
 from sklearn.metrics import confusion_matrix
