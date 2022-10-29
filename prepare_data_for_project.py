@@ -5,8 +5,6 @@ import csv
 import hashlib
 from pathlib import Path
 from time import time
-from typing import Dict
-from typing import List
 
 import click
 import pandas as pd
@@ -25,7 +23,7 @@ DB_DOWNLOAD_LINK = "http://dl.dropboxusercontent.com/s/"
 """str: Base url for downloading data from Dropbox."""
 
 
-FILES_RAW: Dict[str, List[str]] = {
+FILES_RAW: dict[str, list[str]] = {
     "brf_sum_text.tsv.zip": [
         f"{PV_DOWNLOAD_LINK}/brf_sum_text.tsv.zip",
         "bd3e6e8e7ee7034a3734d35086bc50afbeabe13da45a41b2ec855f013cea7de2",
@@ -66,7 +64,7 @@ that Powershell returns uppercase letters and Python lowercase.
 """
 
 
-FILES_REPLICATION: Dict[str, List[str]] = {
+FILES_REPLICATION: dict[str, list[str]] = {
     "indicators_abstract.pkl": [
         f"{DB_DOWNLOAD_LINK}ckleerbtm54ddpm/indicators_abstract.pkl?dl=0",
         "9b63982838f08f162af59019a3e68b33a3e87aaac97df637b98cf15d42530bcc",
