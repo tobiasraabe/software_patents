@@ -113,11 +113,11 @@ that Powershell returns uppercase letters and Python lowercase.
 """
 
 
-DOWNLOAD_FOLDER = Path("src", "data", "downloaded")
+DOWNLOAD_FOLDER = Path("src", "software_patents", "data", "downloaded")
 """pathlib.Path: Points to the target directory of downloads."""
-DATA_RAW_FOLDER = Path("src", "data", "raw")
+DATA_RAW_FOLDER = Path("src", "software_patents", "data", "raw")
 """pathlib.Path: Points to the target directory of raw files."""
-DATA_PROCESSED_FOLDER = Path("src", "data", "processed")
+DATA_PROCESSED_FOLDER = Path("src", "software_patents", "data", "processed")
 """pathlib.Path: Points to the target directory of processed files."""
 
 

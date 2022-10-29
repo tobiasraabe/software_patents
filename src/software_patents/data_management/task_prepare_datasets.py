@@ -75,7 +75,7 @@ if not path.exists():
             **{f"brf_sum_text_{i}": SRC / "data" / "raw" / f"brf_sum_text_{i}.parquet"},
         }
     )
-    produces = BLD / "data" / "indicators_summary.pkl"
+    produces = pytask.mark.produces(BLD / "data" / "indicators_summary.pkl")
     locals()["task_prepare_summary"] = produces(depends_on(prepare_summary))
 
 else:
