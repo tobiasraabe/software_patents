@@ -46,10 +46,10 @@ classification.
 Compared to the manual classification of the authors, the algorithm performed in the
 following way:
 
-+-------------------+----------+--------------+ | | Relevant | Not Relevant |
-+===================+==========+==============+ | **Retrieved** | > 42 | > 8 |
-+-------------------+----------+--------------+ | **Not Retrieved** | > 12 | > 337 |
-+-------------------+----------+--------------+
+|                   | Relevant | Not Relevant |
+|-------------------|:--------:|:------------:|
+| **Retrieved**     | 42       | 8            |
+| **Not Retrieved** | 12       | 337          |
 
 Relevant refers to software patents according to the manual classification whereas
 retrieved indicates software patents detected by the algorithm. The upper left corner
@@ -59,29 +59,23 @@ true-negatives.
 Applying the algorithm on the whole patent corpus, we get the following distributions of
 patents and software versus non-software patents.
 
-```{=html}
 <p align="center">
     <b>Absolute Number of Utility Patents</b><br>
     <img src="_static/fig-patents-distribution.png"
     width="600" height="400">
 </p>
-```
 
-```{=html}
 <p align="center">
     <b>Absolute Number of Software vs. Non-Software Patents</b><br>
     <img src="_static/fig-patents-distribution-vs.png"
     width="600" height="400">
 </p>
-```
 
-```{=html}
 <p align="center">
     <b>Relative Number of Software vs. Non-Software Patents</b><br>
     <img src="_static/fig-patents-distribution-vs-shares.png"
     width="600" height="400">
 </p>
-```
 
 ## Installation
 
@@ -121,12 +115,8 @@ $ pytask
 
 ## References
 
-::: {#citations}
-
-\[BH2007\]{#BH2007 .citation-label}
-
+[BH2007]
 : <https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x>
 
-\[PATENTSVIEW\]{#PATENTSVIEW .citation-label}
-
-: <http://www.patentsview.org/download/> :::
+[PATENTSVIEW]
+: <http://www.patentsview.org/download/>
