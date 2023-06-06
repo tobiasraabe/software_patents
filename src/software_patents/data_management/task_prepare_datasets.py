@@ -51,7 +51,6 @@ paths = {
     )
 }
 if not all(path.exists() for path in paths.values()):
-
     depends_on = pytask.mark.depends_on(
         {
             "bh": BLD / "data" / "bh.pkl",
@@ -68,7 +67,6 @@ else:
 # Paths are relative to the project directory.
 path = SRC / "data" / "processed" / "indicators_summary.pkl"
 if not path.exists():
-
     depends_on = pytask.mark.depends_on(
         {
             "bh": BLD / "data" / "bh.pkl",

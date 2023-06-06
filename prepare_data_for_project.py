@@ -14,13 +14,13 @@ from tqdm import tqdm
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
 PV_LAST_UPDATE = "20180528"
-"""str: Date of newest data release."""
+"""Str: Date of newest data release."""
 PV_DOWNLOAD_LINK = (
     f"http://s3.amazonaws.com/data-patentsview-org/{PV_LAST_UPDATE}/download"
 )
-"""str: Base url for downloading data from PatentsView."""
+"""Str: Base url for downloading data from PatentsView."""
 DB_DOWNLOAD_LINK = "http://dl.dropboxusercontent.com/s/"
-"""str: Base url for downloading data from Dropbox."""
+"""Str: Base url for downloading data from Dropbox."""
 
 
 FILES_RAW: dict[str, list[str]] = {

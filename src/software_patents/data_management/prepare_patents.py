@@ -29,7 +29,6 @@ def process_data():
     df = dd.read_parquet(SRC / "data" / "raw" / "patent_*.parquet")
 
     for section in ["ABSTRACT", "TITLE"]:
-
         out = df[["ID"]]
 
         out = create_indicators(df, section, out)
