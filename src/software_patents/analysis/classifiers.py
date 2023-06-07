@@ -18,11 +18,11 @@ from software_patents.analysis.transformers import NLTKPreprocessor
 
 # This is the original classifier used in the thesis
 OriginalClassifier = Pipeline([
-    ('vectorizer', CountVectorizer(max_df=0.7, ngram_range=(1, 4),
-                                   analyzer='word')),
-    ('feature_selection', SelectKBest(chi2, k=200)),
-    ('classifier', RandomForestClassifier(n_estimators=5000,
-                                          criterion='gini',
+    ("vectorizer", CountVectorizer(max_df=0.7, ngram_range=(1, 4),
+                                   analyzer="word")),
+    ("feature_selection", SelectKBest(chi2, k=200)),
+    ("classifier", RandomForestClassifier(n_estimators=5000,
+                                          criterion="gini",
                                           max_features=0.3, n_jobs=-1)),
 ])
 
@@ -44,8 +44,8 @@ OriginalClassifier = Pipeline([
 
 # 1. Logit
 Logit = Pipeline([
-    ('pca', PCA(n_components=None)),
-    ('classifier', LogisticRegression()),
+    ("pca", PCA(n_components=None)),
+    ("classifier", LogisticRegression()),
 ])
 
 
@@ -62,13 +62,13 @@ Logit = Pipeline([
 
 # This is an arbitrary better classifier
 ImprovedClassifier = Pipeline([
-    ('preprocessor', NLTKPreprocessor()),
-    ('vectorizer', TfidfVectorizer(
+    ("preprocessor", NLTKPreprocessor()),
+    ("vectorizer", TfidfVectorizer(
         tokenizer=identity, preprocessor=None, lowercase=False,
         ngram_range=(1, 4), min_df=0.05
     )),
-    ('feature_selection', SelectFromModel(
-        RandomForestClassifier(n_jobs=3), threshold='mean')),
-    ('classifier', ExtraTreesClassifier(
+    ("feature_selection", SelectFromModel(
+        RandomForestClassifier(n_jobs=3), threshold="mean")),
+    ("classifier", ExtraTreesClassifier(
         n_estimators=1000, max_features=0.3, n_jobs=3)),
 ])

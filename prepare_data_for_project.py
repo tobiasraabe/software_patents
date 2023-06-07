@@ -130,7 +130,7 @@ PATENTSVIEW_MISSPELLINGS = {
 }
 
 
-def check_for_existing_files_before_splitting(filename: str):
+def check_for_existing_files_before_splitting(filename: str) -> bool:
     # Detect if there are already files in the output folder
     out_files = DATA_RAW_FOLDER.glob(filename.split(".")[0] + "_*")
     num_out_files = len(list(out_files))
@@ -150,7 +150,7 @@ def check_for_existing_files_before_splitting(filename: str):
     return start_splitting
 
 
-def downloader(file: Path, url: str, resume_byte_pos: int = None):
+def downloader(file: Path, url: str, resume_byte_pos: int | None = None) -> None:
     """Download url in ``URLS[position]`` to disk with possible resumption.
 
     Parameters
@@ -164,7 +164,7 @@ def downloader(file: Path, url: str, resume_byte_pos: int = None):
 
     """
     # Get size of file
-    r = requests.head(url)
+    r = requests.head(url, timeout=20)
     file_size = int(r.headers.get("content-length", 0))
 
     # Append information to resume download at specific byte position
@@ -172,30 +172,29 @@ def downloader(file: Path, url: str, resume_byte_pos: int = None):
     resume_header = {"Range": f"bytes={resume_byte_pos}-"} if resume_byte_pos else None
 
     # Establish connection
-    r = requests.get(url, stream=True, headers=resume_header)
+    r = requests.get(url, stream=True, headers=resume_header, timeout=5)
 
     # Set configuration
     block_size = 1024
-    initial_pos = resume_byte_pos if resume_byte_pos else 0
+    initial_pos = resume_byte_pos or 0
     mode = "ab" if resume_byte_pos else "wb"
 
-    with open(file, mode) as f:
-        with tqdm(
-            total=file_size,
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            desc=file.name,
-            initial=initial_pos,
-            ascii=True,
-            miniters=1,
-        ) as pbar:
-            for chunk in r.iter_content(32 * block_size):
-                f.write(chunk)
-                pbar.update(len(chunk))
+    with file.open(mode) as f, tqdm(
+        total=file_size,
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        desc=file.name,
+        initial=initial_pos,
+        ascii=True,
+        miniters=1,
+    ) as pbar:
+        for chunk in r.iter_content(32 * block_size):
+            f.write(chunk)
+            pbar.update(len(chunk))
 
 
-def download_file(filename: str, url: str):
+def download_file(filename: str, url: str) -> None:
     """Execute the correct download operation.
 
     Depending on the size of the file online and offline, resume the
@@ -210,7 +209,7 @@ def download_file(filename: str, url: str):
 
     """
     # Establish connection to header of file
-    r = requests.head(url)
+    r = requests.head(url, timeout=20)
 
     # Get filesize of online and offline file
     file_size_online = int(r.headers.get("content-length", 0))
@@ -235,7 +234,7 @@ def download_file(filename: str, url: str):
         downloader(file, url)
 
 
-def validate_file(filename: str, hash_value: str = None):
+def validate_file(filename: str, hash_value: str = None) -> None:
     """Validate a given file with its hash.
 
     The downloaded file is compared with a hash to validate the download
@@ -264,7 +263,7 @@ def validate_file(filename: str, hash_value: str = None):
         return 0
 
     sha = hashlib.sha256()
-    with open(file, "rb") as f:
+    with file.open("rb") as f:
         while True:
             chunk = f.read(1000 * 1000)  # 1MB so that memory is not exhausted
             if not chunk:
@@ -336,7 +335,7 @@ def split_detail_desc_text(filename: str) -> None:
         click.echo(f"Skipped splitting of {filename}")
 
 
-def split_patent(filename: str):
+def split_patent(filename: str) -> None:
     """Split a given file in smaller chunks.
 
     Parameters
@@ -353,7 +352,7 @@ def split_patent(filename: str):
 
         i = 1
 
-        for chunk in pd.read_table(
+        for chunk_ in pd.read_table(
             Path("src", "data", "downloaded", filename),
             sep="\t",
             chunksize=270_000,
@@ -363,6 +362,8 @@ def split_patent(filename: str):
             encoding="ISO-8859-1",
             quoting=csv.QUOTE_NONE,
         ):
+            chunk = chunk_
+
             start_chunk = time()
 
             # Only utility patents
@@ -402,7 +403,7 @@ def split_patent(filename: str):
             chunk.TITLE = chunk.TITLE.str.strip()
             chunk.ABSTRACT = chunk.ABSTRACT.str.strip()
 
-            for column in ["TITLE", "ABSTRACT"]:
+            for column in ("TITLE", "ABSTRACT"):
                 for key, value in PATENTSVIEW_MISSPELLINGS.items():
                     chunk[column] = chunk[column].str.replace(key, value)
 
@@ -426,7 +427,7 @@ def split_patent(filename: str):
         click.echo(f"Skipped splitting of {filename}")
 
 
-def split_brf_sum_text(filename: str):
+def split_brf_sum_text(filename: str) -> None:
     start_splitting = check_for_existing_files_before_splitting(filename)
 
     if start_splitting:
@@ -474,7 +475,7 @@ def split_brf_sum_text(filename: str):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS, chain=True)
-def cli():
+def cli() -> None:
     """Program for preparing the data for the project.
 
     \b
@@ -487,7 +488,6 @@ def cli():
     or `FILES_REPLICATION`.
 
     """
-    pass
 
 
 @cli.command()
@@ -497,7 +497,7 @@ def cli():
     default="replication",
     help="Download raw data (~60GB), replication data (<750MB) or both.",
 )
-def download(subset):
+def download(subset) -> None:
     """Download files specified in ``URLS``."""
     if subset == "raw":
         files = FILES_RAW
@@ -513,7 +513,7 @@ def download(subset):
 
 
 @cli.command()
-def validate():
+def validate() -> None:
     """Validate downloads with hashes in ``HASHES``."""
     click.echo("### Start validating existing files.\n")
     files = {**FILES_RAW, **FILES_REPLICATION}
@@ -523,14 +523,14 @@ def validate():
 
 
 @cli.command()
-def split():
+def split() -> None:
     """Split downloaded files into smaller chunks.
 
     The chunk size is chosen so that files are about 100MB big.
 
     """
     click.echo("### Start splitting predefined files.\n")
-    for filename in FILES_RAW.keys():
+    for filename in FILES_RAW:
         if "detail_desc_text" in filename:
             split_detail_desc_text(filename)
         elif "patent.tsv.zip" in filename:

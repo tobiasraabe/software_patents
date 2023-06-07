@@ -23,7 +23,7 @@ def test_bh():
     matrix = confusion_matrix(df.CLASSIFICATION_MANUAL, df.CLASSIFICATION_ALGORITHM)
 
     false_positive = matrix[0, 1] / (matrix[0, 1] + matrix[1, 1])
-    assert false_positive == 0.16
+    assert false_positive == 0.16  # noqa: PLR2004
 
     false_negative = matrix[1, 0] / (matrix[1, 0] + matrix[1, 1])
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)

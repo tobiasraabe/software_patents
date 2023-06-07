@@ -28,12 +28,12 @@ repos:
     rev: v3.4.0
     hooks:
     -   id: pyupgrade
-        args: [--py36-plus]
+        args: [--py38-plus]
 -   repo: https://github.com/asottile/reorder-python-imports
     rev: v3.9.0
     hooks:
     -   id: reorder-python-imports
-        args: [--py37-plus, --add-import, 'from __future__ import annotations']
+        args: [--py38-plus, --add-import, 'from __future__ import annotations']
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.3.0
     hooks:
@@ -47,31 +47,15 @@ repos:
     hooks:
     -   id: blacken-docs
         additional_dependencies: [black]
--   repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.1
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.270
     hooks:
-    -   id: docformatter
-        args: [--in-place, --wrap-summaries, "88", --wrap-descriptions, "88", --blank]
--   repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+      - id: ruff
+-   repo: https://github.com/dosisod/refurb
+    rev: v1.16.0
     hooks:
-    -   id: flake8
-        additional_dependencies: [
-            flake8-alfred,
-            flake8-bugbear,
-            flake8-builtins,
-            flake8-comprehensions,
-            flake8-docstrings,
-            flake8-eradicate,
-            flake8-print,
-            flake8-pytest-style,
-            flake8-todo,
-            flake8-typing-imports,
-            flake8-unused-arguments,
-            pep8-naming,
-            pydocstyle,
-            Pygments,
-        ]
+    -   id: refurb
+        args: [--ignore, FURB126]
 -   repo: https://github.com/executablebooks/mdformat
     rev: 0.7.16
     hooks:
@@ -97,10 +81,6 @@ repos:
     -   id: check-manifest
         args: [--no-build-isolation]
         additional_dependencies: [setuptools-scm, toml]
--   repo: https://github.com/guilatrova/tryceratops
-    rev: v2.3.2
-    hooks:
-    -   id: tryceratops
 -   repo: meta
     hooks:
     -   id: check-hooks-apply

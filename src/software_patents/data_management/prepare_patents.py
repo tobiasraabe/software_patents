@@ -28,7 +28,7 @@ def process_data():
 
     df = dd.read_parquet(SRC / "data" / "raw" / "patent_*.parquet")
 
-    for section in ["ABSTRACT", "TITLE"]:
+    for section in ("ABSTRACT", "TITLE"):
         out = df[["ID"]]
 
         out = create_indicators(df, section, out)
@@ -44,7 +44,7 @@ def process_data():
 
 
 def merge_indicators():
-    for section in ["abstract", "title"]:
+    for section in ("abstract", "title"):
         df = dd.read_parquet(BLD / "data" / f"indicators_{section}.parquet/*.parquet")
         df = df.compute()
         df.to_pickle(BLD / "data" / f"indicators_{section}.pkl")

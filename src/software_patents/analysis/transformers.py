@@ -14,14 +14,14 @@ from sklearn.base import TransformerMixin
 
 
 class NLTKPreprocessor(BaseEstimator, TransformerMixin):
-    def __init__(self, stopwords=None, punct=None, lower=True, strip=True):
+    def __init__(self, stopwords=None, punct=None, lower=True, strip=True) -> None:
         self.lower = lower
         self.strip = strip
         self.stopwords = stopwords or set(sw.words("english"))
         self.punct = punct or set(string.punctuation)
         self.lemmatizer = WordNetLemmatizer()
 
-    def fit(self, X, y=None):  # noqa: U100, N803
+    def fit(self, X, y=None):  # noqa: N803, ARG002
         return self
 
     def inverse_transform(self, X):  # noqa: N803
@@ -34,7 +34,8 @@ class NLTKPreprocessor(BaseEstimator, TransformerMixin):
         # Break the document into sentences
         for sent in sent_tokenize(document):
             # Break the sentence into part of speech tagged tokens
-            for token, tag in pos_tag(wordpunct_tokenize(sent)):
+            for token_, tag in pos_tag(wordpunct_tokenize(sent)):
+                token = token_
                 # Apply preprocessing to the token
                 token = token.lower() if self.lower else token
                 token = token.strip() if self.strip else token
