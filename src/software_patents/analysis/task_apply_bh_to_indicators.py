@@ -68,26 +68,25 @@ def apply_bh2007_algorithm(df):
     return df.REPLICATION_BH2007
 
 
-@pytask.mark.parametrize(
-    "depends_on, produces",
-    [
-        (BLD / "data" / "indicators.pkl", BLD / "analysis" / "bh_with_patent_db.pkl"),
-        (
-            BLD / "data" / "bh_with_crawled_text.pkl",
-            BLD / "analysis" / "bh_with_crawled_text.pkl",
-        ),
-    ],
-)
-def task_apply_bh_to_indicators(depends_on, produces):
-    df = pd.read_pickle(depends_on)
-    df["CLASSIFICATION_REPLICATION"] = apply_bh2007_algorithm(df)
-    df = df[
-        [
-            "ID",
-            "CLASSIFICATION_REPLICATION",
-            "ABSTRACT",
-            "DESCRIPTION",
-            "TITLE",
+for depends_on, produces in (
+    (BLD / "data" / "indicators.pkl", BLD / "analysis" / "bh_with_patent_db.pkl"),
+    (
+        BLD / "data" / "bh_with_crawled_text.pkl",
+        BLD / "analysis" / "bh_with_crawled_text.pkl",
+    ),
+):
+
+    @pytask.mark.task
+    def task_apply_bh_to_indicators(depends_on=depends_on, produces=produces):
+        df = pd.read_pickle(depends_on)
+        df["CLASSIFICATION_REPLICATION"] = apply_bh2007_algorithm(df)
+        df = df[
+            [
+                "ID",
+                "CLASSIFICATION_REPLICATION",
+                "ABSTRACT",
+                "DESCRIPTION",
+                "TITLE",
+            ]
         ]
-    ]
-    df.to_pickle(produces)
+        df.to_pickle(produces)

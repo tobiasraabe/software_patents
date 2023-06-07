@@ -87,10 +87,10 @@ else:
 
 
 if paths_to_copy:
+    for depends_on, produces in (
+        (path, BLD / "data" / path.name) for path in paths_to_copy
+    ):
 
-    @pytask.mark.parametrize(
-        "depends_on, produces",
-        [(path, BLD / "data" / path.name) for path in paths_to_copy],
-    )
-    def task_copy_files(depends_on, produces):
-        shutil.copyfile(depends_on, produces)
+        @pytask.mark.task
+        def task_copy_files(depends_on=depends_on, produces=produces):
+            shutil.copyfile(depends_on, produces)

@@ -95,8 +95,8 @@ If you only want to download the files for reproducing the analysis based on the
 indicators, run the following commands for downloading and validating:
 
 ```bash
-$ python prepare_data_for_project download --subset replication
-$ python prepare_data_for_project validate
+$ python prepare_data_for_project.py download --subset replication
+$ python prepare_data_for_project.py validate
 ```
 
 (If you want to have the raw data or everything, use `--subset raw` or `--subset all`.
