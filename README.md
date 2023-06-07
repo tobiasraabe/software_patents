@@ -1,7 +1,6 @@
 # Identification of Software Patents
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/tobiasraabe/software_patents/main.svg)](https://results.pre-commit.ci/latest/github/tobiasraabe/software_patents/main)
-
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Introduction
