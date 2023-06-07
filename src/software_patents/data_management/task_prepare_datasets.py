@@ -51,11 +51,13 @@ paths = {
     )
 }
 if not all(path.exists() for path in paths.values()):
-
     depends_on = pytask.mark.depends_on(
         {
             "bh": BLD / "data" / "bh.pkl",
-            **{f"patent_{i}": SRC / "data" / "raw" / f"patent_{i}.parquet"},
+            **{
+                f"patent_{i}": SRC / "data" / "raw" / f"patent_{i}.parquet"
+                for i in range(1, 6)
+            },
         }
     )
     produces = pytask.mark.produces(paths)
@@ -68,11 +70,13 @@ else:
 # Paths are relative to the project directory.
 path = SRC / "data" / "processed" / "indicators_summary.pkl"
 if not path.exists():
-
     depends_on = pytask.mark.depends_on(
         {
             "bh": BLD / "data" / "bh.pkl",
-            **{f"brf_sum_text_{i}": SRC / "data" / "raw" / f"brf_sum_text_{i}.parquet"},
+            **{
+                f"brf_sum_text_{i}": SRC / "data" / "raw" / f"brf_sum_text_{i}.parquet"
+                for i in range(1, 6)
+            },
         }
     )
     produces = pytask.mark.produces(BLD / "data" / "indicators_summary.pkl")

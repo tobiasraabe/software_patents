@@ -30,28 +30,28 @@ def scrape_patent_info(patentnr):
     except AttributeError:
         title = np.nan
 
-    try:  # noqa: TC101
+    try:
         abstract = soup.findAll(attrs={"class": "abstract"})
         abstract = [tag.get_text(strip=True) for tag in abstract]
         abstract = " ".join(abstract)
     except AttributeError:
         abstract = np.nan
 
-    try:  # noqa: TC101
+    try:
         description = soup.find(attrs={"class": "description"}).get_text(
             strip=True, separator=" "
         )
     except AttributeError:
         description = np.nan
 
-    try:  # noqa: TC101
+    try:
         claims = soup.find(attrs={"class": "claims"}).get_text(
             strip=True, separator=" "
         )
     except AttributeError:
         claims = np.nan
 
-    try:  # noqa: TC101
+    try:
         claims_number = soup.find("span", itemprop="count").get_text(
             strip=True, separator=" "
         )

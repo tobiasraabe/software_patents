@@ -1,7 +1,6 @@
 # Identification of Software Patents
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/tobiasraabe/software_patents/main.svg)](https://results.pre-commit.ci/latest/github/tobiasraabe/software_patents/main)
-
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Introduction
@@ -47,9 +46,9 @@ Compared to the manual classification of the authors, the algorithm performed in
 following way:
 
 |                   | Relevant | Not Relevant |
-|-------------------|:--------:|:------------:|
-| **Retrieved**     | 42       | 8            |
-| **Not Retrieved** | 12       | 337          |
+| ----------------- | :------: | :----------: |
+| **Retrieved**     |    42    |      8       |
+| **Not Retrieved** |    12    |     337      |
 
 Relevant refers to software patents according to the manual classification whereas
 retrieved indicates software patents detected by the algorithm. The upper left corner
@@ -115,8 +114,6 @@ $ pytask
 
 ## References
 
-[BH2007]
-: <https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x>
+\[BH2007\] : <https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x>
 
-[PATENTSVIEW]
-: <http://www.patentsview.org/download/>
+\[PATENTSVIEW\] : <http://www.patentsview.org/download/>

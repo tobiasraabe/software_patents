@@ -65,7 +65,7 @@ def task_prepare_bessen_hunt_2007(depends_on, produces):
     )
     df = df.merge(out, on="ID", how="inner", validate="1:1")
 
-    for column in ["ABSTRACT", "DESCRIPTION", "TITLE"]:
+    for column in ("ABSTRACT", "DESCRIPTION", "TITLE"):
         df = create_indicators(df, column)
 
     df.to_pickle(produces["bh_w_text"])
