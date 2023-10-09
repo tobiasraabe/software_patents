@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
     -   id: check-added-large-files
         args: ['--maxkb=25']
@@ -20,15 +20,8 @@ repos:
     hooks:
     -   id: python-check-blanket-noqa
     -   id: python-check-mock-methods
-    -   id: python-no-eval
     -   id: python-no-log-warn
-    -   id: python-use-type-annotations
     -   id: text-unicode-replacement-char
--   repo: https://github.com/asottile/pyupgrade
-    rev: v3.14.0
-    hooks:
-    -   id: pyupgrade
-        args: [--py38-plus]
 -   repo: https://github.com/asottile/reorder-python-imports
     rev: v3.12.0
     hooks:
@@ -42,11 +35,6 @@ repos:
     rev: 23.9.1
     hooks:
     -   id: black
--   repo: https://github.com/asottile/blacken-docs
-    rev: 1.16.0
-    hooks:
-    -   id: blacken-docs
-        additional_dependencies: [black]
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.0.292
     hooks:
@@ -56,6 +44,16 @@ repos:
     hooks:
     -   id: refurb
         args: [--ignore, FURB126]
+-   repo: https://github.com/econchick/interrogate
+    rev: 1.5.0
+    hooks:
+    -   id: interrogate
+        args: [-v, --fail-under=30, src]
+-   repo: https://github.com/asottile/blacken-docs
+    rev: 1.16.0
+    hooks:
+    -   id: blacken-docs
+        additional_dependencies: [black]
 -   repo: https://github.com/executablebooks/mdformat
     rev: 0.7.17
     hooks:
@@ -65,11 +63,6 @@ repos:
             mdformat-black,
         ]
         args: [--wrap, "88"]
--   repo: https://github.com/econchick/interrogate
-    rev: 1.5.0
-    hooks:
-    -   id: interrogate
-        args: [-v, --fail-under=30, src]
 -   repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
     hooks:
