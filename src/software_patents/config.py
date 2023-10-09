@@ -12,7 +12,7 @@ BLD = SRC.joinpath("..", "..", "bld").resolve()
 
 
 SEED = np.random.RandomState(42)
-PROCESSES_SCRAPE_PATENTS = os.cpu_count() * 6
+THREADS_SCRAPE_PATENTS = os.cpu_count() * 6
 DASK_WORKER_NUMBER = os.cpu_count() - 1
 
 DASK_LOCAL_CLUSTER_CONFIGURATION = {
