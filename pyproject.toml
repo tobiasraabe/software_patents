@@ -100,3 +100,10 @@ convention = "numpy"
 
 [tool.refurb]
 python_version = "3.8"
+
+
+[tool.pytest.ini_options]
+addopts = ["--doctest-modules"]
+testpaths = ["src"]
+norecursedirs = [".idea", ".tox"]
+filterwarnings = ["ignore:datetime.*:DeprecationWarning"]

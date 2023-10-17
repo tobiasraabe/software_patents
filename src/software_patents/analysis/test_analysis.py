@@ -52,7 +52,6 @@ def test_equality_of_ml_replication() -> None:
     # Here are the kappa scores from my thesis.
     # thesis_kappa = [0.875, 0.875, 0.875, 0.771, 0.895,
     #                 0.875, 0.543, 0.875, 0.448, 0.314]
-
     pass
 
 
@@ -60,11 +59,8 @@ def test_equality_of_ml_replication() -> None:
 def table() -> None:
     """Fixture for Table 1 of Bessen and Hunt (2007)."""
     table = pd.read_excel(
-        SRC / "data" / "external" / "bh2007_table_1.xlsx",
-        header=2,
-        usecols=[0, 1, 4],
+        SRC / "data" / "external" / "bh2007_table_1.xlsx", header=2, usecols=[0, 1, 4]
     )
-
     return table
 
 
@@ -112,7 +108,7 @@ def test_absolute_number_of_software_patents_between_1976_and_2002(
     sp = sp.loc[sp.DATE.dt.year.le(2002)]
 
     num_software_patents = (
-        sp.groupby([sp.DATE.dt.year, sp.CLASSIFICATION_REPLICATION])
+        sp.groupby([sp.DATE.dt.year, sp.CLASSIFICATION_REPLICATION], observed=False)
         .ID.count()
         .unstack()["Software"]
         .values
@@ -138,7 +134,7 @@ def test_share_of_software_patents_to_total_between_1976_and_2002(
     sp = sp.loc[sp.DATE.dt.year.le(2002)]
 
     share_software_patents = (
-        sp.groupby([sp.DATE.dt.year, sp.CLASSIFICATION_REPLICATION])
+        sp.groupby([sp.DATE.dt.year, sp.CLASSIFICATION_REPLICATION], observed=False)
         .ID.count()
         .unstack()
         .apply(lambda x: x / x.sum(), axis=1)["Software"]
