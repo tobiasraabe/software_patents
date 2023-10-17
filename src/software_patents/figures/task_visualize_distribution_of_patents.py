@@ -39,7 +39,7 @@ def task_visualize_distributions(
     )
 
 
-def plot_distribution_of_patents(df, path):
+def plot_distribution_of_patents(df: pd.DataFrame, path: Path) -> None:
     fig, ax = plt.subplots()
 
     x = list(range(1976, 2019))
@@ -66,12 +66,14 @@ def plot_distribution_of_patents(df, path):
     plt.close()
 
 
-def plot_distribution_of_patents_software_vs_non_software(df, path):
+def plot_distribution_of_patents_software_vs_non_software(
+    df: pd.DataFrame, path: Path
+) -> None:
     fig, ax = plt.subplots()
 
     x = list(range(1976, 2019))
     y = (
-        df.groupby([df.DATE.dt.year, df.CLASSIFICATION_REPLICATION])
+        df.groupby([df.DATE.dt.year, df.CLASSIFICATION_REPLICATION], observed=False)
         .ID.count()
         .unstack()
         .values.T
@@ -99,12 +101,14 @@ def plot_distribution_of_patents_software_vs_non_software(df, path):
     plt.close()
 
 
-def plot_distribution_of_patents_software_vs_non_software_shares(df, path):
+def plot_distribution_of_patents_software_vs_non_software_shares(
+    df: pd.DataFrame, path: Path
+) -> None:
     fig, ax = plt.subplots()
 
     x = list(range(1976, 2019))
     y = (
-        df.groupby([df.DATE.dt.year, df.CLASSIFICATION_REPLICATION])
+        df.groupby([df.DATE.dt.year, df.CLASSIFICATION_REPLICATION], observed=False)
         .ID.count()
         .unstack()
         .apply(lambda x: x / x.sum(), axis=1)

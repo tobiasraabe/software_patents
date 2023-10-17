@@ -76,5 +76,7 @@ if paths_to_copy:
     for path in paths_to_copy:
 
         @task(name=path.name)
-        def copy_files(path: Path = path, produces: Path = BLD / "data" / path.name):
+        def copy_files(
+            path: Path = path, produces: Path = BLD / "data" / path.name
+        ) -> None:
             shutil.copyfile(path, produces)

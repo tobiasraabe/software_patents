@@ -10,7 +10,7 @@ from software_patents.config import BLD
 from software_patents.config import SRC
 
 
-def test_equality_of_bh2007_and_replication_with_crawled_texts():
+def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     df = pd.read_pickle(BLD / "analysis" / "replication_bh_with_crawled_text.pkl")
 
     different_classifications = df.loc[
@@ -24,7 +24,7 @@ def test_equality_of_bh2007_and_replication_with_crawled_texts():
     assert different_classifications.ID.eq(5_489_660).all()
 
 
-def test_equality_of_bh2007_and_replication_with_patent_db():
+def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     df = pd.read_pickle(BLD / "analysis" / "replication_bh_with_patent_db.pkl")
 
     different_classifications = df.loc[
@@ -34,7 +34,7 @@ def test_equality_of_bh2007_and_replication_with_patent_db():
     assert different_classifications.shape[0] == 1
 
 
-def test_equality_of_replication_with_crawled_texts_and_patent_db():
+def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
     bh = pd.read_pickle(BLD / "analysis" / "replication_bh_with_crawled_text.pkl")
     db = pd.read_pickle(BLD / "analysis" / "replication_bh_with_patent_db.pkl")
 
@@ -48,7 +48,7 @@ def test_equality_of_replication_with_crawled_texts_and_patent_db():
     assert df.shape[0] == 0
 
 
-def test_equality_of_ml_replication():
+def test_equality_of_ml_replication() -> None:
     # Here are the kappa scores from my thesis.
     # thesis_kappa = [0.875, 0.875, 0.875, 0.771, 0.895,
     #                 0.875, 0.543, 0.875, 0.448, 0.314]
@@ -57,7 +57,7 @@ def test_equality_of_ml_replication():
 
 
 @pytest.fixture(scope="module")
-def table():
+def table() -> None:
     """Fixture for Table 1 of Bessen and Hunt (2007)."""
     table = pd.read_excel(
         SRC / "data" / "external" / "bh2007_table_1.xlsx",
@@ -69,7 +69,7 @@ def table():
 
 
 @pytest.fixture(scope="module")
-def sp():
+def sp() -> None:
     """Fixture for all classified patents."""
     bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")
     date = pd.read_pickle(BLD / "data" / "patent.pkl")
@@ -81,7 +81,9 @@ def sp():
 @pytest.mark.xfail(
     reason="The number of software patents is underestimated with PatentsView"
 )
-def test_absolute_number_of_software_patents_between_1976_and_1999(sp):
+def test_absolute_number_of_software_patents_between_1976_and_1999(
+    sp: pd.DataFrame,
+) -> None:
     """Test number of software patents in the period from 1976 to 1999.
 
     Bessen and Hunt (2007) state on p. 163 that they found 130,650 software patents
@@ -99,7 +101,9 @@ def test_absolute_number_of_software_patents_between_1976_and_1999(sp):
 @pytest.mark.xfail(
     reason="The number of software patents is underestimated with PatentsView"
 )
-def test_absolute_number_of_software_patents_between_1976_and_2002(table, sp):
+def test_absolute_number_of_software_patents_between_1976_and_2002(
+    table: pd.DataFrame, sp: pd.DataFrame
+) -> None:
     """Test number of software patents between 1976 and 2002.
 
     The data comes from Table 1 of Bessen and Hunt (2007).
@@ -123,7 +127,9 @@ def test_absolute_number_of_software_patents_between_1976_and_2002(table, sp):
 @pytest.mark.xfail(
     reason="The number of software patents is underestimated with PatentsView"
 )
-def test_share_of_software_patents_to_total_between_1976_and_2002(table, sp):
+def test_share_of_software_patents_to_total_between_1976_and_2002(
+    table: pd.DataFrame, sp: pd.DataFrame
+) -> None:
     """Test share of software patents between 1976 and 2002.
 
     The data comes from Table 1 of Bessen and Hunt (2007).

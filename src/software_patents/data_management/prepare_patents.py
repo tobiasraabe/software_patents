@@ -41,7 +41,7 @@ def prepare_patents(
     df.to_pickle(path_to_patents)
 
 
-def process_data(path_to_bh):
+def process_data(path_to_bh: Path) -> None:
     # Get 399 patent numbers from BH2007 to store fulltext of abstract and
     # title.
     bh = pd.read_pickle(path_to_bh)
@@ -53,9 +53,8 @@ def process_data(path_to_bh):
     df = dd.read_parquet(SRC / "data" / "raw" / "patent_*.parquet")
 
     for section in ("ABSTRACT", "TITLE"):
-        out = df[["ID"]]
-
-        out = create_indicators(df, section, out)
+        indicators = create_indicators(df, section)
+        out = pd.concat([df["ID"], indicators], axis="columns")
 
         out = out.assign(
             **{section: df[section].where(cond=out.ID.isin(bh.ID), other=np.nan)}

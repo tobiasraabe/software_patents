@@ -16,7 +16,7 @@ _INDICATOR_PARTS = {
 }
 
 
-@task
+@task()
 def merge_description_indicators(
     path_to_indicator_parts: dict[str, Path] = _INDICATOR_PARTS,
     path_to_indicators: Annotated[Path, Product] = BLD
@@ -37,14 +37,14 @@ def merge_description_indicators(
     df.to_pickle(path_to_indicators)
 
 
-@task
+@task()
 def merge_all_indicators(
     path_to_indicators_description: Path = BLD / "data" / "indicators_description.pkl",
     path_to_indicators_summary: Path = BLD / "data" / "indicators_summary.pkl",
     path_to_indicators_abstract: Path = BLD / "data" / "indicators_abstract.pkl",
     path_to_indicators_title: Path = BLD / "data" / "indicators_title.pkl",
     path_to_indicators: Annotated[Path, Product] = BLD / "data" / "indicators.pkl",
-):
+) -> None:
     description = pd.read_pickle(path_to_indicators_description)
     summary = pd.read_pickle(path_to_indicators_summary)
 
@@ -59,7 +59,9 @@ def merge_all_indicators(
     df.to_pickle(path_to_indicators)
 
 
-def _merge_summary_into_description(description, summary):
+def _merge_summary_into_description(
+    description: pd.DataFrame, summary: pd.DataFrame
+) -> pd.DataFrame:
     """Merge indicators of summary into description with logical ORs."""
     df = description.merge(summary, on="ID", how="outer")
 

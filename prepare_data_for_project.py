@@ -228,13 +228,12 @@ def download_file(filename: str, url: str) -> None:
             downloader(file, url, file_size_offline)
         else:
             click.echo(f"File {file} is complete. Skip download.")
-            pass
     else:
         click.echo(f"File {file} does not exist. Start download.")
         downloader(file, url)
 
 
-def validate_file(filename: str, hash_value: str = None) -> None:
+def validate_file(filename: str, hash_value: str | None = None) -> None:
     """Validate a given file with its hash.
 
     The downloaded file is compared with a hash to validate the download

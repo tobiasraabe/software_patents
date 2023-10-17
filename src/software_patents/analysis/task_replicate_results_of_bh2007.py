@@ -21,12 +21,12 @@ for replication, path_to_replication in (
     ),
 ):
 
-    @task
+    @task()
     def task_replicate_results_of_bh2007(
         path_to_bh: Path = BLD / "data" / "bh.pkl",
         path_to_bh_with_texts: Path = replication,
         path_to_replication: Annotated[Path, Product] = path_to_replication,
-    ):
+    ) -> None:
         bh = pd.read_pickle(path_to_bh)
         replication = pd.read_pickle(path_to_bh_with_texts)
         bh = bh.merge(replication, on="ID", how="inner", validate="1:1")

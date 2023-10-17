@@ -34,11 +34,11 @@ for path_to_indicators, path_to_result in (
     ),
 ):
 
-    @task
+    @task()
     def task_apply_bh_to_indicators(
         path_to_indicators: Path = path_to_indicators,
         path_to_result: Annotated[Path, Product] = path_to_result,
-    ):
+    ) -> None:
         df = pd.read_pickle(path_to_indicators)
         df["CLASSIFICATION_REPLICATION"] = _apply_bh2007_algorithm(df)
         df = df[
@@ -53,7 +53,7 @@ for path_to_indicators, path_to_result in (
         df.to_pickle(path_to_result)
 
 
-def _apply_bh2007_algorithm(df):
+def _apply_bh2007_algorithm(df: pd.DataFrame) -> pd.Series:
     df["ALGO_FIRST_SPEC_SOFTWARE"] = df.ABSTRACT_SOFTWARE | df.DESCRIPTION_SOFTWARE
     df["ALGO_FIRST_SPEC_COMPUTER"] = df.ABSTRACT_COMPUTER | df.DESCRIPTION_COMPUTER
     df["ALGO_FIRST_SPEC_PROGRAM"] = df.ABSTRACT_PROGRAM | df.DESCRIPTION_PROGRAM

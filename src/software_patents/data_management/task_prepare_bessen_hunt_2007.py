@@ -20,7 +20,7 @@ def task_prepare_bessen_hunt_2007(
     path_to_bh_with_crawled_text: Annotated[Path, Product] = BLD
     / "data"
     / "bh_with_crawled_text.pkl",
-):
+) -> None:
     # Read the dataset of BH2007
     df = pd.read_stata(path_to_external)
 
@@ -71,6 +71,7 @@ def task_prepare_bessen_hunt_2007(
     df = df.merge(out, on="ID", how="inner", validate="1:1")
 
     for column in ("ABSTRACT", "DESCRIPTION", "TITLE"):
-        df = create_indicators(df, column)
+        indicators = create_indicators(df, column)
+        df = pd.concat([df, indicators], axis="columns")
 
     df.to_pickle(path_to_bh_with_crawled_text)

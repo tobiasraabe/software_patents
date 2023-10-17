@@ -45,9 +45,8 @@ def prepare_summary(
 
     df = dd.read_parquet(SRC / "data" / "raw" / "brf_sum_text_*")
 
-    out = df[["ID"]]
-
-    out = create_indicators(df, "SUMMARY", out)
+    indicators = create_indicators(df, "SUMMARY")
+    out = pd.concat([df["ID"], indicators], axis="columns")
 
     out = out.assign(SUMMARY=df["SUMMARY"].where(cond=out.ID.isin(bh.ID), other=np.nan))
 

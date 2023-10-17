@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrape_patent_info(patentnr):
+def scrape_patent_info(patentnr: str) -> tuple[str, ...]:
     """Scrape information on a single patent."""
     s = requests.Session()
     adapter = requests.adapters.HTTPAdapter(max_retries=3)

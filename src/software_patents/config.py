@@ -12,8 +12,8 @@ BLD = SRC.joinpath("..", "..", "bld").resolve()
 
 
 SEED = np.random.RandomState(42)
-THREADS_SCRAPE_PATENTS = os.cpu_count() * 6
-DASK_WORKER_NUMBER = os.cpu_count() - 1
+THREADS_SCRAPE_PATENTS = os.cpu_count() * 6  # type: ignore[operator]
+DASK_WORKER_NUMBER = os.cpu_count() - 1  # type: ignore[operator]
 
 DASK_LOCAL_CLUSTER_CONFIGURATION = {
     "memory_limit": 12e9,

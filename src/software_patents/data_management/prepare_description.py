@@ -41,9 +41,8 @@ def prepare_description(
 
     df = dd.read_parquet(SRC / "data" / "raw" / f"detail_desc_text_{part}_*_*.parquet")
 
-    out = df[["ID"]]
-
-    out = create_indicators(df, "DESCRIPTION", out)
+    indicators = create_indicators(df, "DESCRIPTION")
+    out = pd.concat([df["ID"], indicators], axis="columns")
 
     out = out.assign(
         DESCRIPTION=df["DESCRIPTION"].where(cond=out.ID.isin(bh.ID), other=np.nan)

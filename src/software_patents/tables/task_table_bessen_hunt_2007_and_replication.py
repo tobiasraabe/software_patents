@@ -1,8 +1,11 @@
 """This module contains code to produce confusion matrices."""
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Annotated
+
 import pandas as pd
-import pytask
+from pytask import Product
 from sklearn.metrics import confusion_matrix
 from software_patents.config import BLD
 
@@ -26,7 +29,9 @@ TABLE_WITH_INFO = """\\begin{tabular}{@{}cp{0.5cm}cp{0.5cm}c@{}}
 """
 
 
-def create_confusion_matrix(actual_class, predicted_class, path):
+def create_confusion_matrix(
+    actual_class: pd.Series, predicted_class: pd.Series, path: Path
+) -> None:
     (tp, fn), (fp, tn) = confusion_matrix(
         actual_class, predicted_class, labels=["Software", "Non-Software"]
     )
@@ -41,7 +46,9 @@ def create_confusion_matrix(actual_class, predicted_class, path):
     path.write_text(table)
 
 
-def create_confusion_matrix_with_info(actual_class, predicted_class, path):
+def create_confusion_matrix_with_info(
+    actual_class: pd.Series, predicted_class: pd.Series, path: Path
+) -> None:
     (tp, fn), (fp, tn) = confusion_matrix(
         actual_class, predicted_class, labels=["Software", "Non-Software"]
     )
@@ -56,40 +63,35 @@ def create_confusion_matrix_with_info(actual_class, predicted_class, path):
     path.write_text(table)
 
 
-@pytask.mark.depends_on(
-    {
-        "bh_with_crawled_text": BLD
-        / "analysis"
-        / "replication_bh_with_crawled_text.pkl",
-        "bh_with_patent_db": BLD / "analysis" / "replication_bh_with_patent_db.pkl",
-    }
-)
-@pytask.mark.produces(
-    {
-        "cf_crawled_text": BLD
-        / "tables"
-        / "tab-cf-replication-bh-with-crawled-text.tex",
-        "cf_crawled_text_info": BLD
-        / "tables"
-        / "tab-cf-replication-bh-with-crawled-text-info.tex",
-        "cf_patent_db": BLD / "tables" / "tab-cf-replication-bh-with-patent-db.tex",
-    }
-)
-def task_table_bessen_hunt_2007_and_replicate(depends_on, produces):
-    df = pd.read_pickle(depends_on["bh_with_crawled_text"])
+def task_table_bessen_hunt_2007_and_replicate(
+    bh_with_crawled_text: Path = BLD
+    / "analysis"
+    / "replication_bh_with_crawled_text.pkl",
+    bh_with_patent_db: Path = BLD / "analysis" / "replication_bh_with_patent_db.pkl",
+    cf_crawled_text: Annotated[Path, Product] = BLD
+    / "tables"
+    / "tab-cf-replication-bh-with-crawled-text.tex",
+    cf_crawled_text_info: Annotated[Path, Product] = BLD
+    / "tables"
+    / "tab-cf-replication-bh-with-crawled-text-info.tex",
+    cf_patent_db: Annotated[Path, Product] = BLD
+    / "tables"
+    / "tab-cf-replication-bh-with-patent-db.tex",
+) -> None:
+    df = pd.read_pickle(bh_with_crawled_text)
 
     create_confusion_matrix(
         df.CLASSIFICATION_MANUAL,
         df.CLASSIFICATION_ALGORITHM,
-        produces["cf_crawled_text"],
+        cf_crawled_text,
     )
     create_confusion_matrix_with_info(
         df.CLASSIFICATION_MANUAL,
         df.CLASSIFICATION_REPLICATION,
-        produces["cf_crawled_text_info"],
+        cf_crawled_text_info,
     )
 
-    temp = pd.read_pickle(depends_on["bh_with_patent_db"])
+    temp = pd.read_pickle(bh_with_patent_db)
 
     df = df[["ID", "CLASSIFICATION_MANUAL"]].merge(
         temp[["ID", "CLASSIFICATION_REPLICATION"]], on="ID", how="left"
@@ -98,5 +100,5 @@ def task_table_bessen_hunt_2007_and_replicate(depends_on, produces):
     create_confusion_matrix(
         df.CLASSIFICATION_MANUAL,
         df.CLASSIFICATION_REPLICATION,
-        produces["cf_patent_db"],
+        cf_patent_db,
     )
