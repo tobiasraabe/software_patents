@@ -11,19 +11,27 @@ for manual inspection.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Annotated
 
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
 from dask.distributed import Client
 from dask.distributed import LocalCluster
+from pytask import Product
+from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
 from software_patents.data_management.indicators import create_indicators
 
 
-def prepare_description(path_to_bh: Path, part: str, produces: Path) -> None:
-    path_to_intermediate_parquet = produces.with_suffix(".parquet")
+def prepare_description(
+    raw_descriptions: dict[str, Path],  # noqa: ARG001
+    part: str,
+    path_to_pkl: Annotated[Path, Product],
+    path_to_bh: Path = BLD / "data" / "bh.pkl",
+) -> None:
+    path_to_intermediate_parquet = path_to_pkl.with_suffix(".parquet")
     # Get 399 patent numbers from BH2007 to store fulltext of description.
     bh = pd.read_pickle(path_to_bh)
 
@@ -46,4 +54,4 @@ def prepare_description(path_to_bh: Path, part: str, produces: Path) -> None:
     df = dd.read_parquet(path_to_intermediate_parquet)
     df = df.compute()
 
-    df.to_pickle(produces)
+    df.to_pickle(path_to_pkl)

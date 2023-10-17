@@ -10,20 +10,34 @@ for manual inspection.
 """
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Annotated
+
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
 from dask.distributed import Client
 from dask.distributed import LocalCluster
+from pytask import Product
 from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
 from software_patents.data_management.indicators import create_indicators
 
 
-def _process_data():
+_RAW_SUMMARIES = {
+    f"brf_sum_text_{i}": SRC / "data" / "raw" / f"brf_sum_text_{i}.parquet"
+    for i in range(1, 6)
+}
+
+
+def prepare_summary(
+    path_to_bh: Path = BLD / "data" / "bh.pkl",
+    raw_summaries: dict[str, Path] = _RAW_SUMMARIES,  # noqa: ARG001
+    path_to_pkl: Annotated[Path, Product] = BLD / "data" / "indicators_summary.pkl",
+) -> None:
     # Get 399 patent numbers from BH2007 to store fulltext of description.
-    bh = pd.read_pickle(BLD / "data" / "bh.pkl")
+    bh = pd.read_pickle(path_to_bh)
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
@@ -39,11 +53,7 @@ def _process_data():
 
     out.to_parquet(BLD / "data" / "indicators_summary.parquet", compute=True)
 
-
-def prepare_summary(depends_on, produces):
-    _process_data(depends_on)
-
     df = dd.read_parquet(SRC / "data" / "indicators_summary.parquet")
     df = df.compute()
 
-    df.to_pickle(produces)
+    df.to_pickle(path_to_pkl)

@@ -13,6 +13,7 @@ from pytask import task
 from software_patents.config import BLD
 from software_patents.config import SRC
 from software_patents.data_management.prepare_description import prepare_description
+from software_patents.data_management.prepare_patents import merge_indicators
 from software_patents.data_management.prepare_patents import prepare_patents
 from software_patents.data_management.prepare_summary import prepare_summary
 
@@ -27,12 +28,11 @@ for i in range(1, 6):
         task(
             name=path.name,
             kwargs={
-                "depends_on": {
+                "raw_descriptions": {
                     j: SRC / "data" / "raw" / f"detail_desc_text_{i}_{j}.parquet"
                     for j in range(1, 126)
                 },
                 "part": str(i),
-                "path_to_bh": BLD / "data" / "bh.pkl",
                 "path_to_pkl": BLD / "data" / f"indicators_description_{i}.pkl",
             },
         )(prepare_description)
@@ -51,19 +51,15 @@ paths = {
     )
 }
 if not all(path.exists() for path in paths.values()):
-    task(
-        kwargs={
-            "depends_on": {
-                "bh": BLD / "data" / "bh.pkl",
-                **{
-                    f"patent_{i}": SRC / "data" / "raw" / f"patent_{i}.parquet"
-                    for i in range(1, 6)
-                },
-            },
-            "produces": paths,
-        }
-    )(prepare_patents)
+    task()(prepare_patents)
 
+    for section in ("abstract", "title"):
+        task(
+            kwargs={
+                "section": section,
+                "path_to_pkl": BLD / "data" / f"indicators_{section}.pkl",
+            }
+        )(merge_indicators)
 else:
     paths_to_copy.extend(list(paths.values()))
 
@@ -71,22 +67,7 @@ else:
 # Paths are relative to the project directory.
 path = SRC / "data" / "processed" / "indicators_summary.pkl"
 if not path.exists():
-    task(
-        kwargs={
-            "depends_on": {
-                "bh": BLD / "data" / "bh.pkl",
-                **{
-                    f"brf_sum_text_{i}": SRC
-                    / "data"
-                    / "raw"
-                    / f"brf_sum_text_{i}.parquet"
-                    for i in range(1, 6)
-                },
-            },
-            "produces": BLD / "data" / "indicators_summary.pkl",
-        }
-    )(prepare_summary)
-
+    task()(prepare_summary)
 else:
     paths_to_copy.append(path)
 

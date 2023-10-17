@@ -1,10 +1,42 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import pandas as pd
-import pytask
+from pytask import task
 from software_patents.config import BLD
 from software_patents.figures.auxiliaries import format_thousands_with_comma
+
+
+@task(
+    kwargs={
+        "produces": {
+            "dist": BLD / "figures" / "fig-patents-distribution.pdf",
+            "dist_vs": BLD / "figures" / "fig-patents-distribution-vs.pdf",
+            "dist_vs_shares": BLD
+            / "figures"
+            / "fig-patents-distribution-vs-shares.pdf",
+        }
+    }
+)
+def task_visualize_distributions(
+    produces: dict[str, Path],
+    path_to_bh: Path = BLD / "analysis" / "bh_with_patent_db.pkl",
+    path_to_patent: Path = BLD / "data" / "patent.pkl",
+) -> None:
+    # Prepare data by merging the publication date to classified patents
+    bh = pd.read_pickle(path_to_bh)
+    date = pd.read_pickle(path_to_patent)
+    df = bh.merge(date, on="ID", how="inner", validate="1:1")
+
+    plot_distribution_of_patents(df, produces["dist"])
+
+    plot_distribution_of_patents_software_vs_non_software(df, produces["dist_vs"])
+
+    plot_distribution_of_patents_software_vs_non_software_shares(
+        df, produces["dist_vs_shares"]
+    )
 
 
 def plot_distribution_of_patents(df, path):
@@ -95,31 +127,3 @@ def plot_distribution_of_patents_software_vs_non_software_shares(df, path):
 
     plt.savefig(path)
     plt.close()
-
-
-@pytask.mark.depends_on(
-    {
-        "bh_with_patent_db": BLD / "analysis" / "bh_with_patent_db.pkl",
-        "patent": BLD / "data" / "patent.pkl",
-    }
-)
-@pytask.mark.produces(
-    {
-        "dist": BLD / "figures" / "fig-patents-distribution.pdf",
-        "dist_vs": BLD / "figures" / "fig-patents-distribution-vs.pdf",
-        "dist_vs_shares": BLD / "figures" / "fig-patents-distribution-vs-shares.pdf",
-    }
-)
-def task_visualize_distributions(depends_on, produces):
-    # Prepare data by merging the publication date to classified patents
-    bh = pd.read_pickle(depends_on["bh_with_patent_db"])
-    date = pd.read_pickle(depends_on["patent"])
-    df = bh.merge(date, on="ID", how="inner", validate="1:1")
-
-    plot_distribution_of_patents(df, produces["dist"])
-
-    plot_distribution_of_patents_software_vs_non_software(df, produces["dist_vs"])
-
-    plot_distribution_of_patents_software_vs_non_software_shares(
-        df, produces["dist_vs_shares"]
-    )

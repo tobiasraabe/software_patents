@@ -17,12 +17,43 @@ ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 """
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Annotated
+
 import pandas as pd
-import pytask
+from pytask import Product
+from pytask import task
 from software_patents.config import BLD
 
 
-def apply_bh2007_algorithm(df):
+for path_to_indicators, path_to_result in (
+    (BLD / "data" / "indicators.pkl", BLD / "analysis" / "bh_with_patent_db.pkl"),
+    (
+        BLD / "data" / "bh_with_crawled_text.pkl",
+        BLD / "analysis" / "bh_with_crawled_text.pkl",
+    ),
+):
+
+    @task
+    def task_apply_bh_to_indicators(
+        path_to_indicators: Path = path_to_indicators,
+        path_to_result: Annotated[Path, Product] = path_to_result,
+    ):
+        df = pd.read_pickle(path_to_indicators)
+        df["CLASSIFICATION_REPLICATION"] = _apply_bh2007_algorithm(df)
+        df = df[
+            [
+                "ID",
+                "CLASSIFICATION_REPLICATION",
+                "ABSTRACT",
+                "DESCRIPTION",
+                "TITLE",
+            ]
+        ]
+        df.to_pickle(path_to_result)
+
+
+def _apply_bh2007_algorithm(df):
     df["ALGO_FIRST_SPEC_SOFTWARE"] = df.ABSTRACT_SOFTWARE | df.DESCRIPTION_SOFTWARE
     df["ALGO_FIRST_SPEC_COMPUTER"] = df.ABSTRACT_COMPUTER | df.DESCRIPTION_COMPUTER
     df["ALGO_FIRST_SPEC_PROGRAM"] = df.ABSTRACT_PROGRAM | df.DESCRIPTION_PROGRAM
@@ -66,27 +97,3 @@ def apply_bh2007_algorithm(df):
     df.REPLICATION_BH2007 = df.REPLICATION_BH2007.astype("category")
 
     return df.REPLICATION_BH2007
-
-
-for depends_on, produces in (
-    (BLD / "data" / "indicators.pkl", BLD / "analysis" / "bh_with_patent_db.pkl"),
-    (
-        BLD / "data" / "bh_with_crawled_text.pkl",
-        BLD / "analysis" / "bh_with_crawled_text.pkl",
-    ),
-):
-
-    @pytask.mark.task
-    def task_apply_bh_to_indicators(depends_on=depends_on, produces=produces):
-        df = pd.read_pickle(depends_on)
-        df["CLASSIFICATION_REPLICATION"] = apply_bh2007_algorithm(df)
-        df = df[
-            [
-                "ID",
-                "CLASSIFICATION_REPLICATION",
-                "ABSTRACT",
-                "DESCRIPTION",
-                "TITLE",
-            ]
-        ]
-        df.to_pickle(produces)
