@@ -503,7 +503,7 @@ def download(subset) -> None:
     elif subset == "replication":
         files = FILES_REPLICATION
     else:
-        files = {**FILES_RAW, **FILES_REPLICATION}
+        files = FILES_RAW | FILES_REPLICATION
 
     click.echo("\n### Start downloading required files.\n")
     for filename, (url, _) in files.items():
@@ -515,7 +515,7 @@ def download(subset) -> None:
 def validate() -> None:
     """Validate downloads with hashes in ``HASHES``."""
     click.echo("### Start validating existing files.\n")
-    files = {**FILES_RAW, **FILES_REPLICATION}
+    files = FILES_RAW | FILES_REPLICATION
     for filename, (_, hash_value) in files.items():
         validate_file(filename, hash_value)
     click.echo("\n### End\n")
