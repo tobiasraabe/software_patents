@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import re
 
+import pandas as pd
+
 
 INDICATORS = [
     "software",
@@ -20,13 +22,16 @@ INDICATORS = [
 ]
 
 
-def create_indicators(df_source, column: str, df_out=None):
-    if df_out is None:
-        df_out = df_source
-
-    for indicator in INDICATORS:
-        df_out[column + "_" + indicator.replace("-", "_").upper()] = df_source[
-            column
-        ].str.contains(r"\b" + indicator + r"\b", flags=re.IGNORECASE)
-
-    return df_out
+def create_indicators(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    return pd.concat(
+        [
+            pd.Series(
+                data=df[column].str.contains(
+                    r"\b" + indicator + r"\b", flags=re.IGNORECASE
+                ),
+                name=column + "_" + indicator.replace("-", "_").upper(),
+            )
+            for indicator in INDICATORS
+        ],
+        axis="columns",
+    )

@@ -84,10 +84,10 @@ To play with the project, clone the repository to your disk with
 $ git clone https://github.com/tobiasraabe/software_patents
 ```
 
-After that create an environment with `conda` and activate it by running
+After that create an environment with `mamba` and activate it by running
 
 ```bash
-$ conda env create -n sp -f environment.yml
+$ mamba env create
 $ activate sp
 ```
 

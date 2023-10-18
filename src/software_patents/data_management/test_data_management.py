@@ -8,7 +8,7 @@ from software_patents.config import BLD
 from software_patents.config import SRC
 
 
-def test_bh():
+def test_bh() -> None:
     df = pd.read_pickle(BLD / "data" / "bh.pkl")
 
     assert df.shape == (399, 6)
@@ -29,7 +29,7 @@ def test_bh():
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
-def test_patent():
+def test_patent() -> None:
     df = pd.read_pickle(BLD / "data" / "patent.pkl")
 
     assert df.shape == (6_024_729, 2)

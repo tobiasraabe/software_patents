@@ -1,20 +1,12 @@
 """Contains code to scrape patents by patent ids."""
 from __future__ import annotations
 
-import multiprocessing as mp
-
 import numpy as np
 import requests
 from bs4 import BeautifulSoup
-from software_patents.config import PROCESSES_SCRAPE_PATENTS
 
 
-def multiprocessed(func, inputs, processes=PROCESSES_SCRAPE_PATENTS):
-    pool = mp.Pool(processes=processes)
-    return pool.map(func, inputs)
-
-
-def scrape_patent_info(patentnr):
+def scrape_patent_info(patentnr: str) -> tuple[str, ...]:
     """Scrape information on a single patent."""
     s = requests.Session()
     adapter = requests.adapters.HTTPAdapter(max_retries=3)

@@ -8,5 +8,5 @@ from software_patents.config import SRC
 @pytask.mark.latex(
     script=SRC / "paper" / "thesis.tex", document=BLD / "paper" / "thesis.pdf"
 )
-def task_compile_thesis():
+def task_compile_thesis() -> None:
     pass

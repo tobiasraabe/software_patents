@@ -6,13 +6,14 @@ The dynamic task creation needs to be better supported by pytask.
 """
 from __future__ import annotations
 
-import functools
 import shutil
+from pathlib import Path
 
-import pytask
+from pytask import task
 from software_patents.config import BLD
 from software_patents.config import SRC
 from software_patents.data_management.prepare_description import prepare_description
+from software_patents.data_management.prepare_patents import merge_indicators
 from software_patents.data_management.prepare_patents import prepare_patents
 from software_patents.data_management.prepare_summary import prepare_summary
 
@@ -24,18 +25,17 @@ for i in range(1, 6):
     path = SRC / "data" / "processed" / f"indicators_description_{i}.pkl"
 
     if not path.exists():
-        depends_on = pytask.mark.depends_on(
-            {
-                j: SRC / "data" / "raw" / f"detail_desc_text_{i}_{j}.parquet"
-                for j in range(1, 126)
-            }
-        )
-        produces = pytask.mark.produces(
-            BLD / "data" / f"indicators_description_{i}.pkl"
-        )
-        task_func = functools.partial(prepare_description, part=str(i))
-
-        locals()[f"task_prepare_description_{i}"] = produces(depends_on(task_func))
+        task(
+            name=path.name,
+            kwargs={
+                "raw_descriptions": {
+                    j: SRC / "data" / "raw" / f"detail_desc_text_{i}_{j}.parquet"
+                    for j in range(1, 126)
+                },
+                "part": str(i),
+                "path_to_pkl": BLD / "data" / f"indicators_description_{i}.pkl",
+            },
+        )(prepare_description)
 
     else:
         paths_to_copy.append(path)
@@ -51,18 +51,15 @@ paths = {
     )
 }
 if not all(path.exists() for path in paths.values()):
-    depends_on = pytask.mark.depends_on(
-        {
-            "bh": BLD / "data" / "bh.pkl",
-            **{
-                f"patent_{i}": SRC / "data" / "raw" / f"patent_{i}.parquet"
-                for i in range(1, 6)
-            },
-        }
-    )
-    produces = pytask.mark.produces(paths)
-    locals()["task_prepare_patents"] = produces(depends_on(prepare_patents))
+    task()(prepare_patents)
 
+    for section in ("abstract", "title"):
+        task(
+            kwargs={
+                "section": section,
+                "path_to_pkl": BLD / "data" / f"indicators_{section}.pkl",
+            }
+        )(merge_indicators)
 else:
     paths_to_copy.extend(list(paths.values()))
 
@@ -70,27 +67,16 @@ else:
 # Paths are relative to the project directory.
 path = SRC / "data" / "processed" / "indicators_summary.pkl"
 if not path.exists():
-    depends_on = pytask.mark.depends_on(
-        {
-            "bh": BLD / "data" / "bh.pkl",
-            **{
-                f"brf_sum_text_{i}": SRC / "data" / "raw" / f"brf_sum_text_{i}.parquet"
-                for i in range(1, 6)
-            },
-        }
-    )
-    produces = pytask.mark.produces(BLD / "data" / "indicators_summary.pkl")
-    locals()["task_prepare_summary"] = produces(depends_on(prepare_summary))
-
+    task()(prepare_summary)
 else:
     paths_to_copy.append(path)
 
 
 if paths_to_copy:
-    for depends_on, produces in (
-        (path, BLD / "data" / path.name) for path in paths_to_copy
-    ):
+    for path in paths_to_copy:
 
-        @pytask.mark.task
-        def task_copy_files(depends_on=depends_on, produces=produces):
-            shutil.copyfile(depends_on, produces)
+        @task(name=path.name)
+        def copy_files(
+            path: Path = path, produces: Path = BLD / "data" / path.name
+        ) -> None:
+            shutil.copyfile(path, produces)

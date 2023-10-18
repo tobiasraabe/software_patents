@@ -1,25 +1,28 @@
 """Prepare data from Bessen and Hunt (2007)."""
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from typing import Annotated
+
 import pandas as pd
-import pytask
+from pytask import Product
 from software_patents.config import BLD
 from software_patents.config import SRC
+from software_patents.config import THREADS_SCRAPE_PATENTS
 from software_patents.data_management.indicators import create_indicators
-from software_patents.data_management.scrape_patents import multiprocessed
 from software_patents.data_management.scrape_patents import scrape_patent_info
 
 
-@pytask.mark.depends_on(SRC / "data" / "external" / "bessen_hunt_2007.dta")
-@pytask.mark.produces(
-    {
-        "bh": BLD / "data" / "bh.pkl",
-        "bh_w_text": BLD / "data" / "bh_with_crawled_text.pkl",
-    }
-)
-def task_prepare_bessen_hunt_2007(depends_on, produces):
+def task_prepare_bessen_hunt_2007(
+    path_to_external: Path = SRC / "data" / "external" / "bessen_hunt_2007.dta",
+    path_to_bh: Annotated[Path, Product] = BLD / "data" / "bh.pkl",
+    path_to_bh_with_crawled_text: Annotated[Path, Product] = BLD
+    / "data"
+    / "bh_with_crawled_text.pkl",
+) -> None:
     # Read the dataset of BH2007
-    df = pd.read_stata(depends_on)
+    df = pd.read_stata(path_to_external)
 
     # Setting the correct column names
     dict_columns = {
@@ -48,12 +51,14 @@ def task_prepare_bessen_hunt_2007(depends_on, produces):
     # Exclude patent which is not available anymore
     df = df.loc[~df.ID.eq(5_785_646)]
 
-    df.to_pickle(produces["bh"])
+    df.to_pickle(path_to_bh)
 
     # Crawl information from Google and append to existing data
-    out = multiprocessed(scrape_patent_info, df.ID.values)
+    with ThreadPoolExecutor(max_workers=THREADS_SCRAPE_PATENTS) as executor:
+        results = executor.map(scrape_patent_info, df.ID.to_list())
+
     out = pd.DataFrame(
-        out,
+        results,
         columns=[
             "ID",
             "TITLE",
@@ -66,6 +71,7 @@ def task_prepare_bessen_hunt_2007(depends_on, produces):
     df = df.merge(out, on="ID", how="inner", validate="1:1")
 
     for column in ("ABSTRACT", "DESCRIPTION", "TITLE"):
-        df = create_indicators(df, column)
+        indicators = create_indicators(df, column)
+        df = pd.concat([df, indicators], axis="columns")
 
-    df.to_pickle(produces["bh_w_text"])
+    df.to_pickle(path_to_bh_with_crawled_text)

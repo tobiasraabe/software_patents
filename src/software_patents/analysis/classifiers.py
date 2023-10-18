@@ -11,7 +11,6 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.feature_selection import SelectKBest
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from software_patents.analysis.auxiliary import identity
 from software_patents.analysis.transformers import NLTKPreprocessor
 
 # fmt: off
@@ -64,7 +63,7 @@ Logit = Pipeline([
 ImprovedClassifier = Pipeline([
     ("preprocessor", NLTKPreprocessor()),
     ("vectorizer", TfidfVectorizer(
-        tokenizer=identity, preprocessor=None, lowercase=False,
+        tokenizer=lambda x: x, preprocessor=None, lowercase=False,
         ngram_range=(1, 4), min_df=0.05
     )),
     ("feature_selection", SelectFromModel(

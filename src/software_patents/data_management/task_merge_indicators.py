@@ -1,27 +1,67 @@
 """This module contains code for merging indicators to one dataset."""
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Annotated
+
 import pandas as pd
-import pytask
+from pytask import Product
+from pytask import task
 from software_patents.config import BLD
 from software_patents.data_management.indicators import INDICATORS
 
+_INDICATOR_PARTS = {
+    f"indicators_description_{i}": BLD / "data" / f"indicators_description_{i}.pkl"
+    for i in range(1, 6)
+}
 
-def merge_description_indicators(depends_on, produces):
+
+@task()
+def merge_description_indicators(
+    path_to_indicator_parts: dict[str, Path] = _INDICATOR_PARTS,
+    path_to_indicators: Annotated[Path, Product] = BLD
+    / "data"
+    / "indicators_description.pkl",
+) -> None:
     to_concat = []
     for i in range(1, 6):
-        df = pd.read_pickle(depends_on[f"indicators_description_{i}"])
+        df = pd.read_pickle(path_to_indicator_parts[f"indicators_description_{i}"])
         to_concat.append(df)
+
     df = pd.concat(to_concat)
 
     df = df.drop_duplicates()
 
     df = df.drop_duplicates(subset="ID", keep="first")
 
-    df.to_pickle(produces["indicators_description"])
+    df.to_pickle(path_to_indicators)
 
 
-def merge_summary_into_description(description, summary):
+@task()
+def merge_all_indicators(
+    path_to_indicators_description: Path = BLD / "data" / "indicators_description.pkl",
+    path_to_indicators_summary: Path = BLD / "data" / "indicators_summary.pkl",
+    path_to_indicators_abstract: Path = BLD / "data" / "indicators_abstract.pkl",
+    path_to_indicators_title: Path = BLD / "data" / "indicators_title.pkl",
+    path_to_indicators: Annotated[Path, Product] = BLD / "data" / "indicators.pkl",
+) -> None:
+    description = pd.read_pickle(path_to_indicators_description)
+    summary = pd.read_pickle(path_to_indicators_summary)
+
+    df = _merge_summary_into_description(description, summary)
+
+    abstract = pd.read_pickle(path_to_indicators_abstract)
+    title = pd.read_pickle(path_to_indicators_title)
+
+    df = df.merge(abstract, on="ID", how="inner", validate="1:1")
+    df = df.merge(title, on="ID", how="inner", validate="1:1")
+
+    df.to_pickle(path_to_indicators)
+
+
+def _merge_summary_into_description(
+    description: pd.DataFrame, summary: pd.DataFrame
+) -> pd.DataFrame:
     """Merge indicators of summary into description with logical ORs."""
     df = description.merge(summary, on="ID", how="outer")
 
@@ -36,43 +76,3 @@ def merge_summary_into_description(description, summary):
     df = df.drop(columns=summary_cols)
 
     return df
-
-
-def merge_all_indicators(depends_on, produces):
-    description = pd.read_pickle(produces["indicators_description"])
-    summary = pd.read_pickle(depends_on["indicators_summary"])
-
-    df = merge_summary_into_description(description, summary)
-
-    abstract = pd.read_pickle(depends_on["indicators_abstract"])
-    title = pd.read_pickle(depends_on["indicators_title"])
-
-    df = df.merge(abstract, on="ID", how="inner", validate="1:1")
-    df = df.merge(title, on="ID", how="inner", validate="1:1")
-
-    df.to_pickle(produces["indicators"])
-
-
-@pytask.mark.depends_on(
-    {
-        "indicators_abstract": BLD / "data" / "indicators_abstract.pkl",
-        "indicators_title": BLD / "data" / "indicators_title.pkl",
-        "indicators_summary": BLD / "data" / "indicators_summary.pkl",
-        **{
-            f"indicators_description_{i}": BLD
-            / "data"
-            / f"indicators_description_{i}.pkl"
-            for i in range(1, 6)
-        },
-    }
-)
-@pytask.mark.produces(
-    {
-        "indicators": BLD / "data" / "indicators.pkl",
-        "indicators_description": BLD / "data" / "indicators_description.pkl",
-    }
-)
-def task_merge_indicators(depends_on, produces):
-    """Merge all indicators from all parts of text to one dataframe."""
-    merge_description_indicators(depends_on, produces)
-    merge_all_indicators(depends_on, produces)
