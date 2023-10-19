@@ -3,8 +3,14 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Any
+from typing import Callable
 
 import numpy as np
+import pandas as pd
+from attrs import define
+from pytask import DataCatalog
+from pytask import PickleNode
 
 
 SRC = Path(__file__).parent.resolve()
@@ -21,3 +27,18 @@ DASK_LOCAL_CLUSTER_CONFIGURATION = {
     "threads_per_worker": 1,
     "diagnostics_port": 8787,
 }
+
+
+@define
+class PandasPickleNode(PickleNode):
+    load_func: Callable[[bytes], Any] = pd.read_pickle
+    dump_func: Callable[[Any, Path], bytes] = pd.to_pickle
+
+    def load(self) -> Any:
+        return self.load_func(self.path)
+
+    def save(self, value: Any) -> None:
+        self.dump_func(value, self.path)
+
+
+data_catalog = DataCatalog(default_node=PandasPickleNode)

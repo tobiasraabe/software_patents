@@ -3,24 +3,21 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Annotated
 
 import pandas as pd
-from pytask import Product
-from software_patents.config import BLD
+from software_patents.config import data_catalog
 from software_patents.config import SRC
 from software_patents.config import THREADS_SCRAPE_PATENTS
 from software_patents.data_management.indicators import create_indicators
 from software_patents.data_management.scrape_patents import scrape_patent_info
+from typing_extensions import Annotated
 
 
 def task_prepare_bessen_hunt_2007(
     path_to_external: Path = SRC / "data" / "external" / "bessen_hunt_2007.dta",
-    path_to_bh: Annotated[Path, Product] = BLD / "data" / "bh.pkl",
-    path_to_bh_with_crawled_text: Annotated[Path, Product] = BLD
-    / "data"
-    / "bh_with_crawled_text.pkl",
-) -> None:
+) -> Annotated[
+    pd.DataFrame, (data_catalog["bh"], data_catalog["bh_with_crawled_text"])
+]:
     # Read the dataset of BH2007
     df = pd.read_stata(path_to_external)
 
@@ -51,7 +48,7 @@ def task_prepare_bessen_hunt_2007(
     # Exclude patent which is not available anymore
     df = df.loc[~df.ID.eq(5_785_646)]
 
-    df.to_pickle(path_to_bh)
+    bh = df.copy()
 
     # Crawl information from Google and append to existing data
     with ThreadPoolExecutor(max_workers=THREADS_SCRAPE_PATENTS) as executor:
@@ -74,4 +71,4 @@ def task_prepare_bessen_hunt_2007(
         indicators = create_indicators(df, column)
         df = pd.concat([df, indicators], axis="columns")
 
-    df.to_pickle(path_to_bh_with_crawled_text)
+    return bh, df

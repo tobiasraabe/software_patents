@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import numpy.testing as npt
 import pandas as pd
+import pytest
 from sklearn.metrics import confusion_matrix
-from software_patents.config import BLD
+from software_patents.config import data_catalog
 from software_patents.config import SRC
 
 
+@pytest.mark.skipif("bh" not in data_catalog.entries)
 def test_bh() -> None:
-    df = pd.read_pickle(BLD / "data" / "bh.pkl")
+    df = data_catalog["bh"].load()
 
     assert df.shape == (399, 6)
     assert df.notnull().all().all()
@@ -29,8 +31,9 @@ def test_bh() -> None:
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
+@pytest.mark.skipif("patent" not in data_catalog.entries)
 def test_patent() -> None:
-    df = pd.read_pickle(BLD / "data" / "patent.pkl")
+    df = data_catalog["patent"].load()
 
     assert df.shape == (6_024_729, 2)
     assert df.notna().all().all()

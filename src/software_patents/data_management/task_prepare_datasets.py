@@ -6,19 +6,16 @@ The dynamic task creation needs to be better supported by pytask.
 """
 from __future__ import annotations
 
-import shutil
-from pathlib import Path
-
 from pytask import task
 from software_patents.config import BLD
+from software_patents.config import data_catalog
+from software_patents.config import PandasPickleNode
 from software_patents.config import SRC
 from software_patents.data_management.prepare_description import prepare_description
 from software_patents.data_management.prepare_patents import merge_indicators
 from software_patents.data_management.prepare_patents import prepare_patents
 from software_patents.data_management.prepare_summary import prepare_summary
 
-
-paths_to_copy = []
 
 for i in range(1, 6):
     # Path is relative to the project directory
@@ -35,15 +32,18 @@ for i in range(1, 6):
                 "part": str(i),
                 "path_to_pkl": BLD / "data" / f"indicators_description_{i}.pkl",
             },
+            produces=data_catalog[f"indicators_description_{i}"],
         )(prepare_description)
 
     else:
-        paths_to_copy.append(path)
+        data_catalog.add(
+            f"indicators_description_{i}", PandasPickleNode.from_path(path)
+        )
 
 
 # Paths are relative to the project directory.
 paths = {
-    path.name: path
+    path.stem: path
     for path in (
         SRC / "data" / "processed" / "indicators_abstract.pkl",
         SRC / "data" / "processed" / "indicators_title.pkl",
@@ -55,28 +55,21 @@ if not all(path.exists() for path in paths.values()):
 
     for section in ("abstract", "title"):
         task(
-            kwargs={
-                "section": section,
-                "path_to_pkl": BLD / "data" / f"indicators_{section}.pkl",
-            }
+            kwargs={"section": section}, produces=data_catalog[f"indicators_{section}"]
         )(merge_indicators)
 else:
-    paths_to_copy.extend(list(paths.values()))
+    data_catalog.add(
+        "indicators_abstract", PandasPickleNode.from_path(paths["indicators_abstract"])
+    )
+    data_catalog.add(
+        "indicators_title", PandasPickleNode.from_path(paths["indicators_title"])
+    )
+    data_catalog.add("patent", PandasPickleNode.from_path(paths["patent"]))
 
 
 # Paths are relative to the project directory.
 path = SRC / "data" / "processed" / "indicators_summary.pkl"
 if not path.exists():
-    task()(prepare_summary)
+    task(produces=data_catalog["indicators_summary"])(prepare_summary)
 else:
-    paths_to_copy.append(path)
-
-
-if paths_to_copy:
-    for path in paths_to_copy:
-
-        @task(name=path.name)
-        def copy_files(
-            path: Path = path, produces: Path = BLD / "data" / path.name
-        ) -> None:
-            shutil.copyfile(path, produces)
+    data_catalog.add("indicators_summary", PandasPickleNode.from_path(path))
