@@ -11,14 +11,17 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
+
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
 PV_LAST_UPDATE = "20180528"
 """Str: Date of newest data release."""
+
 PV_DOWNLOAD_LINK = (
     f"http://s3.amazonaws.com/data-patentsview-org/{PV_LAST_UPDATE}/download"
 )
 """Str: Base url for downloading data from PatentsView."""
+
 DB_DOWNLOAD_LINK = "http://dl.dropboxusercontent.com/s/"
 """Str: Base url for downloading data from Dropbox."""
 
@@ -67,39 +70,39 @@ that Powershell returns uppercase letters and Python lowercase.
 FILES_REPLICATION: dict[str, list[str]] = {
     "indicators_abstract.pkl": [
         f"{DB_DOWNLOAD_LINK}ckleerbtm54ddpm/indicators_abstract.pkl?dl=0",
-        "9b63982838f08f162af59019a3e68b33a3e87aaac97df637b98cf15d42530bcc",
+        "00e616b54961985ba02b5f6ba7afb4bf772a005dc55da81ee06a5ec791d1dd0d",
     ],
     "indicators_description_1.pkl": [
         f"{DB_DOWNLOAD_LINK}tfhzex5o18ocugu/indicators_description_1.pkl?dl=0",
-        "1ff8899dcb3843f46fd6f92b04a5112632d6e8e9a9f331bd4c84d7374133143f",
+        "ab767934ab443b6d7302ee487978a879b42234ea4737457331831042afdaaa83",
     ],
     "indicators_description_2.pkl": [
         f"{DB_DOWNLOAD_LINK}ayvvzdzr8kihx4e/indicators_description_2.pkl?dl=0",
-        "a4a3cab87a1201fe74b1f85a8ae88c92f0e3fdbea5f7b55e6ef0b2aa99f6c93c",
+        "75abedd8b30ab1e66600a21a5b6f7d2072411eb32dad6078036578c591b66d21",
     ],
     "indicators_description_3.pkl": [
         f"{DB_DOWNLOAD_LINK}frnos85yq97sps4/indicators_description_3.pkl?dl=0",
-        "b408815666381c3d6f307eef92c21a3670caea2911431c078732c2d069fd2744",
+        "0c6c323007c4ae9160ba78213666597233a082fe5a917c137a618bc1114bac5a",
     ],
     "indicators_description_4.pkl": [
         f"{DB_DOWNLOAD_LINK}hsswas2hgwvb8et/indicators_description_4.pkl?dl=0",
-        "7f58681c7095b5b93e6449fed67f8baa7e160f3b8aeaaf589a111399fdb3e966",
+        "666aad68397a49e5baf5e63e0afb731fec13bf64844652b89d6b12e8cbdd6467",
     ],
     "indicators_description_5.pkl": [
         f"{DB_DOWNLOAD_LINK}42but1qhjil1trg/indicators_description_5.pkl?dl=0",
-        "7ca0c1092bf0c555fe1d065abdf20db10faa5dcd685eedb8896f66cbb0377157",
+        "e02fbd23a41f940742e60ad43ca2399d363e8e004cfbaee38d5233edb59f074a",
     ],
     "indicators_title.pkl": [
         f"{DB_DOWNLOAD_LINK}0fxqnvyhsljwprt/indicators_title.pkl?dl=0",
-        "1dcedef7f60f2ad0a2b9b2b9124fb690ed88afec39e9d65967b1ca898f281b79",
+        "2cdd32da894af12e6429131dc5dee9de17225b4601a57844eaef2766e0d38891",
     ],
     "patent.pkl": [
         f"{DB_DOWNLOAD_LINK}atu4974la2p8d5s/patent.pkl?dl=0",
-        "a6ad32258040fa6bdf7abd583038ceec1adae6ab19f028c9a98ab3473fd9b6fd",
+        "0cae61d2335bc3d7aaa616eefbc2908fb3590eaa583ef4688e3bebd1dfdefc4a",
     ],
     "indicators_summary.pkl": [
         f"{DB_DOWNLOAD_LINK}8mffjyvintl757a/indicators_summary.pkl?dl=0",
-        "280081912bee1676638572fe623954c2b42480e1616043fcb0f63f199f3b5244",
+        "5565a5d128569b5f6dbd863aa02c51dcfa49cf75dc3861b9970e80935b101d3e",
     ],
 }
 """Dict[str, List[str]]: Contains file information for replication data.
@@ -269,11 +272,12 @@ def validate_file(filename: str, hash_value: str | None = None) -> None:
                 break
             sha.update(chunk)
     try:
-        assert sha.hexdigest() == hash_value
+        hash_ = sha.hexdigest()
+        assert hash_ == hash_value
     except AssertionError:
         click.echo(
-            f"File {filename} is corrupt. "
-            "Delete it manually and restart the program."
+            f"File {filename} is corrupt. It has hash {hash_}, but we expected "
+            f"{hash_value}. Delete it manually and restart the program."
         )
     else:
         click.echo(f"File {filename} is validated.")
