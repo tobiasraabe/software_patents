@@ -6,10 +6,10 @@ The dynamic task creation needs to be better supported by pytask.
 """
 from __future__ import annotations
 
+from pytask import PickleNode
 from pytask import task
 from software_patents.config import BLD
 from software_patents.config import data_catalog
-from software_patents.config import PandasPickleNode
 from software_patents.config import SRC
 from software_patents.data_management.prepare_description import prepare_description
 from software_patents.data_management.prepare_patents import merge_indicators
@@ -36,9 +36,7 @@ for i in range(1, 6):
         )(prepare_description)
 
     else:
-        data_catalog.add(
-            f"indicators_description_{i}", PandasPickleNode.from_path(path)
-        )
+        data_catalog.add(f"indicators_description_{i}", PickleNode.from_path(path))
 
 
 # Paths are relative to the project directory.
@@ -59,12 +57,12 @@ if not all(path.exists() for path in paths.values()):
         )(merge_indicators)
 else:
     data_catalog.add(
-        "indicators_abstract", PandasPickleNode.from_path(paths["indicators_abstract"])
+        "indicators_abstract", PickleNode.from_path(paths["indicators_abstract"])
     )
     data_catalog.add(
-        "indicators_title", PandasPickleNode.from_path(paths["indicators_title"])
+        "indicators_title", PickleNode.from_path(paths["indicators_title"])
     )
-    data_catalog.add("patent", PandasPickleNode.from_path(paths["patent"]))
+    data_catalog.add("patent", PickleNode.from_path(paths["patent"]))
 
 
 # Paths are relative to the project directory.
@@ -72,4 +70,4 @@ path = SRC / "data" / "processed" / "indicators_summary.pkl"
 if not path.exists():
     task(produces=data_catalog["indicators_summary"])(prepare_summary)
 else:
-    data_catalog.add("indicators_summary", PandasPickleNode.from_path(path))
+    data_catalog.add("indicators_summary", PickleNode.from_path(path))
