@@ -28,7 +28,7 @@ repos:
     -   id: reorder-python-imports
         args: [--py38-plus, --add-import, 'from __future__ import annotations']
 -   repo: https://github.com/psf/black
-    rev: 23.10.0
+    rev: 23.11.0
     hooks:
     -   id: black
 -   repo: https://github.com/asottile/blacken-docs
@@ -37,15 +37,15 @@ repos:
     -   id: blacken-docs
         additional_dependencies: [black]
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.0
+    rev: v0.1.6
     hooks:
       - id: ruff
 -   repo: https://github.com/dosisod/refurb
-    rev: v1.22.0
+    rev: v1.24.0
     hooks:
     -   id: refurb
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.0
+    rev: v1.7.1
     hooks:
     -   id: mypy
         additional_dependencies: [
