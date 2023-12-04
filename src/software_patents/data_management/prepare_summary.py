@@ -50,5 +50,4 @@ def prepare_summary(
     out.to_parquet(BLD / "data" / "indicators_summary.parquet", compute=True)
 
     df = dd.read_parquet(SRC / "data" / "indicators_summary.parquet")
-    df = df.compute()
-    return df
+    return df.compute()

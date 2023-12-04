@@ -21,5 +21,4 @@ for bh_with_texts, replication in (
     def task_replicate_results_of_bh2007(
         bh: pd.DataFrame, bh_with_texts: pd.DataFrame
     ) -> pd.DataFrame:
-        bh = bh.merge(bh_with_texts, on="ID", how="inner", validate="1:1")
-        return bh
+        return bh.merge(bh_with_texts, on="ID", how="inner", validate="1:1")

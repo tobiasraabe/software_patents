@@ -33,10 +33,9 @@ for indicators, result in (
     @task(kwargs={"df": indicators}, produces=result)
     def task_apply_bh_to_indicators(df: pd.DataFrame) -> pd.DataFrame:
         df["CLASSIFICATION_REPLICATION"] = _apply_bh2007_algorithm(df)
-        df = df[
+        return df[
             ["ID", "CLASSIFICATION_REPLICATION", "ABSTRACT", "DESCRIPTION", "TITLE"]
         ]
-        return df
 
 
 def _apply_bh2007_algorithm(df: pd.DataFrame) -> pd.Series:

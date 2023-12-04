@@ -21,8 +21,7 @@ def merge_description_indicators(
 ) -> Annotated[pd.DataFrame, data_catalog["indicators_description"]]:
     df = pd.concat(list(indicator_parts.values()))
     df = df.drop_duplicates()
-    df = df.drop_duplicates(subset="ID", keep="first")
-    return df
+    return df.drop_duplicates(subset="ID", keep="first")
 
 
 @task(produces=data_catalog["indicators"])
@@ -34,8 +33,7 @@ def merge_all_indicators(
 ) -> pd.DataFrame:
     df = _merge_summary_into_description(description, summary)
     df = df.merge(abstract, on="ID", how="inner", validate="1:1")
-    df = df.merge(title, on="ID", how="inner", validate="1:1")
-    return df
+    return df.merge(title, on="ID", how="inner", validate="1:1")
 
 
 def _merge_summary_into_description(
@@ -52,6 +50,4 @@ def _merge_summary_into_description(
         )
 
     summary_cols = df.filter(like="SUMMARY").columns.tolist()
-    df = df.drop(columns=summary_cols)
-
-    return df
+    return df.drop(columns=summary_cols)

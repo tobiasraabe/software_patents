@@ -271,16 +271,16 @@ def validate_file(filename: str, hash_value: str | None = None) -> None:
             if not chunk:
                 break
             sha.update(chunk)
-    try:
-        hash_ = sha.hexdigest()
-        assert hash_ == hash_value
-    except AssertionError:
+
+    hash_ = sha.hexdigest()
+    if hash_ != hash_value:
         click.echo(
             f"File {filename} is corrupt. It has hash {hash_}, but we expected "
             f"{hash_value}. Delete it manually and restart the program."
         )
     else:
         click.echo(f"File {filename} is validated.")
+    return None
 
 
 def split_detail_desc_text(filename: str) -> None:

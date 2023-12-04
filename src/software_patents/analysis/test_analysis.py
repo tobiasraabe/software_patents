@@ -63,10 +63,9 @@ def test_equality_of_ml_replication() -> None:
 @pytest.fixture(scope="module")
 def table() -> None:
     """Fixture for Table 1 of Bessen and Hunt (2007)."""
-    table = pd.read_excel(
+    return pd.read_excel(
         SRC / "data" / "external" / "bh2007_table_1.xlsx", header=2, usecols=[0, 1, 4]
     )
-    return table
 
 
 @pytest.fixture(scope="module")
@@ -74,9 +73,7 @@ def sp() -> None:
     """Fixture for all classified patents."""
     bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")
     date = pd.read_pickle(BLD / "data" / "patent.pkl")
-    df = bh.merge(date, on="ID", how="inner", validate="1:1")
-
-    return df
+    return bh.merge(date, on="ID", how="inner", validate="1:1")
 
 
 @pytest.mark.xfail(
