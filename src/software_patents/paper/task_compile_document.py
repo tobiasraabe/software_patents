@@ -1,3 +1,4 @@
+"""Contains code for compiling the thesis."""
 from __future__ import annotations
 
 import pytask

@@ -29,7 +29,7 @@ def prepare_description(
     path_to_bh: Path = BLD / "data" / "bh.pkl",
 ) -> pd.DataFrame:
     # Get 399 patent numbers from BH2007 to store fulltext of description.
-    bh = pd.read_pickle(path_to_bh)
+    bh = pd.read_pickle(path_to_bh)  # noqa: S301
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)

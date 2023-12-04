@@ -34,7 +34,7 @@ def prepare_summary(
     raw_summaries: dict[str, Path] = _RAW_SUMMARIES,  # noqa: ARG001
 ) -> pd.DataFrame:
     # Get 399 patent numbers from BH2007 to store fulltext of description.
-    bh = pd.read_pickle(path_to_bh)
+    bh = pd.read_pickle(path_to_bh)  # noqa: S301
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)

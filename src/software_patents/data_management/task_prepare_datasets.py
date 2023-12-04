@@ -1,5 +1,4 @@
-"""This module flexibly creates intermediate datasets from the raw data or copies
-processed and downloaded files.
+"""Create datasets from the raw data or copies processed and downloaded files.
 
 The dynamic task creation needs to be better supported by pytask.
 

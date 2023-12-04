@@ -1,4 +1,4 @@
-"""This script allows to download the necessary data for running the project."""
+"""Allows to download the necessary data for running the project."""
 from __future__ import annotations
 
 import csv
@@ -479,7 +479,7 @@ def split_brf_sum_text(filename: str) -> None:
 
 @click.group(context_settings=CONTEXT_SETTINGS, chain=True)
 def cli() -> None:
-    """Program for preparing the data for the project.
+    r"""Program for preparing the data for the project.
 
     \b
     The program covers three steps:
@@ -500,7 +500,7 @@ def cli() -> None:
     default="replication",
     help="Download raw data (~60GB), replication data (<750MB) or both.",
 )
-def download(subset) -> None:
+def download(subset: str) -> None:
     """Download files specified in ``URLS``."""
     if subset == "raw":
         files = FILES_RAW

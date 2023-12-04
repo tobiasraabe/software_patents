@@ -1,4 +1,4 @@
-"""This module contains tasks to replicate the result of Bessen and Hunt."""
+"""Contains tasks to replicate the result of Bessen and Hunt."""
 from __future__ import annotations
 
 import pandas as pd

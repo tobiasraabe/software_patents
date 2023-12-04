@@ -1,4 +1,4 @@
-"""This module performs some tests to assert that the data stays the same."""
+"""Perform some tests to assert that the data stays the same."""
 from __future__ import annotations
 
 import numpy.testing as npt

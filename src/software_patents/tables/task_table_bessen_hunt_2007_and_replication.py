@@ -1,4 +1,4 @@
-"""This module contains code to produce confusion matrices."""
+"""Contains code to produce confusion matrices."""
 from __future__ import annotations
 
 from pathlib import Path

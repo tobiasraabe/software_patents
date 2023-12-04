@@ -1,5 +1,4 @@
-"""This file classifies the patents of the original data of Bessen and Hunt (2007)
-according to their algorithm.
+"""Classifies the patents of the original data of Bessen and Hunt (2007).
 
 The algorithm is defined as follows:
 

@@ -1,4 +1,4 @@
-"""This module contains auxiliary functions for plots."""
+"""Contains auxiliary functions for plots."""
 from __future__ import annotations
 
 from typing import Any

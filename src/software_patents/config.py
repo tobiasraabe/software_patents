@@ -1,4 +1,4 @@
-"""This is the configuration of the project."""
+"""Configuration of the project."""
 from __future__ import annotations
 
 import os

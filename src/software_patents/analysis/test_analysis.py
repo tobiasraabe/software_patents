@@ -1,6 +1,4 @@
-"""This module tests the equality of the two algorithms in classifcation_bh2007.py and
-replication_bh2007.py as well as the data quality.
-"""
+"""Tests the equality of the two algorithms and data quality."""
 from __future__ import annotations
 
 import numpy.testing as npt
@@ -71,8 +69,8 @@ def table() -> None:
 @pytest.fixture(scope="module")
 def sp() -> None:
     """Fixture for all classified patents."""
-    bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")
-    date = pd.read_pickle(BLD / "data" / "patent.pkl")
+    bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")  # noqa: S301
+    date = pd.read_pickle(BLD / "data" / "patent.pkl")  # noqa: S301
     return bh.merge(date, on="ID", how="inner", validate="1:1")
 
 

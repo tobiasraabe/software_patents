@@ -1,4 +1,4 @@
-"""This module contains code for merging indicators to one dataset."""
+"""Contains code for merging indicators to one dataset."""
 from __future__ import annotations
 
 import pandas as pd
