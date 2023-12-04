@@ -1,5 +1,4 @@
-"""This file classifies the patents of the original data of Bessen and Hunt (2007)
-according to their algorithm.
+"""Classifies the patents of the original data of Bessen and Hunt (2007).
 
 The algorithm is defined as follows:
 
@@ -17,40 +16,25 @@ ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 """
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Annotated
-
 import pandas as pd
-from pytask import Product
 from pytask import task
-from software_patents.config import BLD
+from software_patents.config import data_catalog
 
 
-for path_to_indicators, path_to_result in (
-    (BLD / "data" / "indicators.pkl", BLD / "analysis" / "bh_with_patent_db.pkl"),
+for indicators, result in (
+    (data_catalog["indicators"], data_catalog["bh_with_patent_db"]),
     (
-        BLD / "data" / "bh_with_crawled_text.pkl",
-        BLD / "analysis" / "bh_with_crawled_text.pkl",
+        data_catalog["bh_with_crawled_text"],
+        data_catalog["bh_with_crawled_text_analysis"],
     ),
 ):
 
-    @task()
-    def task_apply_bh_to_indicators(
-        path_to_indicators: Path = path_to_indicators,
-        path_to_result: Annotated[Path, Product] = path_to_result,
-    ) -> None:
-        df = pd.read_pickle(path_to_indicators)
+    @task(kwargs={"df": indicators}, produces=result)
+    def task_apply_bh_to_indicators(df: pd.DataFrame) -> pd.DataFrame:
         df["CLASSIFICATION_REPLICATION"] = _apply_bh2007_algorithm(df)
-        df = df[
-            [
-                "ID",
-                "CLASSIFICATION_REPLICATION",
-                "ABSTRACT",
-                "DESCRIPTION",
-                "TITLE",
-            ]
+        return df[
+            ["ID", "CLASSIFICATION_REPLICATION", "ABSTRACT", "DESCRIPTION", "TITLE"]
         ]
-        df.to_pickle(path_to_result)
 
 
 def _apply_bh2007_algorithm(df: pd.DataFrame) -> pd.Series:

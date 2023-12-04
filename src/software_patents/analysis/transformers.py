@@ -1,4 +1,4 @@
-"""This module contains code for transformers of sklearn models."""
+"""Contains code for transformers of sklearn models."""
 from __future__ import annotations
 
 import string

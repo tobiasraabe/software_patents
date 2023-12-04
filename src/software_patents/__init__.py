@@ -1,3 +1,4 @@
+"""Main entry-point for the software_patents package."""
 from __future__ import annotations
 
 try:

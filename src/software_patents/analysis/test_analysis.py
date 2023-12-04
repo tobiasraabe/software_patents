@@ -1,17 +1,17 @@
-"""This module tests the equality of the two algorithms in classifcation_bh2007.py and
-replication_bh2007.py as well as the data quality.
-"""
+"""Tests the equality of the two algorithms and data quality."""
 from __future__ import annotations
 
 import numpy.testing as npt
 import pandas as pd
 import pytest
 from software_patents.config import BLD
+from software_patents.config import data_catalog
 from software_patents.config import SRC
 
 
+@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
 def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
-    df = pd.read_pickle(BLD / "analysis" / "replication_bh_with_crawled_text.pkl")
+    df = data_catalog["replication_bh_with_crawled_text"].load()
 
     different_classifications = df.loc[
         ~df.CLASSIFICATION_ALGORITHM.eq(df.CLASSIFICATION_REPLICATION)
@@ -24,8 +24,9 @@ def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     assert different_classifications.ID.eq(5_489_660).all()
 
 
+@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog.entries)
 def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
-    df = pd.read_pickle(BLD / "analysis" / "replication_bh_with_patent_db.pkl")
+    df = data_catalog["replication_bh_with_patent_db"].load()
 
     different_classifications = df.loc[
         ~df.CLASSIFICATION_ALGORITHM.eq(df.CLASSIFICATION_REPLICATION)
@@ -34,9 +35,11 @@ def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     assert different_classifications.shape[0] == 1
 
 
+@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
+@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog.entries)
 def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
-    bh = pd.read_pickle(BLD / "analysis" / "replication_bh_with_crawled_text.pkl")
-    db = pd.read_pickle(BLD / "analysis" / "replication_bh_with_patent_db.pkl")
+    bh = data_catalog["replication_bh_with_crawled_text"].load()
+    db = data_catalog["replication_bh_with_patent_db"].load()
 
     columns = ["ID", "CLASSIFICATION_REPLICATION"]
     bh = bh[columns]
@@ -58,20 +61,17 @@ def test_equality_of_ml_replication() -> None:
 @pytest.fixture(scope="module")
 def table() -> None:
     """Fixture for Table 1 of Bessen and Hunt (2007)."""
-    table = pd.read_excel(
+    return pd.read_excel(
         SRC / "data" / "external" / "bh2007_table_1.xlsx", header=2, usecols=[0, 1, 4]
     )
-    return table
 
 
 @pytest.fixture(scope="module")
 def sp() -> None:
     """Fixture for all classified patents."""
-    bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")
-    date = pd.read_pickle(BLD / "data" / "patent.pkl")
-    df = bh.merge(date, on="ID", how="inner", validate="1:1")
-
-    return df
+    bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")  # noqa: S301
+    date = pd.read_pickle(BLD / "data" / "patent.pkl")  # noqa: S301
+    return bh.merge(date, on="ID", how="inner", validate="1:1")
 
 
 @pytest.mark.xfail(

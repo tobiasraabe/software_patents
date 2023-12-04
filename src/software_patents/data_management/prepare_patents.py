@@ -7,7 +7,6 @@ Note that the information is previously processed by ``download_data.py`` and
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated
 
 import dask.dataframe as dd
 import numpy as np
@@ -19,6 +18,7 @@ from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
 from software_patents.data_management.indicators import create_indicators
+from typing_extensions import Annotated
 
 
 _RAW_PATENTS = {
@@ -44,7 +44,7 @@ def prepare_patents(
 def process_data(path_to_bh: Path) -> None:
     # Get 399 patent numbers from BH2007 to store fulltext of abstract and
     # title.
-    bh = pd.read_pickle(path_to_bh)
+    bh = pd.read_pickle(path_to_bh)  # noqa: S301
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
@@ -66,7 +66,6 @@ def process_data(path_to_bh: Path) -> None:
         )
 
 
-def merge_indicators(section: str, path_to_pkl: Annotated[Path, Product]) -> None:
+def merge_indicators(section: str) -> pd.DataFrame:
     df = dd.read_parquet(BLD / "data" / f"indicators_{section}.parquet/*.parquet")
-    df = df.compute()
-    df.to_pickle(path_to_pkl)
+    return df.compute()

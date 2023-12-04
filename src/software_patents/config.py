@@ -1,10 +1,11 @@
-"""This is the configuration of the project."""
+"""Configuration of the project."""
 from __future__ import annotations
 
 import os
 from pathlib import Path
 
 import numpy as np
+from pytask import DataCatalog
 
 
 SRC = Path(__file__).parent.resolve()
@@ -21,3 +22,6 @@ DASK_LOCAL_CLUSTER_CONFIGURATION = {
     "threads_per_worker": 1,
     "diagnostics_port": 8787,
 }
+
+
+data_catalog = DataCatalog()

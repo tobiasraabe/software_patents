@@ -1,4 +1,4 @@
-"""This module contains pipelines to build prediction models."""
+"""Contains pipelines to build prediction models."""
 from __future__ import annotations
 
 from sklearn.decomposition import PCA

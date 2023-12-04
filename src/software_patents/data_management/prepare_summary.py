@@ -11,14 +11,12 @@ for manual inspection.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated
 
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
 from dask.distributed import Client
 from dask.distributed import LocalCluster
-from pytask import Product
 from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
@@ -34,10 +32,9 @@ _RAW_SUMMARIES = {
 def prepare_summary(
     path_to_bh: Path = BLD / "data" / "bh.pkl",
     raw_summaries: dict[str, Path] = _RAW_SUMMARIES,  # noqa: ARG001
-    path_to_pkl: Annotated[Path, Product] = BLD / "data" / "indicators_summary.pkl",
-) -> None:
+) -> pd.DataFrame:
     # Get 399 patent numbers from BH2007 to store fulltext of description.
-    bh = pd.read_pickle(path_to_bh)
+    bh = pd.read_pickle(path_to_bh)  # noqa: S301
 
     # Start client for computations
     cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
@@ -53,6 +50,4 @@ def prepare_summary(
     out.to_parquet(BLD / "data" / "indicators_summary.parquet", compute=True)
 
     df = dd.read_parquet(SRC / "data" / "indicators_summary.parquet")
-    df = df.compute()
-
-    df.to_pickle(path_to_pkl)
+    return df.compute()
