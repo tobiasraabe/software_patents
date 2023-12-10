@@ -10,7 +10,7 @@ dependencies:
   - setuptools_scm
   - toml
 
-  - pytask >=0.4.3
+  - pytask >=0.4.4
   - pytask-latex >=0.4
   - pytask-parallel >=0.4
 
@@ -32,11 +32,6 @@ dependencies:
   - tox
   - tqdm
   - openpyxl
-
-  # Temporary
-  - universal_pathlib
-  - fsspec
-  - dropboxdrivefs
 
   - pip:
     - -e .
