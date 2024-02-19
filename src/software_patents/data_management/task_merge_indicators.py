@@ -17,7 +17,7 @@ from typing_extensions import Annotated
     }
 )
 def merge_description_indicators(
-    indicator_parts: dict[str, pd.DataFrame]
+    indicator_parts: dict[str, pd.DataFrame],
 ) -> Annotated[pd.DataFrame, data_catalog["indicators_description"]]:
     df = pd.concat(list(indicator_parts.values()))
     df = df.drop_duplicates()
