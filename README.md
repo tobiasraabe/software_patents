@@ -10,13 +10,14 @@ approaches from simple algorithms to novel machine learning models to achieve th
 ## Background
 
 The origin of this project was a Bachelor's thesis built on the algorithmic approach of
-[[BH2007]](#BH2007){.citation}. The authors wanted to estimate the number of software
-patents and find out where software patents are used and what economic indicators are
-correlated with the number of software patents in certain industries.
+[Bessen & Hunt (2007)](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x).
+The authors wanted to estimate the number of software patents and find out where
+software patents are used and what economic indicators are correlated with the number of
+software patents in certain industries.
 
-To classify patents of software and non-software, the authors developed
-a simple algorithm based on the evaluation of a random sample of patents. The algorithm
-is as follows:
+To classify patents of software and non-software, the authors developed a simple
+algorithm based on the evaluation of a random sample of patents. The algorithm is as
+follows:
 
 > (("software" in specification) OR ("computer" AND "program" in specification))
 >
@@ -27,14 +28,14 @@ is as follows:
 > ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 
 Whereas the title is simply identified, the specification is defined as the abstract and
-the description of the patent ([[PATENTSVIEW]](#PATENTSVIEW){.citation} separates the
-description in [[BH2007]](#BH2007){.citation} definition into description and
+the description of the patent ([PatentsView](http://www.patentsview.org/download/)
+separates the description in Bessen & Hunt (2007) definition into description and
 summary).
 
 To replicate the algorithm, the project relies on two strategies. The first data source
 is [Google Patents](https://patents.google.com/) where the texts can be crawled. As this
 procedure is not feasible for the whole corpus of patents, the second data source is
-[[PATENTSVIEW]](#PATENTSVIEW){.citation} which provides large data files for all
+PatentsView which provides large data files for all
 patents from 1976 on.
 
 The replication of the original algorithm succeeded in 398 of 400 cases as one patent
@@ -103,9 +104,3 @@ $ pytask
 > were deleted by PatentsView and the data access has changed a lot since 2015.
 >
 > If you are interested in fixing this issue, file an issue and we work out the details.
-
-## References
-
-[BH2007]: <https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x>
-
-[PATENTSVIEW]: <http://www.patentsview.org/download/>
