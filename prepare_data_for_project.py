@@ -1,4 +1,5 @@
 """Allows to download the necessary data for running the project."""
+
 from __future__ import annotations
 
 import csv
@@ -10,7 +11,6 @@ import click
 import pandas as pd
 import requests
 from tqdm import tqdm
-
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 

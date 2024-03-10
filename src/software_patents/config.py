@@ -1,4 +1,5 @@
 """Configuration of the project."""
+
 from __future__ import annotations
 
 import os
@@ -6,7 +7,6 @@ from pathlib import Path
 
 import numpy as np
 from pytask import DataCatalog
-
 
 SRC = Path(__file__).parent.resolve()
 BLD = SRC.joinpath("..", "..", "bld").resolve()

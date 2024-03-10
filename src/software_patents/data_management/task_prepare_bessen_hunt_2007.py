@@ -1,16 +1,21 @@
 """Prepare data from Bessen and Hunt (2007)."""
+
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pandas as pd
-from software_patents.config import data_catalog
+from typing_extensions import Annotated
+
 from software_patents.config import SRC
 from software_patents.config import THREADS_SCRAPE_PATENTS
+from software_patents.config import data_catalog
 from software_patents.data_management.indicators import create_indicators
 from software_patents.data_management.scrape_patents import scrape_patent_info
-from typing_extensions import Annotated
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def task_prepare_bessen_hunt_2007(

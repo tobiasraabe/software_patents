@@ -1,11 +1,12 @@
 """Contains code for transformers of sklearn models."""
+
 from __future__ import annotations
 
 import string
 
+from nltk import WordNetLemmatizer
 from nltk import pos_tag
 from nltk import sent_tokenize
-from nltk import WordNetLemmatizer
 from nltk import wordpunct_tokenize
 from nltk.corpus import stopwords as sw
 from nltk.corpus import wordnet as wn
