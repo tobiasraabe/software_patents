@@ -103,5 +103,5 @@ $ pytask
 > [!WARNING]
 > You cannot recreate the analysis from the raw files right now, since they
 > were deleted by PatentsView and the data access has changed a lot since 2015.
-> 
+>
 > If you are interested in fixing this issue, file an issue and we work out the details.
