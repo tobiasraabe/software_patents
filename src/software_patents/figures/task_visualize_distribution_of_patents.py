@@ -2,19 +2,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 from pytask import task
 
 from software_patents.config import BLD
 from software_patents.config import data_catalog
 from software_patents.figures.auxiliaries import format_thousands_with_comma
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    import pandas as pd
 
 
 @task(

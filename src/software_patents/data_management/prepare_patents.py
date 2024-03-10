@@ -72,6 +72,6 @@ def process_data(path_to_bh: Path) -> None:
 
 
 def merge_indicators(section: str) -> pd.DataFrame:
-    return dd.read_parquet(
-        BLD / "data" / f"indicators_{section}.parquet/*.parquet"
-    ).compute()
+    df = dd.read_parquet(BLD / "data" / f"indicators_{section}.parquet/*.parquet")
+    df.compute()
+    return df

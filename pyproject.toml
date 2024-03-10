@@ -73,6 +73,7 @@ extend-ignore = [
     # Temporary
     "D103",
     "D104",
+    "TCH",
 ]
 select = ["ALL"]
 

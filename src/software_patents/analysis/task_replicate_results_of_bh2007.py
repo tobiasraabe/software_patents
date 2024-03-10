@@ -2,14 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
+import pandas as pd
 from pytask import task
 
 from software_patents.config import data_catalog
-
-if TYPE_CHECKING:
-    import pandas as pd
 
 for bh_with_texts, replication in (
     (

@@ -17,14 +17,10 @@ ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
+import pandas as pd
 from pytask import task
 
 from software_patents.config import data_catalog
-
-if TYPE_CHECKING:
-    import pandas as pd
 
 for indicators, result in (
     (data_catalog["indicators"], data_catalog["bh_with_patent_db"]),
@@ -79,8 +75,8 @@ def _apply_bh2007_algorithm(df: pd.DataFrame) -> pd.Series:
         df.ALGO_FIRST_LINE & ~df.ALGO_THIRD_LINE & ~df.ALGO_FOURTH_LINE
     )
 
-    df.REPLICATION_BH2007.replace(
-        {False: "Non-Software", True: "Software"}, inplace=True
+    df["REPLICATION_BH2007"] = df["REPLICATION_BH2007"].replace(
+        {False: "Non-Software", True: "Software"}
     )
 
     df.REPLICATION_BH2007 = df.REPLICATION_BH2007.astype("category")
