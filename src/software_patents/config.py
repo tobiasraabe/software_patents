@@ -1,9 +1,10 @@
 """Configuration of the project."""
+
 from __future__ import annotations
 
 import os
-from enum import auto
 from enum import Enum
+from enum import auto
 from pathlib import Path
 
 import numpy as np

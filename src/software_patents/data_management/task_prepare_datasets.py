@@ -3,13 +3,15 @@
 The dynamic task creation needs to be better supported by pytask.
 
 """
+
 from __future__ import annotations
 
 from pytask import PickleNode
-from software_patents.config import data_catalog
+from upath import UPath
+
 from software_patents.config import Mode
 from software_patents.config import ProjectMode
-from upath import UPath
+from software_patents.config import data_catalog
 
 _BaseURL = "http://dl.dropboxusercontent.com/s"
 
