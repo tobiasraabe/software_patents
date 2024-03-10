@@ -7,20 +7,24 @@ Note that the information is previously processed by ``download_data.py`` and
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
 from dask.distributed import Client
 from dask.distributed import LocalCluster
-from pytask import Product
 from typing_extensions import Annotated
 
 from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
 from software_patents.data_management.indicators import create_indicators
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pytask import Product
 
 _RAW_PATENTS = {
     f"patent_{i}": SRC / "data" / "raw" / f"patent_{i}.parquet" for i in range(1, 6)

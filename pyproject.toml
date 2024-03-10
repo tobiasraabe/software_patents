@@ -62,8 +62,6 @@ unsafe-fixes = true
 
 [tool.ruff.lint]
 extend-ignore = [
-    "TRY",  # ignore tryceratops.
-    "TCH",  # ignore non-guarded type imports.
     # Others.
     "D404",  # Do not start module docstring with "This".
     "ANN101",  # type annotating self

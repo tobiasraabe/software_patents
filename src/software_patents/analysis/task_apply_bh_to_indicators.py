@@ -17,10 +17,14 @@ ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 
 from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING
+
 from pytask import task
 
 from software_patents.config import data_catalog
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 for indicators, result in (
     (data_catalog["indicators"], data_catalog["bh_with_patent_db"]),

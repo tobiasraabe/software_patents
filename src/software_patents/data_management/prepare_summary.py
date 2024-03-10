@@ -11,7 +11,7 @@ for manual inspection.
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import dask.dataframe as dd
 import numpy as np
@@ -23,6 +23,9 @@ from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
 from software_patents.data_management.indicators import create_indicators
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 _RAW_SUMMARIES = {
     f"brf_sum_text_{i}": SRC / "data" / "raw" / f"brf_sum_text_{i}.parquet"

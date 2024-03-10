@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-import pandas as pd
-from pytask import Product
 from sklearn.metrics import confusion_matrix
 from typing_extensions import Annotated
 
 from software_patents.config import BLD
 from software_patents.config import data_catalog
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pandas as pd
+    from pytask import Product
 
 TABLE = """\\begin{tabular}{@{}cp{0.5cm}cp{0.5cm}c@{}}
 \t\\toprule
