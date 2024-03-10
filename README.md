@@ -1,7 +1,6 @@
 # Identification of Software Patents
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/tobiasraabe/software_patents/main.svg)](https://results.pre-commit.ci/latest/github/tobiasraabe/software_patents/main)
-[![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Introduction
 
@@ -11,13 +10,14 @@ approaches from simple algorithms to novel machine learning models to achieve th
 ## Background
 
 The origin of this project was a Bachelor's thesis built on the algorithmic approach of
-[\[BH2007\]](#BH2007){.citation}. The authors wanted to estimate the number of software
-patents and find out where software patents are used and what economic indicators are
-correlated with the amount of software patents in certain industries.
+[Bessen & Hunt (2007)](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x).
+The authors wanted to estimate the number of software patents and find out where
+software patents are used and what economic indicators are correlated with the number of
+software patents in certain industries.
 
-To classify patents into categories of software and non-software, the authors developed
-a simple algorithm based on the evaluation of a random sample of patents. The algorithm
-is as follows:
+To classify patents of software and non-software, the authors developed a simple
+algorithm based on the evaluation of a random sample of patents. The algorithm is as
+follows:
 
 > (("software" in specification) OR ("computer" AND "program" in specification))
 >
@@ -28,18 +28,18 @@ is as follows:
 > ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 
 Whereas the title is simply identified, the specification is defined as the abstract and
-the description of the patent ([\[PATENTSVIEW\]](#PATENTSVIEW){.citation} separates the
-description in [\[BH2007\]](#BH2007){.citation} definition into description and
+the description of the patent ([PatentsView](http://www.patentsview.org/download/)
+separates the description in Bessen & Hunt (2007) definition into description and
 summary).
 
 To replicate the algorithm, the project relies on two strategies. The first data source
 is [Google Patents](https://patents.google.com/) where the texts can be crawled. As this
 procedure is not feasible for the whole corpus of patents, the second data source is
-[\[PATENTSVIEW\]](#PATENTSVIEW){.citation} which provides large data files for all
+PatentsView which provides large data files for all
 patents from 1976 on.
 
-The replication of the original algorithm succeeds in 398 of 400 cases as one patent was
-retracted and in one case an indicator was overlooked which lead to a error in the
+The replication of the original algorithm succeeded in 398 of 400 cases as one patent
+was retracted and in one case an indicator was overlooked which led to an error in the
 classification.
 
 Compared to the manual classification of the authors, the algorithm performed in the
@@ -52,10 +52,10 @@ following way:
 
 Relevant refers to software patents according to the manual classification whereas
 retrieved indicates software patents detected by the algorithm. The upper left corner
-can also be called true-positives whereas the lower right corner shows the number of
-true-negatives.
+can also be called true positives whereas the lower right corner shows the number of
+true negatives.
 
-Applying the algorithm on the whole patent corpus, we get the following distributions of
+Applying the algorithm to the whole patent corpus, we get the following distributions of
 patents and software versus non-software patents.
 
 <p align="center">
@@ -78,7 +78,7 @@ patents and software versus non-software patents.
 
 ## Installation
 
-To play with the project, clone the repository to your disk with
+To get started, clone the repository to your disk with
 
 ```bash
 $ git clone https://github.com/tobiasraabe/software_patents
@@ -88,32 +88,20 @@ After that create an environment with `mamba` and activate it by running
 
 ```bash
 $ mamba env create
-$ activate sp
+$ mamba activate sp
 ```
 
-If you only want to download the files for reproducing the analysis based on the
-indicators, run the following commands for downloading and validating:
+## Replication
 
-```bash
-$ python prepare_data_for_project.py download --subset replication
-$ python prepare_data_for_project.py validate
-```
-
-(If you want to have the raw data or everything, use `--subset raw` or `--subset all`.
-Note that, you need about 60GB of free space on your disk. Furthermore, handling the raw
-data requires an additional step where the files are split into smaller chunks, so that
-they can fit into the memory of your machine. These steps require knowledge about
-[Dask](https://dask.pydata.org/en/latest/). You can find more on this
-[here \<https://github.com/tobiasraabe/software_patents/blob/master/src/documentation/ data.rst>](<>).)
-
-Then, run the following two commands to replicate the results.
+If you only want to replicate the results of the thesis from intermediate files, run the
+following command.
 
 ```bash
 $ pytask
 ```
 
-## References
-
-\[BH2007\] : <https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1530-9134.2007.00136.x>
-
-\[PATENTSVIEW\] : <http://www.patentsview.org/download/>
+> [!WARNING]
+> You cannot recreate the analysis from the raw files right now, since they
+> were deleted by PatentsView and the data access has changed a lot since 2015.
+>
+> If you are interested in fixing this issue, file an issue and we work out the details.

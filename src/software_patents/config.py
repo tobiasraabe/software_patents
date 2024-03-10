@@ -3,10 +3,23 @@
 from __future__ import annotations
 
 import os
+from enum import Enum
+from enum import auto
 from pathlib import Path
 
 import numpy as np
 from pytask import DataCatalog
+
+
+class Mode(Enum):
+    """Mode of the project."""
+
+    REPLICATION = auto()
+    RAW = auto()
+
+
+ProjectMode = Mode.REPLICATION
+
 
 SRC = Path(__file__).parent.resolve()
 BLD = SRC.joinpath("..", "..", "bld").resolve()

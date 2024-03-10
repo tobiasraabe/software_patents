@@ -13,6 +13,7 @@ dependencies:
   - pytask >=0.4.4
   - pytask-latex >=0.4
   - pytask-parallel >=0.4
+  - universal_pathlib <0.2
 
   # Dependencies
   - black

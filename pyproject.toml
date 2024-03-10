@@ -52,7 +52,7 @@ ignore_errors = true
 
 
 [tool.pytask.ini_options]
-paths = "src/software_patents"
+paths = ["src/software_patents"]
 
 
 [tool.ruff]
@@ -73,6 +73,7 @@ extend-ignore = [
     # Temporary
     "D103",
     "D104",
+    "TCH",
 ]
 select = ["ALL"]
 

@@ -7,67 +7,70 @@ The dynamic task creation needs to be better supported by pytask.
 from __future__ import annotations
 
 from pytask import PickleNode
-from pytask import task
+from upath import UPath
 
-from software_patents.config import BLD
-from software_patents.config import SRC
+from software_patents.config import Mode
+from software_patents.config import ProjectMode
 from software_patents.config import data_catalog
-from software_patents.data_management.prepare_description import prepare_description
-from software_patents.data_management.prepare_patents import merge_indicators
-from software_patents.data_management.prepare_patents import prepare_patents
-from software_patents.data_management.prepare_summary import prepare_summary
 
-for i in range(1, 6):
-    # Path is relative to the project directory
-    path = SRC / "data" / "processed" / f"indicators_description_{i}.pkl"
+_BaseURL = "http://dl.dropboxusercontent.com/s"
 
-    if not path.exists():
-        task(
-            name=path.name,
-            kwargs={
-                "raw_descriptions": {
-                    j: SRC / "data" / "raw" / f"detail_desc_text_{i}_{j}.parquet"
-                    for j in range(1, 126)
-                },
-                "part": str(i),
-                "path_to_pkl": BLD / "data" / f"indicators_description_{i}.pkl",
-            },
-            produces=data_catalog[f"indicators_description_{i}"],
-        )(prepare_description)
-
-    else:
-        data_catalog.add(f"indicators_description_{i}", PickleNode.from_path(path))
-
-
-# Paths are relative to the project directory.
-paths = {
-    path.stem: path
-    for path in (
-        SRC / "data" / "processed" / "indicators_abstract.pkl",
-        SRC / "data" / "processed" / "indicators_title.pkl",
-        SRC / "data" / "processed" / "patent.pkl",
-    )
-}
-if not all(path.exists() for path in paths.values()):
-    task()(prepare_patents)
-
-    for section in ("abstract", "title"):
-        task(
-            kwargs={"section": section}, produces=data_catalog[f"indicators_{section}"]
-        )(merge_indicators)
-else:
+if ProjectMode == Mode.REPLICATION:
     data_catalog.add(
-        "indicators_abstract", PickleNode.from_path(paths["indicators_abstract"])
+        "indicators_abstract",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/ckleerbtm54ddpm/indicators_abstract.pkl?dl=0")
+        ),
     )
     data_catalog.add(
-        "indicators_title", PickleNode.from_path(paths["indicators_title"])
+        "indicators_description_1",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/tfhzex5o18ocugu/indicators_description_1.pkl?dl=0")
+        ),
     )
-    data_catalog.add("patent", PickleNode.from_path(paths["patent"]))
+    data_catalog.add(
+        "indicators_description_2",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/ayvvzdzr8kihx4e/indicators_description_2.pkl?dl=0")
+        ),
+    )
+    data_catalog.add(
+        "indicators_description_3",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/frnos85yq97sps4/indicators_description_3.pkl?dl=0")
+        ),
+    )
+    data_catalog.add(
+        "indicators_description_4",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/hsswas2hgwvb8et/indicators_description_4.pkl?dl=0")
+        ),
+    )
+    data_catalog.add(
+        "indicators_description_5",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/42but1qhjil1trg/indicators_description_5.pkl?dl=0")
+        ),
+    )
+    data_catalog.add(
+        "indicators_title",
+        PickleNode(path=UPath(f"{_BaseURL}/0fxqnvyhsljwprt/indicators_title.pkl?dl=0")),
+    )
+    data_catalog.add(
+        "patent",
+        PickleNode(path=UPath(f"{_BaseURL}/atu4974la2p8d5s/patent.pkl?dl=0")),
+    )
+    data_catalog.add(
+        "indicators_summary",
+        PickleNode(
+            path=UPath(f"{_BaseURL}/8mffjyvintl757a/indicators_summary.pkl?dl=0")
+        ),
+    )
 
+elif ProjectMode == Mode.RAW:
+    # Needs to be reimplemented since data is not available anymore.
+    ...
 
-# Paths are relative to the project directory.
-path = SRC / "data" / "processed" / "indicators_summary.pkl"
-if not path.exists():
-    task(produces=data_catalog["indicators_summary"])(prepare_summary)
 else:
-    data_catalog.add("indicators_summary", PickleNode.from_path(path))
+    msg = f"ProjectMode {ProjectMode} is not implemented."
+    raise NotImplementedError(msg)
