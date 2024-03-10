@@ -78,7 +78,7 @@ patents and software versus non-software patents.
 
 ## Installation
 
-To play with the project, clone the repository to your disk with
+To get started, clone the repository to your disk with
 
 ```bash
 $ git clone https://github.com/tobiasraabe/software_patents
@@ -88,29 +88,22 @@ After that create an environment with `mamba` and activate it by running
 
 ```bash
 $ mamba env create
-$ activate sp
+$ mamba activate sp
 ```
 
-If you only want to download the files for reproducing the analysis based on the
-indicators, run the following commands for downloading and validating:
+## Replication
 
-```bash
-$ python prepare_data_for_project.py download --subset replication
-$ python prepare_data_for_project.py validate
-```
-
-(If you want to have the raw data or everything, use `--subset raw` or `--subset all`.
-Note that, you need about 60GB of free space on your disk. Furthermore, handling the raw
-data requires an additional step where the files are split into smaller chunks, so that
-they can fit into the memory of your machine. These steps require knowledge about
-[Dask](https://dask.pydata.org/en/latest/). You can find more on this
-[here \<https://github.com/tobiasraabe/software_patents/blob/master/src/documentation/ data.rst>](<>).)
-
-Then, run the following two commands to replicate the results.
+If you only want to replicate the results of the thesis from intermediate files, run the
+following command.
 
 ```bash
 $ pytask
 ```
+
+> \[!WARNING\] You cannot recreate the analysis from the raw files right now, since they
+> were deleted by PatentsView and the data access has changed a lot since 2015.
+>
+> If you are interested in fixing this issue, file an issue and we work out the details.
 
 ## References
 
