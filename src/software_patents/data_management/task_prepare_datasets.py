@@ -3,18 +3,19 @@
 The dynamic task creation needs to be better supported by pytask.
 
 """
+
 from __future__ import annotations
 
 from pytask import PickleNode
 from pytask import task
+
 from software_patents.config import BLD
-from software_patents.config import data_catalog
 from software_patents.config import SRC
+from software_patents.config import data_catalog
 from software_patents.data_management.prepare_description import prepare_description
 from software_patents.data_management.prepare_patents import merge_indicators
 from software_patents.data_management.prepare_patents import prepare_patents
 from software_patents.data_management.prepare_summary import prepare_summary
-
 
 for i in range(1, 6):
     # Path is relative to the project directory

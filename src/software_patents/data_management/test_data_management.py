@@ -1,12 +1,14 @@
 """Perform some tests to assert that the data stays the same."""
+
 from __future__ import annotations
 
 import numpy.testing as npt
 import pandas as pd
 import pytest
 from sklearn.metrics import confusion_matrix
-from software_patents.config import data_catalog
+
 from software_patents.config import SRC
+from software_patents.config import data_catalog
 
 
 @pytest.mark.skipif("bh" not in data_catalog.entries)

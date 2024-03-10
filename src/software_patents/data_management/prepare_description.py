@@ -8,6 +8,7 @@ TODO: Implement intermediate step where the fulltext of all 399 is also saved
 for manual inspection.
 
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,6 +18,7 @@ import numpy as np
 import pandas as pd
 from dask.distributed import Client
 from dask.distributed import LocalCluster
+
 from software_patents.config import BLD
 from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC

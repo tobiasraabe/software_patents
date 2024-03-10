@@ -1,11 +1,13 @@
 """Contains code for merging indicators to one dataset."""
+
 from __future__ import annotations
 
 import pandas as pd
 from pytask import task
+from typing_extensions import Annotated
+
 from software_patents.config import data_catalog
 from software_patents.data_management.indicators import INDICATORS
-from typing_extensions import Annotated
 
 
 @task(
@@ -19,9 +21,11 @@ from typing_extensions import Annotated
 def merge_description_indicators(
     indicator_parts: dict[str, pd.DataFrame],
 ) -> Annotated[pd.DataFrame, data_catalog["indicators_description"]]:
-    df = pd.concat(list(indicator_parts.values()))
-    df = df.drop_duplicates()
-    return df.drop_duplicates(subset="ID", keep="first")
+    return (
+        pd.concat(list(indicator_parts.values()))
+        .drop_duplicates()
+        .drop_duplicates(subset="ID", keep="first")
+    )
 
 
 @task(produces=data_catalog["indicators"])
@@ -31,9 +35,9 @@ def merge_all_indicators(
     abstract: Annotated[pd.DataFrame, data_catalog["indicators_abstract"]],
     title: Annotated[pd.DataFrame, data_catalog["indicators_title"]],
 ) -> pd.DataFrame:
-    df = _merge_summary_into_description(description, summary)
-    df = df.merge(abstract, on="ID", how="inner", validate="1:1")
-    return df.merge(title, on="ID", how="inner", validate="1:1")
+    _merge_summary_into_description(description, summary).merge(
+        abstract, on="ID", how="inner", validate="1:1"
+    ).merge(title, on="ID", how="inner", validate="1:1")
 
 
 def _merge_summary_into_description(

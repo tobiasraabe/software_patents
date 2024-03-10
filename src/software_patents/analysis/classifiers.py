@@ -1,4 +1,5 @@
 """Contains pipelines to build prediction models."""
+
 from __future__ import annotations
 
 from sklearn.decomposition import PCA
@@ -6,11 +7,12 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_selection import chi2
 from sklearn.feature_selection import SelectFromModel
 from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+
 from software_patents.analysis.transformers import NLTKPreprocessor
 
 # fmt: off

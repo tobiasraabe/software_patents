@@ -1,12 +1,14 @@
 """Tests the equality of the two algorithms and data quality."""
+
 from __future__ import annotations
 
 import numpy.testing as npt
 import pandas as pd
 import pytest
+
 from software_patents.config import BLD
-from software_patents.config import data_catalog
 from software_patents.config import SRC
+from software_patents.config import data_catalog
 
 
 @pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
@@ -43,11 +45,10 @@ def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
 
     columns = ["ID", "CLASSIFICATION_REPLICATION"]
     bh = bh[columns]
-    db = db[columns]
-
-    df = db.merge(bh, on="ID", how="inner", suffixes=("_DB", "_CT"), validate="1:1")
+    df = db[columns].merge(
+        bh, on="ID", how="inner", suffixes=("_DB", "_CT"), validate="1:1"
+    )
     df = df.loc[~df.CLASSIFICATION_REPLICATION_CT.eq(df.CLASSIFICATION_REPLICATION_DB)]
-
     assert df.shape[0] == 0
 
 

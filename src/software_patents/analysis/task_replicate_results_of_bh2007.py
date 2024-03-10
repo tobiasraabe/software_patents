@@ -1,10 +1,11 @@
 """Contains tasks to replicate the result of Bessen and Hunt."""
+
 from __future__ import annotations
 
 import pandas as pd
 from pytask import task
-from software_patents.config import data_catalog
 
+from software_patents.config import data_catalog
 
 for bh_with_texts, replication in (
     (

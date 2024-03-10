@@ -14,12 +14,13 @@ ANDNOT ("antigen" OR "antigenic" OR "chromatography" in specification)
 ````
 
 """
+
 from __future__ import annotations
 
 import pandas as pd
 from pytask import task
-from software_patents.config import data_catalog
 
+from software_patents.config import data_catalog
 
 for indicators, result in (
     (data_catalog["indicators"], data_catalog["bh_with_patent_db"]),

@@ -1,4 +1,5 @@
 """Contains code to produce confusion matrices."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -6,10 +7,10 @@ from pathlib import Path
 import pandas as pd
 from pytask import Product
 from sklearn.metrics import confusion_matrix
-from software_patents.config import BLD
-from software_patents.config import data_catalog
 from typing_extensions import Annotated
 
+from software_patents.config import BLD
+from software_patents.config import data_catalog
 
 TABLE = """\\begin{tabular}{@{}cp{0.5cm}cp{0.5cm}c@{}}
 \t\\toprule

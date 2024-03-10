@@ -1,4 +1,5 @@
 """Contains task for visualizing the results."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -6,6 +7,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 from pytask import task
+
 from software_patents.config import BLD
 from software_patents.config import data_catalog
 from software_patents.figures.auxiliaries import format_thousands_with_comma
