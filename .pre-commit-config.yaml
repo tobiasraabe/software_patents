@@ -22,17 +22,17 @@ repos:
     -   id: python-check-mock-methods
     -   id: python-no-log-warn
     -   id: text-unicode-replacement-char
--   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.3.2
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.4
     hooks:
       - id: ruff
       - id: ruff-format
 -   repo: https://github.com/dosisod/refurb
-    rev: v1.28.0
+    rev: v2.0.0
     hooks:
     -   id: refurb
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
+    rev: v1.9.0
     hooks:
     -   id: mypy
         additional_dependencies: [
