@@ -30,10 +30,8 @@ ignore = ["src/software_patents/_version.py"]
 where = ["src"]
 namespaces = false
 
-
 [tool.setuptools_scm]
 write_to = "src/software_patents/_version.py"
-
 
 [tool.mypy]
 files = ["src"]
@@ -50,10 +48,8 @@ module = "software_patents.analysis.transformers"
 disallow_untyped_defs = false
 ignore_errors = true
 
-
 [tool.pytask.ini_options]
 paths = ["src/software_patents"]
-
 
 [tool.ruff]
 target-version = "py38"
@@ -63,7 +59,6 @@ unsafe-fixes = true
 [tool.ruff.lint]
 extend-ignore = [
     # Others.
-    "D404",  # Do not start module docstring with "This".
     "ANN101",  # type annotating self
     "ANN102",  # type annotating cls
     "ANN401",  # flake8-annotate typing.Any
@@ -88,10 +83,8 @@ force-single-line = true
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-
 [tool.refurb]
 python_version = "3.8"
-
 
 [tool.pytest.ini_options]
 addopts = ["--doctest-modules"]
