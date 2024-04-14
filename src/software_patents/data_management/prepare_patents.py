@@ -17,7 +17,6 @@ from dask.distributed import LocalCluster
 from typing_extensions import Annotated
 
 from software_patents.config import BLD
-from software_patents.config import DASK_LOCAL_CLUSTER_CONFIGURATION
 from software_patents.config import SRC
 from software_patents.data_management.indicators import create_indicators
 
@@ -52,7 +51,7 @@ def process_data(path_to_bh: Path) -> None:
     bh = pd.read_pickle(path_to_bh)  # noqa: S301
 
     # Start client for computations
-    cluster = LocalCluster(**DASK_LOCAL_CLUSTER_CONFIGURATION)
+    cluster = LocalCluster()
     client = Client(cluster)  # noqa: F841
 
     df = dd.read_parquet(SRC / "data" / "raw" / "patent_*.parquet")

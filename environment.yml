@@ -7,19 +7,18 @@ channels:
 dependencies:
   - python >= 3.8
   - pip
-  - setuptools_scm
-  - toml
+  - hatchling
+  - hatch-vcs
 
   - pytask >=0.4.4
   - pytask-latex >=0.4
   - pytask-parallel >=0.4
 
   - universal_pathlib
-  - requests
+  - httpx
   - aiohttp
 
   # Dependencies
-  - black
   - dask
   - fastparquet
   - jupyterlab
