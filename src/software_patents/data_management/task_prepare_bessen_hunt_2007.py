@@ -54,7 +54,7 @@ def task_prepare_bessen_hunt_2007(
     bh = df.copy()
 
     # Crawl information from Google and append to existing data
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     tasks = [loop.create_task(fetch_patent(id_)) for id_ in df.ID.to_list()]
     pages = loop.run_until_complete(asyncio.gather(*tasks))
     infos = list(starmap(parse_patent_page, zip(df.ID.to_list(), pages)))
