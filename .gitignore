@@ -78,3 +78,7 @@ dask-worker-space
 *.bib.sav
 src/software_patents/_version.py
 *.egg-info
+# pixi environments
+.pixi
+*.egg-info
+

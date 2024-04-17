@@ -16,8 +16,6 @@ from typing import TYPE_CHECKING
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
-from dask.distributed import Client
-from dask.distributed import LocalCluster
 
 from software_patents.config import BLD
 from software_patents.config import SRC
@@ -38,10 +36,6 @@ def prepare_summary(
 ) -> pd.DataFrame:
     # Get 399 patent numbers from BH2007 to store fulltext of description.
     bh = pd.read_pickle(path_to_bh)  # noqa: S301
-
-    # Start client for computations
-    cluster = LocalCluster()
-    client = Client(cluster)  # noqa: F841
 
     df = dd.read_parquet(SRC / "data" / "raw" / "brf_sum_text_*")
 
