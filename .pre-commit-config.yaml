@@ -45,7 +45,13 @@ repos:
     rev: v2.2.6
     hooks:
     -   id: codespell
-        exclude: (src/software_patents/exploration/.|src/software_patents/paper/.|matplotlibrc)
+        args: [-L, astroid]
+        exclude: |
+            (?x)^(
+                src/software_patents/exploration/.*|
+                src/software_patents/paper/.*|
+                matplotlibrc|
+            )$
 -   repo: meta
     hooks:
     -   id: check-hooks-apply
