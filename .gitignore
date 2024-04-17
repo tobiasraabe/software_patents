@@ -81,4 +81,3 @@ src/software_patents/_version.py
 # pixi environments
 .pixi
 *.egg-info
-
