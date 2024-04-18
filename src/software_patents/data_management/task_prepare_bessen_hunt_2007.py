@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
+import asyncio
+from itertools import starmap
 from pathlib import Path
 
 import pandas as pd
 from typing_extensions import Annotated
 
 from software_patents.config import SRC
-from software_patents.config import THREADS_SCRAPE_PATENTS
 from software_patents.config import data_catalog
 from software_patents.data_management.indicators import create_indicators
-from software_patents.data_management.scrape_patents import scrape_patent_info
+from software_patents.data_management.scrape_patents import fetch_patent
+from software_patents.data_management.scrape_patents import parse_patent_page
 
 
 def task_prepare_bessen_hunt_2007(
@@ -53,19 +54,14 @@ def task_prepare_bessen_hunt_2007(
     bh = df.copy()
 
     # Crawl information from Google and append to existing data
-    with ThreadPoolExecutor(max_workers=THREADS_SCRAPE_PATENTS) as executor:
-        results = executor.map(scrape_patent_info, df.ID.to_list())
+    loop = asyncio.new_event_loop()
+    tasks = [loop.create_task(fetch_patent(id_)) for id_ in df.ID.to_list()]
+    pages = loop.run_until_complete(asyncio.gather(*tasks))
+    infos = list(starmap(parse_patent_page, zip(df.ID.to_list(), pages)))
 
     out = pd.DataFrame(
-        results,
-        columns=[
-            "ID",
-            "TITLE",
-            "ABSTRACT",
-            "DESCRIPTION",
-            "CLAIMS",
-            "CLAIMS_NUMBER",
-        ],
+        infos,
+        columns=["ID", "TITLE", "ABSTRACT", "DESCRIPTION", "CLAIMS", "CLAIMS_NUMBER"],
     )
     df = df.merge(out, on="ID", how="inner", validate="1:1")
 

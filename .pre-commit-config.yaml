@@ -45,13 +45,13 @@ repos:
     rev: v2.2.6
     hooks:
     -   id: codespell
-        exclude: (src/software_patents/exploration/.|src/software_patents/paper/.|matplotlibrc)
--   repo: https://github.com/mgedmin/check-manifest
-    rev: "0.49"
-    hooks:
-    -   id: check-manifest
-        args: [--no-build-isolation]
-        additional_dependencies: [setuptools-scm, toml, wheel]
+        args: [-L, astroid]
+        exclude: |
+            (?x)^(
+                src/software_patents/exploration/.*|
+                src/software_patents/paper/.*|
+                matplotlibrc|
+            )$
 -   repo: meta
     hooks:
     -   id: check-hooks-apply
