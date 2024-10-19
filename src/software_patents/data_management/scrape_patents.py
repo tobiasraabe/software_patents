@@ -2,21 +2,21 @@
 
 from __future__ import annotations
 
+import httpx
 import numpy as np
-import requests
 from bs4 import BeautifulSoup
 
 
-def scrape_patent_info(patentnr: str) -> tuple[str, ...]:
-    """Scrape information on a single patent."""
-    s = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(max_retries=3)
-    s.mount("https://", adapter)
+async def fetch_patent(patentnr: str) -> bytes:
+    """Scrape a patent and return its content."""
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        result = await client.get(f"https://patents.google.com/patent/US{patentnr}")
+        return result.content
 
-    url = f"https://www.google.de/patents/US{patentnr}"
-    result = s.get(url)
-    htmldoc = result.content
-    soup = BeautifulSoup(htmldoc, "html.parser")
+
+def parse_patent_page(patentnr: str, page_content: bytes) -> tuple[str, ...]:
+    """Parse the patent page."""
+    soup = BeautifulSoup(page_content, "html.parser")
 
     try:
         title = soup.find("span", itemprop="title").get_text(strip=True, separator=" ")
