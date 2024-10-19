@@ -11,7 +11,7 @@ from software_patents.config import SRC
 from software_patents.config import data_catalog
 
 
-@pytest.mark.skipif("bh" not in data_catalog.entries)
+@pytest.mark.skipif("bh" not in data_catalog._entries)
 def test_bh() -> None:
     df = data_catalog["bh"].load()
 
@@ -33,7 +33,7 @@ def test_bh() -> None:
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
-@pytest.mark.skipif("patent" not in data_catalog.entries)
+@pytest.mark.skipif("patent" not in data_catalog._entries)
 def test_patent() -> None:
     df = data_catalog["patent"].load()
 

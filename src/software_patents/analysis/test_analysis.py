@@ -11,7 +11,7 @@ from software_patents.config import SRC
 from software_patents.config import data_catalog
 
 
-@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
+@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog._entries)
 def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     df = data_catalog["replication_bh_with_crawled_text"].load()
 
@@ -26,7 +26,7 @@ def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     assert different_classifications.ID.eq(5_489_660).all()
 
 
-@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog.entries)
+@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog._entries)
 def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     df = data_catalog["replication_bh_with_patent_db"].load()
 
@@ -37,8 +37,8 @@ def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     assert different_classifications.shape[0] == 1
 
 
-@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
-@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog.entries)
+@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog._entries)
+@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog._entries)
 def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
     bh = data_catalog["replication_bh_with_crawled_text"].load()
     db = data_catalog["replication_bh_with_patent_db"].load()
