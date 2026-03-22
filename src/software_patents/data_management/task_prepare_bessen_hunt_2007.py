@@ -12,7 +12,7 @@ from typing_extensions import Annotated
 from software_patents.config import SRC
 from software_patents.config import data_catalog
 from software_patents.data_management.indicators import create_indicators
-from software_patents.data_management.scrape_patents import fetch_patent
+from software_patents.data_management.scrape_patents import fetch_patents
 from software_patents.data_management.scrape_patents import parse_patent_page
 
 
@@ -55,9 +55,7 @@ def task_prepare_bessen_hunt_2007(
     bh = df.copy()
 
     # Crawl information from Google and append to existing data
-    loop = asyncio.new_event_loop()
-    tasks = [loop.create_task(fetch_patent(id_)) for id_ in df.ID.to_list()]
-    pages = loop.run_until_complete(asyncio.gather(*tasks))
+    pages = asyncio.run(fetch_patents(df.ID.astype(str).to_list()))
     infos = list(map(parse_patent_page, df.ID.to_list(), pages))
 
     out = pd.DataFrame(

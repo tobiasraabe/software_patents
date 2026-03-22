@@ -20,6 +20,7 @@ dependencies = [
     "pytask-parallel",
     "pytest",
     "pytest-cov",
+    "s3fs>=2024.10.0",
     "scikit-learn",
     "universal-pathlib>=0.2.2",
 ]

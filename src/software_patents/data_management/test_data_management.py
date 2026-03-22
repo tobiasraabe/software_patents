@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from importlib import import_module
 from typing import Any
 from typing import cast
 
@@ -12,6 +13,8 @@ from sklearn.metrics import confusion_matrix
 
 from software_patents.config import SRC
 from software_patents.config import data_catalog
+
+import_module("software_patents.data_management.task_prepare_datasets")
 
 _MISSING_DATA_REASON = "Required data catalog entries are not available."
 

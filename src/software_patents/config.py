@@ -31,7 +31,7 @@ BLD = SRC.joinpath("..", "..", "bld").resolve()
 
 
 SEED = np.random.RandomState(42)
-THREADS_SCRAPE_PATENTS = (os.cpu_count() or 1) * 6
+THREADS_SCRAPE_PATENTS = min((os.cpu_count() or 1) * 2, 32)
 
 data_catalog = DataCatalog()
 

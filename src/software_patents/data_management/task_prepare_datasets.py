@@ -20,7 +20,9 @@ _BaseURL = "s3://software-patents"
 
 
 def _pickle_node(name: str) -> PickleNode:
-    return PickleNode(path=cast(Path, UPath(f"{_BaseURL}/{name}.pkl")))
+    return PickleNode(
+        name=name, path=cast(Path, UPath(f"{_BaseURL}/{name}.pkl", anon=True))
+    )
 
 
 if ProjectMode == Mode.REPLICATION:
