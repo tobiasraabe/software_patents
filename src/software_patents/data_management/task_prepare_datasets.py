@@ -6,6 +6,9 @@ The dynamic task creation needs to be better supported by pytask.
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import cast
+
 from pytask import PickleNode
 from upath import UPath
 
@@ -15,42 +18,47 @@ from software_patents.config import data_catalog
 
 _BaseURL = "s3://software-patents"
 
+
+def _pickle_node(name: str) -> PickleNode:
+    return PickleNode(path=cast(Path, UPath(f"{_BaseURL}/{name}.pkl")))
+
+
 if ProjectMode == Mode.REPLICATION:
     data_catalog.add(
         "indicators_abstract",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_abstract.pkl")),
+        _pickle_node("indicators_abstract"),
     )
     data_catalog.add(
         "indicators_description_1",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_description_1.pkl")),
+        _pickle_node("indicators_description_1"),
     )
     data_catalog.add(
         "indicators_description_2",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_description_2.pkl")),
+        _pickle_node("indicators_description_2"),
     )
     data_catalog.add(
         "indicators_description_3",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_description_3.pkl")),
+        _pickle_node("indicators_description_3"),
     )
     data_catalog.add(
         "indicators_description_4",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_description_4.pkl")),
+        _pickle_node("indicators_description_4"),
     )
     data_catalog.add(
         "indicators_description_5",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_description_5.pkl")),
+        _pickle_node("indicators_description_5"),
     )
     data_catalog.add(
         "indicators_title",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_title.pkl")),
+        _pickle_node("indicators_title"),
     )
     data_catalog.add(
         "patent",
-        PickleNode(path=UPath(f"{_BaseURL}/patent.pkl")),
+        _pickle_node("patent"),
     )
     data_catalog.add(
         "indicators_summary",
-        PickleNode(path=UPath(f"{_BaseURL}/indicators_summary.pkl")),
+        _pickle_node("indicators_summary"),
     )
 
 elif ProjectMode == Mode.RAW:

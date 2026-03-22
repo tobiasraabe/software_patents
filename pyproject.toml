@@ -11,8 +11,10 @@ dependencies = [
     "dask",
     "httpx",
     "matplotlib",
+    "nltk>=3.9.1",
     "openpyxl",
     "pandas",
+    "pyarrow>=17.0.0",
     "pytask>=0.4.4",
     "pytask-latex",
     "pytask-parallel",
@@ -27,12 +29,12 @@ dynamic = ["version"]
 file = "README.md"
 content-type = "text/markdown"
 
+[dependency-groups]
+typing = ["ty>=0.0.24"]
+
 [build-system]
 requires = ["hatchling", "hatch_vcs"]
 build-backend = "hatchling.build"
-
-[tool.rye]
-managed = true
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/software_patents/_version.py"
@@ -51,21 +53,6 @@ source = "vcs"
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.mypy]
-files = ["src"]
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-
-[[tool.mypy.overrides]]
-module = "software_patents.analysis.transformers"
-disallow_untyped_defs = false
-ignore_errors = true
-
 [tool.pytask.ini_options]
 paths = ["src/software_patents"]
 
@@ -73,12 +60,11 @@ paths = ["src/software_patents"]
 target-version = "py38"
 fix = true
 unsafe-fixes = true
+extend-exclude = ["src/software_patents/exploration/*.ipynb"]
 
 [tool.ruff.lint]
 extend-ignore = [
     # Others.
-    "ANN101",  # type annotating self
-    "ANN102",  # type annotating cls
     "ANN401",  # flake8-annotate typing.Any
     "PD",  # pandas-vet
     "COM812",  # Comply with ruff-format.
@@ -110,9 +96,18 @@ testpaths = ["src"]
 norecursedirs = [".idea", ".tox"]
 filterwarnings = ["ignore:datetime.*:DeprecationWarning"]
 
-[tool.pixi.project]
-channels = ["conda-forge"]
-platforms = ["linux-64"]
+[tool.ty.rules]
+unused-ignore-comment = "error"
 
-[tool.pixi.pypi-dependencies]
-software_patents = { path = ".", editable = true }
+[[tool.ty.overrides]]
+include = ["src/software_patents/__init__.py"]
+
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"
+
+[tool.ty.src]
+include = ["src/software_patents"]
+exclude = ["src/software_patents/exploration"]
+
+[tool.ty.terminal]
+error-on-warning = true

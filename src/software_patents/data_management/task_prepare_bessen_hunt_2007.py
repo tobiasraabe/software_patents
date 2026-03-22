@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from itertools import starmap
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 from typing_extensions import Annotated
@@ -19,10 +19,11 @@ from software_patents.data_management.scrape_patents import parse_patent_page
 def task_prepare_bessen_hunt_2007(
     path_to_external: Path = SRC / "data" / "external" / "bessen_hunt_2007.dta",
 ) -> Annotated[
-    pd.DataFrame, (data_catalog["bh"], data_catalog["bh_with_crawled_text"])
+    tuple[pd.DataFrame, pd.DataFrame],
+    (data_catalog["bh"], data_catalog["bh_with_crawled_text"]),
 ]:
     # Read the dataset of BH2007
-    df = pd.read_stata(path_to_external)
+    df = cast(pd.DataFrame, pd.read_stata(path_to_external))
 
     # Setting the correct column names
     dict_columns = {
@@ -57,7 +58,7 @@ def task_prepare_bessen_hunt_2007(
     loop = asyncio.new_event_loop()
     tasks = [loop.create_task(fetch_patent(id_)) for id_ in df.ID.to_list()]
     pages = loop.run_until_complete(asyncio.gather(*tasks))
-    infos = list(starmap(parse_patent_page, zip(df.ID.to_list(), pages)))
+    infos = list(map(parse_patent_page, df.ID.to_list(), pages))
 
     out = pd.DataFrame(
         infos,

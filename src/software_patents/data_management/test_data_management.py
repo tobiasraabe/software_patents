@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any
+from typing import cast
+
 import numpy.testing as npt
 import pandas as pd
 import pytest
@@ -10,8 +13,22 @@ from sklearn.metrics import confusion_matrix
 from software_patents.config import SRC
 from software_patents.config import data_catalog
 
+_MISSING_DATA_REASON = "Required data catalog entries are not available."
 
-@pytest.mark.skipif("bh" not in data_catalog._entries)
+
+def _has_loadable_data_catalog_entry(name: str) -> bool:
+    try:
+        node = cast(Any, data_catalog[name])
+        return node.path.exists()
+    except (FileNotFoundError, ImportError, OSError):
+        return False
+
+
+_HAS_BH = _has_loadable_data_catalog_entry("bh")
+_HAS_PATENT = _has_loadable_data_catalog_entry("patent")
+
+
+@pytest.mark.skipif(not _HAS_BH, reason=_MISSING_DATA_REASON)
 def test_bh() -> None:
     df = data_catalog["bh"].load()
 
@@ -33,7 +50,7 @@ def test_bh() -> None:
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
-@pytest.mark.skipif("patent" not in data_catalog._entries)
+@pytest.mark.skipif(not _HAS_PATENT, reason=_MISSING_DATA_REASON)
 def test_patent() -> None:
     df = data_catalog["patent"].load()
 

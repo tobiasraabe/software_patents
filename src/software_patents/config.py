@@ -7,6 +7,7 @@ from concurrent.futures import Executor
 from enum import Enum
 from enum import auto
 from pathlib import Path
+from typing import cast
 
 import coiled
 import numpy as np
@@ -30,18 +31,18 @@ BLD = SRC.joinpath("..", "..", "bld").resolve()
 
 
 SEED = np.random.RandomState(42)
-THREADS_SCRAPE_PATENTS = os.cpu_count() * 6  # type: ignore[operator]
+THREADS_SCRAPE_PATENTS = (os.cpu_count() or 1) * 6
 
 data_catalog = DataCatalog()
 
 
 def build_custom_backend(n_workers: int) -> Executor:
     """Build custom executor."""
-    return (
-        coiled.Cluster(name="software-patents", n_workers=n_workers)
-        .get_client()
-        .get_executor()
+    cluster = coiled.Cluster(  # ty: ignore[invalid-argument-type]
+        name="software-patents",
+        n_workers=n_workers,
     )
+    return cast(Executor, cluster.get_client().get_executor())
 
 
 registry.register_parallel_backend(

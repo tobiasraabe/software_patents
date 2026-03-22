@@ -85,11 +85,26 @@ To get started, clone the repository to your disk with
 git clone https://github.com/tobiasraabe/software_patents
 ```
 
-After that create an environment with `rye` or `pixi` or install the package directly
-with
+After that create an environment with `uv` and sync the project with
 
 ```console
-pip install -e .
+uv sync --group typing
+```
+
+You can then run the main project commands without activating the environment manually, for example
+
+```console
+uvx pre-commit run -a
+uv run --group typing ty check
+uv run pytask
+```
+
+If you have `just` installed, the repo also exposes the common workflows via:
+
+```console
+just install
+just check
+just build
 ```
 
 ## Replication
@@ -98,7 +113,7 @@ If you only want to replicate the results of the thesis from intermediate files,
 following command.
 
 ```console
-pytask
+uv run pytask
 ```
 
 > [!WARNING]

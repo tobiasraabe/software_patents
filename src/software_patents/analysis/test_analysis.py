@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any
+from typing import cast
+
 import numpy.testing as npt
 import pandas as pd
 import pytest
@@ -10,8 +13,22 @@ from software_patents.config import BLD
 from software_patents.config import SRC
 from software_patents.config import data_catalog
 
+_MISSING_DATA_REASON = "Required data catalog entries are not available."
 
-@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog._entries)
+
+def _has_loadable_data_catalog_entry(name: str) -> bool:
+    try:
+        node = cast(Any, data_catalog[name])
+        return node.path.exists()
+    except (FileNotFoundError, ImportError, OSError):
+        return False
+
+
+_HAS_CRAWLED_TEXT = _has_loadable_data_catalog_entry("replication_bh_with_crawled_text")
+_HAS_PATENT_DB = _has_loadable_data_catalog_entry("replication_bh_with_patent_db")
+
+
+@pytest.mark.skipif(not _HAS_CRAWLED_TEXT, reason=_MISSING_DATA_REASON)
 def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     df = data_catalog["replication_bh_with_crawled_text"].load()
 
@@ -26,7 +43,7 @@ def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     assert different_classifications.ID.eq(5_489_660).all()
 
 
-@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog._entries)
+@pytest.mark.skipif(not _HAS_PATENT_DB, reason=_MISSING_DATA_REASON)
 def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     df = data_catalog["replication_bh_with_patent_db"].load()
 
@@ -37,8 +54,8 @@ def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     assert different_classifications.shape[0] == 1
 
 
-@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog._entries)
-@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog._entries)
+@pytest.mark.skipif(not _HAS_CRAWLED_TEXT, reason=_MISSING_DATA_REASON)
+@pytest.mark.skipif(not _HAS_PATENT_DB, reason=_MISSING_DATA_REASON)
 def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
     bh = data_catalog["replication_bh_with_crawled_text"].load()
     db = data_catalog["replication_bh_with_patent_db"].load()
@@ -60,7 +77,7 @@ def test_equality_of_ml_replication() -> None:
 
 
 @pytest.fixture(scope="module")
-def table() -> None:
+def table() -> pd.DataFrame:
     """Fixture for Table 1 of Bessen and Hunt (2007)."""
     return pd.read_excel(
         SRC / "data" / "external" / "bh2007_table_1.xlsx", header=2, usecols=[0, 1, 4]
@@ -68,7 +85,7 @@ def table() -> None:
 
 
 @pytest.fixture(scope="module")
-def sp() -> None:
+def sp() -> pd.DataFrame:
     """Fixture for all classified patents."""
     bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")  # noqa: S301
     date = pd.read_pickle(BLD / "data" / "patent.pkl")  # noqa: S301
