@@ -6,6 +6,9 @@ The dynamic task creation needs to be better supported by pytask.
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import cast
+
 from pytask import PickleNode
 from upath import UPath
 
@@ -13,58 +16,51 @@ from software_patents.config import Mode
 from software_patents.config import ProjectMode
 from software_patents.config import data_catalog
 
-_BaseURL = "http://dl.dropboxusercontent.com/s"
+_BaseURL = "s3://software-patents"
+
+
+def _pickle_node(name: str) -> PickleNode:
+    return PickleNode(
+        name=name, path=cast(Path, UPath(f"{_BaseURL}/{name}.pkl", anon=True))
+    )
+
 
 if ProjectMode == Mode.REPLICATION:
     data_catalog.add(
         "indicators_abstract",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/ckleerbtm54ddpm/indicators_abstract.pkl?dl=0")
-        ),
+        _pickle_node("indicators_abstract"),
     )
     data_catalog.add(
         "indicators_description_1",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/tfhzex5o18ocugu/indicators_description_1.pkl?dl=0")
-        ),
+        _pickle_node("indicators_description_1"),
     )
     data_catalog.add(
         "indicators_description_2",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/ayvvzdzr8kihx4e/indicators_description_2.pkl?dl=0")
-        ),
+        _pickle_node("indicators_description_2"),
     )
     data_catalog.add(
         "indicators_description_3",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/frnos85yq97sps4/indicators_description_3.pkl?dl=0")
-        ),
+        _pickle_node("indicators_description_3"),
     )
     data_catalog.add(
         "indicators_description_4",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/hsswas2hgwvb8et/indicators_description_4.pkl?dl=0")
-        ),
+        _pickle_node("indicators_description_4"),
     )
     data_catalog.add(
         "indicators_description_5",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/42but1qhjil1trg/indicators_description_5.pkl?dl=0")
-        ),
+        _pickle_node("indicators_description_5"),
     )
     data_catalog.add(
         "indicators_title",
-        PickleNode(path=UPath(f"{_BaseURL}/0fxqnvyhsljwprt/indicators_title.pkl?dl=0")),
+        _pickle_node("indicators_title"),
     )
     data_catalog.add(
         "patent",
-        PickleNode(path=UPath(f"{_BaseURL}/atu4974la2p8d5s/patent.pkl?dl=0")),
+        _pickle_node("patent"),
     )
     data_catalog.add(
         "indicators_summary",
-        PickleNode(
-            path=UPath(f"{_BaseURL}/8mffjyvintl757a/indicators_summary.pkl?dl=0")
-        ),
+        _pickle_node("indicators_summary"),
     )
 
 elif ProjectMode == Mode.RAW:

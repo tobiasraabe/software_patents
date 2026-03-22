@@ -2,53 +2,62 @@
 
 from __future__ import annotations
 
+import asyncio
+from typing import Union
+
+import httpx
 import numpy as np
-import requests
 from bs4 import BeautifulSoup
+from bs4 import Tag
+
+from software_patents.config import THREADS_SCRAPE_PATENTS
+
+PatentField = Union[str, float]
+_PATENT_URL = "https://patents.google.com/patent/US{patentnr}"
 
 
-def scrape_patent_info(patentnr: str) -> tuple[str, ...]:
-    """Scrape information on a single patent."""
-    s = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(max_retries=3)
-    s.mount("https://", adapter)
+async def _fetch_patent(
+    patentnr: str, client: httpx.AsyncClient, semaphore: asyncio.Semaphore
+) -> bytes:
+    async with semaphore:
+        result = await client.get(_PATENT_URL.format(patentnr=patentnr))
+        return result.content
 
-    url = f"https://www.google.de/patents/US{patentnr}"
-    result = s.get(url)
-    htmldoc = result.content
-    soup = BeautifulSoup(htmldoc, "html.parser")
 
-    try:
-        title = soup.find("span", itemprop="title").get_text(strip=True, separator=" ")
-    except AttributeError:
-        title = np.nan
+async def fetch_patents(patentnrs: list[str]) -> list[bytes]:
+    """Scrape patents while reusing one client and a bounded connection pool."""
+    limits = httpx.Limits(
+        max_connections=THREADS_SCRAPE_PATENTS,
+        max_keepalive_connections=THREADS_SCRAPE_PATENTS,
+    )
+    semaphore = asyncio.Semaphore(THREADS_SCRAPE_PATENTS)
+    async with httpx.AsyncClient(limits=limits, timeout=10.0) as client:
+        tasks = [_fetch_patent(patentnr, client, semaphore) for patentnr in patentnrs]
+        return await asyncio.gather(*tasks)
 
-    try:
-        abstract = soup.findAll(attrs={"class": "abstract"})
-        abstract = [tag.get_text(strip=True) for tag in abstract]
-        abstract = " ".join(abstract)
-    except AttributeError:
+
+def _get_text(tag: Tag | None) -> PatentField:
+    if tag is None:
+        return np.nan
+    return tag.get_text(strip=True, separator=" ")
+
+
+def parse_patent_page(
+    patentnr: str, page_content: bytes
+) -> tuple[str, PatentField, PatentField, PatentField, PatentField, PatentField]:
+    """Parse the patent page."""
+    soup = BeautifulSoup(page_content, "html.parser")
+
+    title = _get_text(soup.find("span", itemprop="title"))
+
+    abstract_tags = soup.find_all(attrs={"class": "abstract"})
+    if abstract_tags:
+        abstract = " ".join(tag.get_text(strip=True) for tag in abstract_tags)
+    else:
         abstract = np.nan
 
-    try:
-        description = soup.find(attrs={"class": "description"}).get_text(
-            strip=True, separator=" "
-        )
-    except AttributeError:
-        description = np.nan
-
-    try:
-        claims = soup.find(attrs={"class": "claims"}).get_text(
-            strip=True, separator=" "
-        )
-    except AttributeError:
-        claims = np.nan
-
-    try:
-        claims_number = soup.find("span", itemprop="count").get_text(
-            strip=True, separator=" "
-        )
-    except AttributeError:
-        claims_number = np.nan
+    description = _get_text(soup.find(attrs={"class": "description"}))
+    claims = _get_text(soup.find(attrs={"class": "claims"}))
+    claims_number = _get_text(soup.find("span", itemprop="count"))
 
     return patentnr, title, abstract, description, claims, claims_number

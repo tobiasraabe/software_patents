@@ -1,6 +1,7 @@
 # Identification of Software Patents
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/tobiasraabe/software_patents/main.svg)](https://results.pre-commit.ci/latest/github/tobiasraabe/software_patents/main)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ## Introduction
 
@@ -80,15 +81,30 @@ patents and software versus non-software patents.
 
 To get started, clone the repository to your disk with
 
-```bash
-$ git clone https://github.com/tobiasraabe/software_patents
+```console
+git clone https://github.com/tobiasraabe/software_patents
 ```
 
-After that create an environment with `mamba` and activate it by running
+After that create an environment with `uv` and sync the project with
 
-```bash
-$ mamba env create
-$ mamba activate sp
+```console
+uv sync --group typing
+```
+
+You can then run the main project commands without activating the environment manually, for example
+
+```console
+uvx pre-commit run -a
+uv run --group typing ty check
+uv run pytask
+```
+
+If you have `just` installed, the repo also exposes the common workflows via:
+
+```console
+just install
+just check
+just build
 ```
 
 ## Replication
@@ -96,8 +112,8 @@ $ mamba activate sp
 If you only want to replicate the results of the thesis from intermediate files, run the
 following command.
 
-```bash
-$ pytask
+```console
+uv run pytask
 ```
 
 > [!WARNING]

@@ -2,26 +2,28 @@
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
+import asyncio
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 from typing_extensions import Annotated
 
 from software_patents.config import SRC
-from software_patents.config import THREADS_SCRAPE_PATENTS
 from software_patents.config import data_catalog
 from software_patents.data_management.indicators import create_indicators
-from software_patents.data_management.scrape_patents import scrape_patent_info
+from software_patents.data_management.scrape_patents import fetch_patents
+from software_patents.data_management.scrape_patents import parse_patent_page
 
 
 def task_prepare_bessen_hunt_2007(
     path_to_external: Path = SRC / "data" / "external" / "bessen_hunt_2007.dta",
 ) -> Annotated[
-    pd.DataFrame, (data_catalog["bh"], data_catalog["bh_with_crawled_text"])
+    tuple[pd.DataFrame, pd.DataFrame],
+    (data_catalog["bh"], data_catalog["bh_with_crawled_text"]),
 ]:
     # Read the dataset of BH2007
-    df = pd.read_stata(path_to_external)
+    df = cast(pd.DataFrame, pd.read_stata(path_to_external))
 
     # Setting the correct column names
     dict_columns = {
@@ -53,19 +55,12 @@ def task_prepare_bessen_hunt_2007(
     bh = df.copy()
 
     # Crawl information from Google and append to existing data
-    with ThreadPoolExecutor(max_workers=THREADS_SCRAPE_PATENTS) as executor:
-        results = executor.map(scrape_patent_info, df.ID.to_list())
+    pages = asyncio.run(fetch_patents(df.ID.astype(str).to_list()))
+    infos = list(map(parse_patent_page, df.ID.to_list(), pages))
 
     out = pd.DataFrame(
-        results,
-        columns=[
-            "ID",
-            "TITLE",
-            "ABSTRACT",
-            "DESCRIPTION",
-            "CLAIMS",
-            "CLAIMS_NUMBER",
-        ],
+        infos,
+        columns=["ID", "TITLE", "ABSTRACT", "DESCRIPTION", "CLAIMS", "CLAIMS_NUMBER"],
     )
     df = df.merge(out, on="ID", how="inner", validate="1:1")
 

@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import os
+from concurrent.futures import Executor
 from enum import Enum
 from enum import auto
 from pathlib import Path
+from typing import cast
 
+import coiled
 import numpy as np
 from pytask import DataCatalog
+from pytask_parallel import ParallelBackend
+from pytask_parallel import registry
 
 
 class Mode(Enum):
@@ -26,15 +31,20 @@ BLD = SRC.joinpath("..", "..", "bld").resolve()
 
 
 SEED = np.random.RandomState(42)
-THREADS_SCRAPE_PATENTS = os.cpu_count() * 6  # type: ignore[operator]
-DASK_WORKER_NUMBER = os.cpu_count() - 1  # type: ignore[operator]
-
-DASK_LOCAL_CLUSTER_CONFIGURATION = {
-    "memory_limit": 12e9,
-    "n_workers": DASK_WORKER_NUMBER,
-    "threads_per_worker": 1,
-    "diagnostics_port": 8787,
-}
-
+THREADS_SCRAPE_PATENTS = min((os.cpu_count() or 1) * 2, 32)
 
 data_catalog = DataCatalog()
+
+
+def build_custom_backend(n_workers: int) -> Executor:
+    """Build custom executor."""
+    cluster = coiled.Cluster(  # ty: ignore[invalid-argument-type]
+        name="software-patents",
+        n_workers=n_workers,
+    )
+    return cast(Executor, cluster.get_client().get_executor())
+
+
+registry.register_parallel_backend(
+    ParallelBackend.CUSTOM, build_custom_backend, worker_type="processes", remote=True
+)
