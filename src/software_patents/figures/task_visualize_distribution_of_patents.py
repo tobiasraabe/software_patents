@@ -42,7 +42,7 @@ def task_visualize_distributions(
 
 
 def plot_distribution_of_patents(df: pd.DataFrame, path: Path) -> None:
-    fig, ax = plt.subplots()
+    _fig, ax = plt.subplots()
 
     x = list(range(1976, 2019))
     y = df.groupby(df.DATE.dt.year).ID.count().values
@@ -71,7 +71,7 @@ def plot_distribution_of_patents(df: pd.DataFrame, path: Path) -> None:
 def plot_distribution_of_patents_software_vs_non_software(
     df: pd.DataFrame, path: Path
 ) -> None:
-    fig, ax = plt.subplots()
+    _fig, ax = plt.subplots()
 
     x = list(range(1976, 2019))
     y = (
@@ -106,7 +106,7 @@ def plot_distribution_of_patents_software_vs_non_software(
 def plot_distribution_of_patents_software_vs_non_software_shares(
     df: pd.DataFrame, path: Path
 ) -> None:
-    fig, ax = plt.subplots()
+    _fig, ax = plt.subplots()
 
     x = list(range(1976, 2019))
     y = (
