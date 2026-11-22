@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Union
 
 import httpx
 import numpy as np
@@ -12,7 +11,7 @@ from bs4 import Tag
 
 from software_patents.config import THREADS_SCRAPE_PATENTS
 
-PatentField = Union[str, float]
+PatentField = str | float
 _PATENT_URL = "https://patents.google.com/patent/US{patentnr}"
 
 
