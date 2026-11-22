@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any
+from typing import cast
+
 import numpy.testing as npt
 import pandas as pd
 import pytest
@@ -10,10 +13,18 @@ from software_patents.config import BLD
 from software_patents.config import SRC
 from software_patents.config import data_catalog
 
+pytestmark = pytest.mark.data
 
-@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
+
+def _load_catalog_entry(name: str) -> pd.DataFrame:
+    node = cast(Any, data_catalog[name])
+    if not node.path.exists():
+        pytest.skip(f"Replication data not available: {name}")
+    return cast(pd.DataFrame, node.load())
+
+
 def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
-    df = data_catalog["replication_bh_with_crawled_text"].load()
+    df = _load_catalog_entry("replication_bh_with_crawled_text")
 
     different_classifications = df.loc[
         ~df.CLASSIFICATION_ALGORITHM.eq(df.CLASSIFICATION_REPLICATION)
@@ -26,9 +37,8 @@ def test_equality_of_bh2007_and_replication_with_crawled_texts() -> None:
     assert different_classifications.ID.eq(5_489_660).all()
 
 
-@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog.entries)
 def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
-    df = data_catalog["replication_bh_with_patent_db"].load()
+    df = _load_catalog_entry("replication_bh_with_patent_db")
 
     different_classifications = df.loc[
         ~df.CLASSIFICATION_ALGORITHM.eq(df.CLASSIFICATION_REPLICATION)
@@ -37,11 +47,9 @@ def test_equality_of_bh2007_and_replication_with_patent_db() -> None:
     assert different_classifications.shape[0] == 1
 
 
-@pytest.mark.skipif("replication_bh_with_crawled_text" not in data_catalog.entries)
-@pytest.mark.skipif("replication_bh_with_patent_db" not in data_catalog.entries)
 def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
-    bh = data_catalog["replication_bh_with_crawled_text"].load()
-    db = data_catalog["replication_bh_with_patent_db"].load()
+    bh = _load_catalog_entry("replication_bh_with_crawled_text")
+    db = _load_catalog_entry("replication_bh_with_patent_db")
 
     columns = ["ID", "CLASSIFICATION_REPLICATION"]
     bh = bh[columns]
@@ -52,15 +60,8 @@ def test_equality_of_replication_with_crawled_texts_and_patent_db() -> None:
     assert df.shape[0] == 0
 
 
-def test_equality_of_ml_replication() -> None:
-    # Here are the kappa scores from my thesis.
-    # thesis_kappa = [0.875, 0.875, 0.875, 0.771, 0.895,
-    #                 0.875, 0.543, 0.875, 0.448, 0.314]
-    pass
-
-
 @pytest.fixture(scope="module")
-def table() -> None:
+def table() -> pd.DataFrame:
     """Fixture for Table 1 of Bessen and Hunt (2007)."""
     return pd.read_excel(
         SRC / "data" / "external" / "bh2007_table_1.xlsx", header=2, usecols=[0, 1, 4]
@@ -68,15 +69,20 @@ def table() -> None:
 
 
 @pytest.fixture(scope="module")
-def sp() -> None:
+def sp() -> pd.DataFrame:
     """Fixture for all classified patents."""
-    bh = pd.read_pickle(BLD / "analysis" / "bh_with_patent_db.pkl")  # noqa: S301
-    date = pd.read_pickle(BLD / "data" / "patent.pkl")  # noqa: S301
+    bh_path = BLD / "analysis" / "bh_with_patent_db.pkl"
+    date_path = BLD / "data" / "patent.pkl"
+    if not bh_path.exists() or not date_path.exists():
+        pytest.skip("Replication data files are not available")
+    bh = pd.read_pickle(bh_path)  # noqa: S301
+    date = pd.read_pickle(date_path)  # noqa: S301
     return bh.merge(date, on="ID", how="inner", validate="1:1")
 
 
 @pytest.mark.xfail(
-    reason="The number of software patents is underestimated with PatentsView"
+    reason="The number of software patents is underestimated with PatentsView",
+    raises=AssertionError,
 )
 def test_absolute_number_of_software_patents_between_1976_and_1999(
     sp: pd.DataFrame,
@@ -92,11 +98,12 @@ def test_absolute_number_of_software_patents_between_1976_and_1999(
     num_software_patents = sp.shape[0]
 
     for decimal in (-6, -5):
-        assert npt.assert_almost_equal(num_software_patents, 130_650, decimal=decimal)
+        npt.assert_almost_equal(num_software_patents, 130_650, decimal=decimal)
 
 
 @pytest.mark.xfail(
-    reason="The number of software patents is underestimated with PatentsView"
+    reason="The number of software patents is underestimated with PatentsView",
+    raises=AssertionError,
 )
 def test_absolute_number_of_software_patents_between_1976_and_2002(
     table: pd.DataFrame, sp: pd.DataFrame
@@ -116,13 +123,14 @@ def test_absolute_number_of_software_patents_between_1976_and_2002(
     )
 
     for decimal in (-5, -4):
-        assert npt.assert_array_almost_equal(
+        npt.assert_array_almost_equal(
             num_software_patents, table["Software Patents"], decimal=decimal
         )
 
 
 @pytest.mark.xfail(
-    reason="The number of software patents is underestimated with PatentsView"
+    reason="The number of software patents is underestimated with PatentsView",
+    raises=AssertionError,
 )
 def test_share_of_software_patents_to_total_between_1976_and_2002(
     table: pd.DataFrame, sp: pd.DataFrame
@@ -143,6 +151,6 @@ def test_share_of_software_patents_to_total_between_1976_and_2002(
     )
 
     for decimal in (1, 2):
-        assert npt.assert_array_almost_equal(
+        npt.assert_array_almost_equal(
             share_software_patents, table["Software/Total"], decimal=decimal
         )

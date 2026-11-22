@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any
+from typing import cast
+
 import numpy.testing as npt
 import pandas as pd
 import pytest
@@ -10,10 +13,18 @@ from sklearn.metrics import confusion_matrix
 from software_patents.config import SRC
 from software_patents.config import data_catalog
 
+pytestmark = pytest.mark.data
 
-@pytest.mark.skipif("bh" not in data_catalog.entries)
+
+def _load_catalog_entry(name: str) -> pd.DataFrame:
+    node = cast(Any, data_catalog[name])
+    if not node.path.exists():
+        pytest.skip(f"Replication data not available: {name}")
+    return cast(pd.DataFrame, node.load())
+
+
 def test_bh() -> None:
-    df = data_catalog["bh"].load()
+    df = _load_catalog_entry("bh")
 
     assert df.shape == (399, 6)
     assert df.notnull().all().all()
@@ -33,9 +44,8 @@ def test_bh() -> None:
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
-@pytest.mark.skipif("patent" not in data_catalog.entries)
 def test_patent() -> None:
-    df = data_catalog["patent"].load()
+    df = _load_catalog_entry("patent")
 
     assert df.shape == (6_024_729, 2)
     assert df.notna().all().all()

@@ -62,11 +62,13 @@ full
 Thumbs.db
 ___*
 !.gitignore
+!.python-version
 !.mywaflib
 .env/workaround.bat
 .env/installed_conda_pkgs
 .env/installed_pip_pkgs
 .env/installed_spec.json
+.env
 
 # Custom ignores
 dask-worker-space
@@ -76,4 +78,7 @@ dask-worker-space
 *.bib.bak
 *.bib.sav
 src/software_patents/_version.py
+*.egg-info
+# pixi environments
+.pixi
 *.egg-info

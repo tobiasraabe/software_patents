@@ -66,7 +66,7 @@ def _apply_bh2007_algorithm(df: pd.DataFrame) -> pd.Series:
         df.ABSTRACT_CHROMATOGRAPHY | df.DESCRIPTION_CHROMATOGRAPHY
     )
     df["ALGO_FOURTH_LINE"] = (
-        df.ALGO_FOURTH_SPEC_ANTIGENIC
+        df.ALGO_FOURTH_SPEC_ANTIGEN
         | df.ALGO_FOURTH_SPEC_ANTIGENIC
         | df.ALGO_FOURTH_SPEC_CHROMATOGRAPHY
     )
