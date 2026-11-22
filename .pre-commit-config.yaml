@@ -25,33 +25,27 @@ repos:
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.5
     hooks:
-      - id: ruff
-      - id: ruff-format
+    -   id: ruff-format
+    -   id: ruff-check
+-   repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.10.10
+    hooks:
+    -   id: uv-lock
 -   repo: https://github.com/dosisod/refurb
     rev: v2.3.1
     hooks:
     -   id: refurb
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.1
+-   repo: https://github.com/crate-ci/typos
+    rev: v1.49.0
     hooks:
-    -   id: mypy
-        additional_dependencies: [
-            pytask >=0.4.4,
-            types-requests,
-            types-setuptools,
-        ]
-        pass_filenames: false
--   repo: https://github.com/codespell-project/codespell
-    rev: v2.4.3
-    hooks:
-    -   id: codespell
-        exclude: (src/software_patents/exploration/.|src/software_patents/paper/.|matplotlibrc)
--   repo: https://github.com/mgedmin/check-manifest
-    rev: "0.51"
-    hooks:
-    -   id: check-manifest
-        args: [--no-build-isolation]
-        additional_dependencies: [setuptools-scm, toml, wheel]
+    -   id: typos
+        exclude: |
+            (?x)^(
+                src/software_patents/exploration/.*|
+                src/software_patents/paper/.*|
+                matplotlibrc|
+                \.gitignore
+            )$
 -   repo: meta
     hooks:
     -   id: check-hooks-apply
