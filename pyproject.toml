@@ -55,6 +55,7 @@ extend-exclude = ["src/software_patents/exploration/*.ipynb"]
 extend-ignore = [
     # Others.
     "ANN401",  # flake8-annotate typing.Any
+    "CPY001",  # The project does not require copyright headers.
     "PD",  # pandas-vet
     "COM812",  # Comply with ruff-format.
     "ISC001",  # Comply with ruff-format.
