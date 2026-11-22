@@ -13,24 +13,18 @@ from sklearn.metrics import confusion_matrix
 from software_patents.config import SRC
 from software_patents.config import data_catalog
 
-_MISSING_DATA_REASON = "Required data catalog entries are not available."
+pytestmark = pytest.mark.data
 
 
-def _has_loadable_data_catalog_entry(name: str) -> bool:
-    try:
-        node = cast(Any, data_catalog[name])
-        return node.path.exists()
-    except (FileNotFoundError, ImportError, OSError):
-        return False
+def _load_catalog_entry(name: str) -> pd.DataFrame:
+    node = cast(Any, data_catalog[name])
+    if not node.path.exists():
+        pytest.skip(f"Replication data not available: {name}")
+    return cast(pd.DataFrame, node.load())
 
 
-_HAS_BH = _has_loadable_data_catalog_entry("bh")
-_HAS_PATENT = _has_loadable_data_catalog_entry("patent")
-
-
-@pytest.mark.skipif(not _HAS_BH, reason=_MISSING_DATA_REASON)
 def test_bh() -> None:
-    df = data_catalog["bh"].load()
+    df = _load_catalog_entry("bh")
 
     assert df.shape == (399, 6)
     assert df.notnull().all().all()
@@ -50,9 +44,8 @@ def test_bh() -> None:
     npt.assert_almost_equal(false_negative, 0.222_222_222_2, decimal=10)
 
 
-@pytest.mark.skipif(not _HAS_PATENT, reason=_MISSING_DATA_REASON)
 def test_patent() -> None:
-    df = data_catalog["patent"].load()
+    df = _load_catalog_entry("patent")
 
     assert df.shape == (6_024_729, 2)
     assert df.notna().all().all()

@@ -20,6 +20,7 @@ async def _fetch_patent(
 ) -> bytes:
     async with semaphore:
         result = await client.get(_PATENT_URL.format(patentnr=patentnr))
+        result.raise_for_status()
         return result.content
 
 

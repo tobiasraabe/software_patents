@@ -100,6 +100,9 @@ uv run --group typing ty check
 uv run pytask
 ```
 
+Run the offline tests with `uv run pytest`. To also run the tests that need the
+original or replicated datasets, use `uv run pytest --run-data-tests`.
+
 If you have `just` installed, the repo also exposes the common workflows via:
 
 ```console

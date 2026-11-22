@@ -84,6 +84,7 @@ addopts = ["--doctest-modules"]
 testpaths = ["src"]
 norecursedirs = [".idea", ".tox"]
 filterwarnings = ["ignore:datetime.*:DeprecationWarning"]
+markers = ["data: tests requiring the original or replicated datasets"]
 
 [tool.ty.rules]
 unused-ignore-comment = "error"
