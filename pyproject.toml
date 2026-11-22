@@ -10,7 +10,7 @@ dependencies = [
     "beautifulsoup4",
     "coiled",
     "dask",
-    "httpx",
+    "httpx2",
     "matplotlib",
     "nltk>=3.9.1",
     "openpyxl",

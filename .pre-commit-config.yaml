@@ -35,16 +35,16 @@ repos:
     rev: v2.0.0
     hooks:
     -   id: refurb
--   repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+-   repo: https://github.com/crate-ci/typos
+    rev: v1.49.0
     hooks:
-    -   id: codespell
-        args: [-L, astroid]
+    -   id: typos
         exclude: |
             (?x)^(
                 src/software_patents/exploration/.*|
                 src/software_patents/paper/.*|
                 matplotlibrc|
+                \.gitignore
             )$
 -   repo: meta
     hooks:

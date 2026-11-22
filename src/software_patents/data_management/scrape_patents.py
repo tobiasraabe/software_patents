@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
-import httpx
+import httpx2
 import numpy as np
 from bs4 import BeautifulSoup
 from bs4 import Tag
@@ -16,7 +16,7 @@ _PATENT_URL = "https://patents.google.com/patent/US{patentnr}"
 
 
 async def _fetch_patent(
-    patentnr: str, client: httpx.AsyncClient, semaphore: asyncio.Semaphore
+    patentnr: str, client: httpx2.AsyncClient, semaphore: asyncio.Semaphore
 ) -> bytes:
     async with semaphore:
         result = await client.get(_PATENT_URL.format(patentnr=patentnr))
@@ -25,12 +25,12 @@ async def _fetch_patent(
 
 async def fetch_patents(patentnrs: list[str]) -> list[bytes]:
     """Scrape patents while reusing one client and a bounded connection pool."""
-    limits = httpx.Limits(
+    limits = httpx2.Limits(
         max_connections=THREADS_SCRAPE_PATENTS,
         max_keepalive_connections=THREADS_SCRAPE_PATENTS,
     )
     semaphore = asyncio.Semaphore(THREADS_SCRAPE_PATENTS)
-    async with httpx.AsyncClient(limits=limits, timeout=10.0) as client:
+    async with httpx2.AsyncClient(limits=limits, timeout=10.0) as client:
         tasks = [_fetch_patent(patentnr, client, semaphore) for patentnr in patentnrs]
         return await asyncio.gather(*tasks)
 
