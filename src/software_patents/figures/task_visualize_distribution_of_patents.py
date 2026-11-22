@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from importlib import import_module
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -12,8 +11,6 @@ from pytask import task
 from software_patents.config import BLD
 from software_patents.config import data_catalog
 from software_patents.figures.auxiliaries import format_thousands_with_comma
-
-import_module("software_patents.data_management.task_prepare_datasets")
 
 
 @task(
