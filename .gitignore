@@ -62,6 +62,7 @@ full
 Thumbs.db
 ___*
 !.gitignore
+!.python-version
 !.mywaflib
 .env/workaround.bat
 .env/installed_conda_pkgs

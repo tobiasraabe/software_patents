@@ -85,7 +85,8 @@ To get started, clone the repository to your disk with
 git clone https://github.com/tobiasraabe/software_patents
 ```
 
-After that create an environment with `uv` and sync the project with
+Install [uv](https://docs.astral.sh/uv/), then create an environment and sync the project
+with the pinned Python version (3.12):
 
 ```console
 uv sync --group typing
