@@ -109,7 +109,7 @@ def test_absolute_number_of_software_patents_between_1976_and_1999(
     num_software_patents = sp.shape[0]
 
     for decimal in (-6, -5):
-        assert npt.assert_almost_equal(num_software_patents, 130_650, decimal=decimal)
+        npt.assert_almost_equal(num_software_patents, 130_650, decimal=decimal)
 
 
 @pytest.mark.xfail(
@@ -133,7 +133,7 @@ def test_absolute_number_of_software_patents_between_1976_and_2002(
     )
 
     for decimal in (-5, -4):
-        assert npt.assert_array_almost_equal(
+        npt.assert_array_almost_equal(
             num_software_patents, table["Software Patents"], decimal=decimal
         )
 
@@ -160,6 +160,6 @@ def test_share_of_software_patents_to_total_between_1976_and_2002(
     )
 
     for decimal in (1, 2):
-        assert npt.assert_array_almost_equal(
+        npt.assert_array_almost_equal(
             share_software_patents, table["Software/Total"], decimal=decimal
         )

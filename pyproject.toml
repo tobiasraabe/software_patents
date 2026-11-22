@@ -4,7 +4,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only"
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.11"
+version = "0.1.0"
 dependencies = [
     "beautifulsoup4",
     "coiled",
@@ -24,41 +25,28 @@ dependencies = [
     "scikit-learn",
     "universal-pathlib>=0.2.2",
 ]
-dynamic = ["version"]
 
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
 
 [dependency-groups]
-typing = ["ty>=0.0.24"]
+typing = [
+    "ty>=0.0.107",
+]
 
 [build-system]
-requires = ["hatchling", "hatch_vcs"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.12.17,<0.13"]
+build-backend = "uv_build"
 
-[tool.hatch.build.hooks.vcs]
-version-file = "src/software_patents/_version.py"
-
-[tool.hatch.build.targets.sdist]
-exclude = ["tests"]
-only-packages = true
-
-[tool.hatch.build.targets.wheel]
-exclude = ["tests"]
-only-packages = true
-
-[tool.hatch.version]
-source = "vcs"
-
-[tool.hatch.metadata]
-allow-direct-references = true
+[tool.uv.build-backend]
+source-exclude = ["src/software_patents/_version.py"]
 
 [tool.pytask.ini_options]
 paths = ["src/software_patents"]
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py311"
 fix = true
 unsafe-fixes = true
 extend-exclude = ["src/software_patents/exploration/*.ipynb"]
@@ -89,7 +77,7 @@ force-single-line = true
 convention = "numpy"
 
 [tool.refurb]
-python_version = "3.8"
+python_version = "3.11"
 
 [tool.pytest.ini_options]
 addopts = ["--doctest-modules"]
@@ -99,12 +87,6 @@ filterwarnings = ["ignore:datetime.*:DeprecationWarning"]
 
 [tool.ty.rules]
 unused-ignore-comment = "error"
-
-[[tool.ty.overrides]]
-include = ["src/software_patents/__init__.py"]
-
-[tool.ty.overrides.rules]
-unresolved-import = "ignore"
 
 [tool.ty.src]
 include = ["src/software_patents"]
