@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+from typing import Annotated
 from typing import cast
 
 import pandas as pd
-from typing_extensions import Annotated
 
 from software_patents.config import SRC
 from software_patents.config import data_catalog

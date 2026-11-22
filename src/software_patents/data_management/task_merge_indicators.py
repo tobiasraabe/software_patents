@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from importlib import import_module
+from typing import Annotated
 
 import pandas as pd
 from pytask import task
-from typing_extensions import Annotated
 
 from software_patents.config import data_catalog
 from software_patents.data_management.indicators import INDICATORS

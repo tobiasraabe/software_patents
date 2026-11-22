@@ -8,11 +8,11 @@ Note that the information is previously processed by ``download_data.py`` and
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from typing import Annotated
 
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
-from typing_extensions import Annotated
 
 from software_patents.config import BLD
 from software_patents.config import SRC

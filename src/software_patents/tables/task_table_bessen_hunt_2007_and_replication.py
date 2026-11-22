@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Annotated
 
 import pandas as pd
 from pytask import Product
 from sklearn.metrics import confusion_matrix
-from typing_extensions import Annotated
 
 from software_patents.config import BLD
 from software_patents.config import data_catalog
